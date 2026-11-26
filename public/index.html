@@ -615,10 +615,10 @@ function hud(brilho) {
 const NPCS = [
   { nome: 'Seu Diego', cargo: 'Pai da noiva', a: 'o', img: 'npc-diego', x: 39, y: 80.5 },
   { nome: 'Dona Fran', cargo: 'Mãe da noiva', a: 'a', img: 'npc-fran', x: 61, y: 76.5 },
-  { nome: 'Randerson', cargo: 'Irmão e padrinho', a: 'o', img: 'npc-mercador', x: 62, y: 60 },
+  { nome: 'Randerson', cargo: 'Irmão e padrinho', a: 'o', img: 'npc-randerson', x: 62, y: 60 },
   { nome: 'Radmila', cargo: 'Irmã e madrinha', a: 'a', img: 'npc-radmila', x: 24, y: 57 },
-  { nome: 'Henrique', cargo: 'Pajem da placa', a: 'o', img: 'npc-arauto', x: 43, y: 47.5 },
-  { nome: 'Rangel e Ciane', cargo: 'Pais do Henrique e da Bel', a: '', img: 'npc-bilheteiro', x: 65, y: 44.5 },
+  { nome: 'Henrique', cargo: 'Pajem da placa', a: 'o', img: 'npc-henrique', x: 43, y: 47.5 },
+  { nome: 'Rangel e Ciane', cargo: 'Pais do Henrique e da Bel', a: '', img: 'npc-rangel-ciane', x: 65, y: 44.5 },
   { nome: 'Pastora Luzia', cargo: 'Pastora e cantora', a: 'a', img: 'npc-luzia', x: 75, y: 22 },
   { nome: 'Pastor Lucas', cargo: 'Pastor metodista', a: 'o', img: 'npc-pastor', x: 58, y: 21.5 },
   { nome: 'Cayo', cargo: 'O padrinho mais top', a: 'o', img: 'npc-cayo', x: 39, y: 20.5 },
@@ -628,6 +628,7 @@ const com = n => (n.a ? `${n.a} ${n.nome}` : n.nome);
 const BICHOS = [
   { img: 'amb-theo', nome: 'Theo', h: 5.6, casa: { x: 32, y: 53 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Eu levei as alianças! 💍', 'Hihihi! 😄', 'Vamos brincar?'] },
   { img: 'amb-snow', nome: 'Snow', h: 5.4, casa: { x: 50, y: 88 }, raio: 14, vel: .13, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*pede carinho*'] },
+  { img: 'amb-bel', nome: 'Bel', h: 7.4, casa: { x: 58, y: 48 }, raio: 6, vel: .08, diz: ['Eu fui demoiselle! 💃', 'Feliz aniversário, Vitória! 🎉', 'Nesta noite o amor chegou! 🎶', 'O Henrique é meu irmão!'] },
   { img: 'amb-gato', nome: 'Paçoca', h: 4.2, casa: { x: 47, y: 31 }, raio: 9, vel: .06, diz: ['Miau 💛', 'Purr...', '*se espreguiça*'] },
 ];
 const PORTAO = { x: 50.5, y: 17 }, INICIO = { x: 50, y: 89.5 };

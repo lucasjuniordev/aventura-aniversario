@@ -26,7 +26,7 @@ Os moradores são a família, cada um lembrando o que fez no casamento (01/08/20
 
 No final, depois da carta (9 pedaços) e dos vales, sobem os créditos "O cortejo desta aventura de uma vida", com quem fez o quê no casamento (lista `CREDITOS`).
 
-Pela vila também passeiam o Theo, o Snow (cachorro) e a Paçoca (gata): toque neles para ver o que dizem. A ordem da lista `NPCS` é a ordem dos capítulos. Já têm desenho feito no Google Flow a partir de fotos: Theo, Snow, Pastor Lucas, Seu Diego, Dona Fran, Radmila, Pastora Luzia e Cayo. Randerson, Henrique e Rangel e Ciane ainda usam desenhos antigos dos moradores até chegarem as fotos. Se a personagem não consegue ir reto até alguém (uma construção no meio), ela passa antes por pontos da estrada de pedras (`ESTRADA`).
+Pela vila também passeiam o Theo, a Bel (Isabella, demoiselle), o Snow (cachorro) e a Paçoca (gata): toque neles para ver o que dizem. A ordem da lista `NPCS` é a ordem dos capítulos. Todos os moradores, o Theo e a Bel têm desenho feito no Google Flow a partir de fotos. Se a personagem não consegue ir reto até alguém (uma construção no meio), ela passa antes por pontos da estrada de pedras (`ESTRADA`).
 
 O progresso fica salvo no navegador dela. Artes: Google Flow (mapa, personagens, retratos e a cena final). Som: `public/sons/fanfarra.mp3` ("Success Fanfare Trumpets", freesound_community no Pixabay).
 

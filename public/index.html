@@ -12,7 +12,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="A Aventura da Aniversariante">
 <meta property="og:title" content="🎂 A Aventura da Aniversariante">
-<meta property="og:description" content="O escudeiro sumiu e deixou pistas pela vila. Encontre os 5 pedaços da carta e descubra o seu presente!">
+<meta property="og:description" content="O escudeiro sumiu e deixou pistas pela vila. Encontre os 8 pedaços da carta e descubra o seu presente!">
 <meta property="og:url" content="https://aniversario.lucasjrdev.com/">
 <meta property="og:image" content="https://aniversario.lucasjrdev.com/img/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -358,7 +358,8 @@
   .pedacos img { width:24px; height:24px; filter:grayscale(1) brightness(.45); }
   .pedacos li.tem { border-color:var(--gold); } .pedacos li.tem img { filter:none; }
   .pedacos li.chegou { animation:pop .5s ease; box-shadow:0 0 16px #ffd36e; }
-  @media (max-width:440px) { .pedacos { position:absolute; left:0; top:64px; margin:0; } .topo .mudo { top:6px !important; } }
+  @media (max-width:600px) { .pedacos { position:absolute; left:0; top:64px; margin:0; } }
+  @media (max-width:440px) { .topo .mudo { top:6px !important; } .pedacos { gap:3px; padding:4px 6px; } .pedacos li { width:28px; height:28px; } .pedacos img { width:22px; height:22px; } }
   .topo .mudo { position:absolute; right:0; top:52px; margin:0; width:44px; height:44px; border-radius:50%; background:#2a180bcc; border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; }
 
   /* controles */
@@ -407,7 +408,46 @@
   .coracao { position:fixed; bottom:-40px; font-size:26px; pointer-events:none; z-index:6001; animation:subir-coracao 7s ease-in infinite; }
   @keyframes subir-coracao { 0% { transform:translateY(0) rotate(-10deg); opacity:0; } 10% { opacity:1; } 100% { transform:translateY(-110vh) rotate(15deg); opacity:0; } }
   .despedida { font:700 clamp(22px, 6vw, 30px) 'Cinzel Decorative', Georgia, serif; color:var(--ruby2); margin:6px 0 18px; }
-  @media (prefers-reduced-motion:reduce) { .mundo .npc img, .brilho, .nuvem { animation:none !important; } }
+  /* nome e cargo dos moradores; aceno quando ela chega perto */
+  .mundo .npc small { display:flex; flex-direction:column; align-items:center; line-height:1.05; border-radius:9px; padding:2px 8px 3px; }
+  .mundo .npc small em { font-style:normal; font-weight:600; font-size:.78em; color:var(--gold2); letter-spacing:.03em; }
+  .mundo .npc.perto small em { color:#5a3a10; }
+  .mundo .npc.perto img { animation:oi .8s ease-in-out infinite; }
+  @keyframes oi { 0%, 100% { transform:none; } 30% { transform:translateY(-7%); } 55% { transform:translateY(0) scale(1.04, .96); } }
+  .fala-cargo { font:700 13px 'Alegreya Sans', sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--ink2); opacity:.85; }
+
+  /* menino, cachorro e gato passeando; borboletas no jardim */
+  .bicho { position:absolute; translate:-50% -100%; background:none; border:0; padding:0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+  .bicho img { display:block; width:auto; transform-origin:50% 100%; filter:drop-shadow(0 2px 2px #0006); }
+  .bicho .sombra { position:absolute; left:50%; bottom:0; width:80%; height:1.2cqh; translate:-50% 35%; border-radius:50%; background:radial-gradient(#0009, transparent 70%); }
+  .bicho.esquerda img { scale:-1 1; }
+  .bicho.andando img { animation:andar .32s ease-in-out infinite; }
+  .bicho.feliz img { animation:pulinho .45s ease 2; }
+  @keyframes pulinho { 40% { transform:translateY(-22%); } }
+  .fala-bicho { position:absolute; bottom:100%; left:50%; translate:-50% -4px; white-space:nowrap; pointer-events:none; animation:pop .3s ease;
+    font:800 max(12px, 1.4cqh) 'Alegreya Sans', sans-serif; color:#3e2405; background:#fff8e6; border:2px solid var(--gold3); border-radius:12px; padding:3px 9px; }
+  .borboleta { position:absolute; font-size:max(14px, 1.8cqh); pointer-events:none; z-index:1300; animation:borboleta 7s ease-in-out infinite; }
+  @keyframes borboleta { 0%, 100% { transform:translate(0, 0); } 25% { transform:translate(4cqh, -3cqh) scaleX(.6); } 50% { transform:translate(7cqh, 1cqh); } 75% { transform:translate(2cqh, 3cqh) scaleX(.6); } }
+
+  /* Poeta: palavras embaralhadas */
+  .slots { display:flex; justify-content:center; gap:4px; margin:8px 0 18px; }
+  .slots span { width:clamp(24px, 7.5vw, 40px); height:46px; display:grid; place-items:center; border-bottom:3px solid var(--gold3); font:800 26px Alegreya, Georgia, serif; color:var(--ink); }
+  .slots span.cheio { animation:pop .25s ease; }
+  .slots.certo span { color:#2f8f5b; border-color:#2f8f5b; }
+  .slots.errado { animation:tremer .35s; }
+  .letras { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-bottom:6px; }
+  .letras button { width:50px; height:54px; border-radius:12px; font:800 24px Alegreya, Georgia, serif; color:#3e2405; background:linear-gradient(180deg, #fffaf0, #f1dfb4); border:2px solid #b48a4a; box-shadow:0 3px 0 #8b6532; }
+  .letras button:disabled { opacity:.3; box-shadow:none; transform:translateY(3px); cursor:default; }
+
+  /* Jardineira: quebra-cabeça 3x3 */
+  .quebra { display:grid; grid-template-columns:repeat(3, 1fr); gap:3px; width:min(100%, 360px); margin:8px auto 0; padding:3px; border-radius:10px; background:var(--wood); transition:gap .5s, padding .5s, box-shadow .5s; }
+  .peca { aspect-ratio:1; padding:0; border:0; border-radius:4px; background:url(img/jardim.webp) 0 0 / 300% 300% no-repeat; transition:background-position .25s, transform .15s, box-shadow .15s; }
+  .peca.sel { transform:scale(.9); box-shadow:0 0 0 3px var(--gold), 0 0 16px #ffd36e; position:relative; z-index:1; }
+  .peca.certa { box-shadow:inset 0 0 0 2px #2f8f5b99; }
+  .quebra.pronto { gap:0; padding:0; box-shadow:0 0 0 4px var(--gold), 0 0 30px #ffd36e; }
+  .quebra.pronto .peca { border-radius:0; box-shadow:none; }
+
+  @media (prefers-reduced-motion:reduce) { .mundo .npc img, .brilho, .nuvem, .borboleta, .bicho img, .peca { animation:none !important; transition:none !important; } }
 </style>
 </head>
 <body>
@@ -427,28 +467,50 @@ const PROLOGO = {
   titulo: 'A Aventura da Aniversariante',
   texto: `<p>Feliz aniversário, ${ELA}! Mas... cadê o seu escudeiro?</p>
     <p>Ao lado da cama, um bilhete selado:</p>
-    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, cada morador da vila guarda um pedaço da minha carta. Junte os cinco e suba até o castelo: o seu presente está te esperando lá.<br>— L.”</p>`,
+    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, cada morador da vila guarda um pedaço da minha carta. Junte os oito e suba até o castelo: o seu presente está te esperando lá.<br>— L.”</p>`,
   botao: 'Partir em busca do escudeiro',
 };
 // a carta que ela monta, um pedaço por morador (a ordem é a ordem dos capítulos)
 const CARTA = [
   `${ELA}, minha aventureira preferida: nada acontece por acaso.`,
   'Deus colocou você no meu caminho, e cada dia ao seu lado é uma aventura que eu escolheria de novo, mil vezes.',
+  'Se eu fosse escrever um livro, você seria a melhor parte de cada capítulo.',
+  'Você deixa tudo mais bonito, como um jardim depois da chuva.',
   'Agradeço a Ele por mais um ano da sua vida e por me deixar caminhar com você.',
   'Você é a minha alegria, a minha parceira e o meu lar. Te amo mil milhões!',
+  'O amor é paciente, o amor é bondoso, e é assim que eu quero te amar todos os dias.',
   `Feliz aniversário! Agora suba até o castelo: o seu prêmio está te esperando.<br>Até o infinito e amém! Seu escudeiro, ${ELE}.`,
 ];
+// um capítulo por morador, na ordem do caminho (de baixo do mapa até o castelo)
 const CAPITULOS = [
-  { npc: 0, icone: 'filme', jogo: 'charadas', titulo: 'As Charadas do Bilheteiro',
+  { icone: 'filme', jogo: 'charadas', titulo: 'As Charadas do Bilheteiro',
     fala: `Ora, ora, a aniversariante! O ${ELE} passou por aqui e deixou um pedaço da carta comigo. Mas só entrego para quem acertar as minhas três charadas!` },
-  { npc: 1, icone: 'dia', jogo: 'relogio', titulo: 'A Hora Certa',
+  { icone: 'dia', jogo: 'relogio', titulo: 'A Hora Certa',
     fala: `Tic-tac! Nada acontece por acaso, nem na hora errada. O ${ELE} me pediu para guardar isto até a hora da festa: pare o ponteiro na faixa dourada três vezes.` },
-  { npc: 2, icone: 'comida', jogo: 'bolo', titulo: 'O Bolo de Aniversário',
+  { icone: 'poeta', jogo: 'palavras', titulo: 'As Palavras do Poeta',
+    fala: `Ah, a aniversariante! O ${ELE} me pediu ajuda para escrever a carta, mas o vento embaralhou as letras das palavras mais importantes. Desembaralhe três palavras e o pedaço é seu.` },
+  { icone: 'flor', jogo: 'quebracabeca', titulo: 'O Quadro do Jardim',
+    fala: `Bom dia, ${ELA}! O ${ELE} encomendou um quadro de vocês dois no meu jardim, mas as peças se misturaram. Monte o quadro de novo e eu te entrego o pedaço da carta.` },
+  { icone: 'comida', jogo: 'bolo', titulo: 'O Bolo de Aniversário',
     fala: 'Estou fazendo o seu bolo, mas os ingredientes fugiram! Pegue 10 ingredientes de bolo e deixe a cebola, a pimenta e o alho de fora.' },
-  { npc: 3, icone: 'presente', jogo: 'memoria', titulo: 'Os Tesouros Embaralhados',
+  { icone: 'presente', jogo: 'memoria', titulo: 'Os Tesouros Embaralhados',
     fala: `Psiu! O ${ELE} disse que te ama mil milhões e pediu segredo. Embaralhei os meus tesouros: ache todos os pares e o pedaço da carta é seu.` },
-  { npc: 4, icone: 'festa', jogo: 'sequencia', titulo: 'A Fanfarra do Castelo',
+  { icone: 'biblia', jogo: 'versiculos', titulo: 'O Amor de 1 Coríntios 13',
+    fala: `A paz, ${ELA}! O ${ELE} deixou um pedaço comigo e pediu que eu lembrasse você do amor de 1 Coríntios 13. Complete os versículos e ele é seu.` },
+  { icone: 'festa', jogo: 'sequencia', titulo: 'A Fanfarra do Castelo',
     fala: 'Tu-tu-ruuu! Para abrir o portão do castelo, repita a sequência das gemas: observe e depois toque na mesma ordem. Até o infinito e amém!' },
+];
+// Poeta: palavras embaralhadas (dica e resposta)
+const PALAVRAS = [
+  { dica: 'Nada acontece por...', p: 'ACASO' },
+  { dica: 'Te amo mil...', p: 'MILHÕES' },
+  { dica: 'Até o ... e amém!', p: 'INFINITO' },
+];
+// Pastor: versículos de 1 Coríntios 13 (NVI)
+const VERSICULOS = [
+  { p: '“O amor é paciente, o amor é...” (1 Coríntios 13:4)', o: ['bondoso', 'apressado', 'orgulhoso'], c: 0 },
+  { p: '“Tudo sofre, tudo crê, tudo espera, tudo...” (1 Coríntios 13:7)', o: ['suporta', 'esquece', 'reclama'], c: 0 },
+  { p: '“Assim, permanecem agora estes três: a fé, a esperança e o amor. O maior deles, porém, é...” (1 Coríntios 13:13)', o: ['o amor', 'a fé', 'a esperança'], c: 0 },
 ];
 const CHARADAS = [
   { p: 'O que é, o que é: quanto mais se tira, maior fica?', o: ['O buraco', 'A sombra', 'A fila do cinema'], c: 0 },
@@ -470,11 +532,11 @@ const falaEl = document.getElementById('fala'), acaoEl = document.getElementById
 const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 const embaralhar = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
-let cap = -1, xp = 0;  // cap = capítulo atual (0..4); 5 = carta completa, castelo aberto
+let cap = -1, xp = 0;  // cap = capítulo atual (0..7); 8 = carta completa, castelo aberto
 const lvl = () => 1 + Math.floor(xp / 100);
 
 // ---- progresso salvo neste navegador ----
-const CHAVE = 'aventura-v1';
+const CHAVE = 'aventura-v2';  // v2: 8 capítulos (o progresso da versão de 5 recomeça)
 const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify({ cap, xp })); } catch {} };
 const carregar = () => { try { return JSON.parse(localStorage.getItem(CHAVE)); } catch { return null; } };
 
@@ -506,12 +568,23 @@ function hud(brilho) {
 }
 
 // ================= O MUNDO: mapa maior que a tela, câmera, controles e colisão =================
+// moradores na ordem dos capítulos (NPCS[i] dá o capítulo i); a = artigo ("falar com o/a ...")
 const NPCS = [
-  { nome: 'Bilheteiro', img: 'npc-bilheteiro', x: 39, y: 80.5 },
-  { nome: 'Relojoeira', img: 'npc-relojoeira', x: 61, y: 76.5 },
-  { nome: 'Cozinheira', img: 'npc-cozinheira', x: 43, y: 47.5 },
-  { nome: 'Mercador', img: 'npc-mercador', x: 65, y: 44.5 },
-  { nome: 'Arauto', img: 'npc-arauto', x: 39, y: 20.5 },
+  { nome: 'Seu Bento', cargo: 'Bilheteiro', a: 'o', img: 'npc-bilheteiro', x: 39, y: 80.5 },
+  { nome: 'Dona Cida', cargo: 'Relojoeira', a: 'a', img: 'npc-relojoeira', x: 61, y: 76.5 },
+  { nome: 'Dom Otávio', cargo: 'Poeta', a: 'o', img: 'npc-poeta', x: 62, y: 60 },
+  { nome: 'Lia', cargo: 'Jardineira', a: 'a', img: 'npc-jardineira', x: 24, y: 57 },
+  { nome: 'Tia Rosa', cargo: 'Cozinheira', a: 'a', img: 'npc-cozinheira', x: 43, y: 47.5 },
+  { nome: 'Tomé', cargo: 'Mercador', a: 'o', img: 'npc-mercador', x: 65, y: 44.5 },
+  { nome: 'Pastor Elias', cargo: 'Pastor', a: 'o', img: 'npc-pastor', x: 62, y: 21.5 },
+  { nome: 'Gaspar', cargo: 'Arauto', a: 'o', img: 'npc-arauto', x: 39, y: 20.5 },
+];
+const com = n => `${n.a} ${n.nome}`;
+// quem anda sozinho pela vila (h = altura em % da altura do mapa; casa = onde passeia)
+const BICHOS = [
+  { img: 'amb-menino', nome: 'Juca', h: 6.4, casa: { x: 50, y: 88 }, raio: 14, vel: .1, diz: [`Feliz aniversário, ${ELA}!`, 'Quer jogar bola?', 'O escudeiro passou correndo por aqui!'] },
+  { img: 'amb-cachorro', nome: 'Pipoca', h: 4.6, casa: { x: 30, y: 54 }, raio: 16, vel: .14, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*'] },
+  { img: 'amb-gato', nome: 'Paçoca', h: 4.2, casa: { x: 47, y: 31 }, raio: 9, vel: .06, diz: ['Miau 💛', 'Purr...', '*se espreguiça*'] },
 ];
 const PORTAO = { x: 50.5, y: 17 }, INICIO = { x: 50, y: 89.5 };
 // áreas bloqueadas do mapa, em % (x0, y0, x1, y1): castelo, morros, loja, barraca, tenda, torre e bordas
@@ -531,11 +604,15 @@ function medir() {
 }
 function montarMundo() {
   mundoEl.insertAdjacentHTML('beforeend', NPCS.map((n, i) => `<button class="npc" data-i="${i}" style="left:${n.x}%;top:${n.y}%;z-index:${Math.round(n.y * 10)};animation-delay:${-i * .7}s">
-      <span class="balao" aria-hidden="true"></span><img src="img/${n.img}.webp" alt=""><small>${n.nome}</small></button>`).join('')
+      <span class="balao" aria-hidden="true"></span><img src="img/${n.img}.webp" alt=""><small><b>${n.nome}</b><em>${n.cargo}</em></small></button>`).join('')
     + `<button class="portao" style="left:${PORTAO.x}%;top:${PORTAO.y}%"><span class="balao" aria-hidden="true"></span></button>`
     + `<div class="heroi" id="heroi"><span class="sombra"></span><img src="img/heroi-vitoria.webp" alt="${ELA}, a aventureira"></div>`
     + Array.from({ length: reduz ? 0 : 18 }, () => `<i class="brilho" style="left:${10 + Math.random() * 80}%;top:${14 + Math.random() * 80}%;animation-delay:${-Math.random() * 8}s;animation-duration:${6 + Math.random() * 6}s"></i>`).join('')
-    + (reduz ? '' : '<i class="nuvem n1"></i><i class="nuvem n2"></i>'));
+    + BICHOS.map((b, i) => `<button class="bicho" data-b="${i}" aria-label="${b.nome}"><span class="sombra"></span><img src="img/${b.img}.webp" alt="" style="height:${b.h}cqh"></button>`).join('')
+    + (reduz ? '' : '<i class="nuvem n1"></i><i class="nuvem n2"></i>' + [[27, 55], [33, 60], [58, 63]].map(([x, y], i) => `<i class="borboleta" style="left:${x}%;top:${y}%;animation-delay:${-i * 2.3}s">🦋</i>`).join('')));
+  BICHOS.forEach((b, i) => { Object.assign(b, { x: b.casa.x, y: b.casa.y, alvo: null, espera: Math.random() * 2, esq: false, el: mundoEl.querySelector(`.bicho[data-b="${i}"]`) });
+    Object.assign(b.el.style, { left: `${b.x}%`, top: `${b.y}%`, zIndex: Math.round(b.y * 10) });
+    b.el.onclick = e => { e.stopPropagation(); balaozinho(b); }; });
   mundoEl.querySelectorAll('.npc').forEach(b => b.onclick = e => { e.stopPropagation(); irAte(NPCS[+b.dataset.i], () => falarCom(+b.dataset.i)); });
   mundoEl.querySelector('.portao').onclick = e => { e.stopPropagation(); irAte({ x: PORTAO.x + 8, y: PORTAO.y + 3 }, irAoPortao); };
   // toque no chão: anda até lá (o joystick tem prioridade)
@@ -587,9 +664,35 @@ function passo(t) {
   } else el.classList.remove('andando');
   el.classList.toggle('esquerda', heroi.esq);
   el.style.left = `${heroi.x}%`; el.style.top = `${heroi.y}%`; el.style.zIndex = Math.round(heroi.y * 10) + 1;
+  passear(dt);
   camera(false);
   vizinho();
   requestAnimationFrame(passo);
+}
+// menino, cachorro e gato passeiam sozinhos: escolhem um ponto livre perto de casa, andam, param um pouco
+function passear(dt) {
+  BICHOS.forEach(b => {
+    if (!b.alvo) {
+      if ((b.espera -= dt) > 0 || reduz) return;
+      for (let k = 0; k < 12 && !b.alvo; k++) {
+        const a = Math.random() * Math.PI * 2, r = Math.random() * b.raio, p = { x: b.casa.x + Math.cos(a) * r, y: b.casa.y + Math.sin(a) * r * .6 };
+        if (livre(p.x, p.y) && !NPCS.some(n => Math.hypot(n.x - p.x, n.y - p.y) < 5)) b.alvo = p;
+      }
+      if (!b.alvo) { b.espera = 1; return; }
+    }
+    const dx = (b.alvo.x - b.x) * W / 100, dy = (b.alvo.y - b.y) * H / 100, d = Math.hypot(dx, dy), v = W * b.vel * dt;
+    if (d <= v) { b.x = b.alvo.x; b.y = b.alvo.y; b.alvo = null; b.espera = 1.5 + Math.random() * 3.5; }
+    else { b.x += dx / d * v / W * 100; b.y += dy / d * v / H * 100; if (Math.abs(dx) > 2) b.esq = dx < 0; }
+    b.el.classList.toggle('andando', !!b.alvo); b.el.classList.toggle('esquerda', b.esq);
+    b.el.style.left = `${b.x}%`; b.el.style.top = `${b.y}%`; b.el.style.zIndex = Math.round(b.y * 10);
+  });
+}
+function balaozinho(b) {
+  b.el.querySelector('.fala-bicho')?.remove();
+  const f = document.createElement('span'); f.className = 'fala-bicho'; f.setAttribute('role', 'status');
+  f.textContent = `${b.nome}: ${b.diz[Math.random() * b.diz.length | 0]}`; b.el.append(f);
+  b.el.classList.remove('feliz'); void b.el.offsetWidth; b.el.classList.add('feliz');
+  setTimeout(() => f.remove(), 2600);
 }
 function poeira() {
   const p = document.createElement('i'); p.className = 'poeira'; p.style.left = `${heroi.x}%`; p.style.top = `${heroi.y}%`;
@@ -616,7 +719,7 @@ function vizinho() {
   perto = achou ? { ...achou, chave } : null;
   mundoEl.querySelectorAll('.npc').forEach((b, i) => b.classList.toggle('perto', perto?.tipo === 'npc' && perto.i === i));
   acaoEl.hidden = !perto;
-  if (perto) acaoEl.innerHTML = perto.tipo === 'npc' ? `💬 Falar com ${artigo(NPCS[perto.i].nome)} ${NPCS[perto.i].nome}` : (cap >= CAPITULOS.length ? '🏰 Entrar no castelo' : '🔒 Portão trancado');
+  if (perto) acaoEl.innerHTML = perto.tipo === 'npc' ? `💬 Falar com ${com(NPCS[perto.i])}` : (cap >= CAPITULOS.length ? '🏰 Entrar no castelo' : '🔒 Portão trancado');
 }
 function agir() { if (!perto || pausado()) return; perto.tipo === 'npc' ? falarCom(perto.i) : irAoPortao(); }
 acaoEl.onclick = agir;
@@ -652,7 +755,7 @@ function desenharMundo() {
   mundoEl.querySelectorAll('.npc').forEach((b, i) => {
     const estado = i < cap ? 'feito' : i === cap ? 'agora' : 'depois';
     b.classList.remove('feito', 'agora', 'depois'); b.classList.add(estado);
-    b.setAttribute('aria-label', `${NPCS[i].nome}: ${estado === 'feito' ? 'pedaço da carta entregue' : estado === 'agora' ? 'tem um desafio para você' : 'ainda não é a vez'}`);
+    b.setAttribute('aria-label', `${NPCS[i].nome}, ${NPCS[i].cargo}: ${estado === 'feito' ? 'pedaço da carta entregue' : estado === 'agora' ? 'tem um desafio para você' : 'ainda não é a vez'}`);
   });
   const p = mundoEl.querySelector('.portao'), aberto = cap >= CAPITULOS.length;
   p.classList.toggle('aberto', aberto);
@@ -663,14 +766,13 @@ function aviso(txt) {
   avisoEl.textContent = txt; avisoEl.hidden = false;
   clearTimeout(aviso.t); aviso.t = setTimeout(() => { avisoEl.hidden = true; }, 3600);
 }
-const artigo = nome => /a$/.test(nome) ? 'a' : 'o';
 
 // ================= FALAS (caixa de diálogo de RPG, letra por letra) =================
 let digitando = null;
 function falar(i, texto, botoes) {
   const n = NPCS[i];
-  falaEl.innerHTML = `<div class="fala-caixa" role="dialog" aria-modal="true" aria-label="${n.nome}">
-      <img class="fala-rosto" src="img/${n.img}.webp" alt=""><div class="fala-corpo"><b class="fala-nome">${n.nome}</b>
+  falaEl.innerHTML = `<div class="fala-caixa" role="dialog" aria-modal="true" aria-label="${n.nome}, ${n.cargo}">
+      <img class="fala-rosto" src="img/${n.img}.webp" alt=""><div class="fala-corpo"><b class="fala-nome">${n.nome}</b> <span class="fala-cargo">${n.cargo}</span>
       <p class="fala-texto" aria-live="polite"></p><div class="fala-botoes">${botoes.map(([t, cls], k) => `<button class="${cls || ''}" data-k="${k}">${t}</button>`).join('')}</div></div></div>`;
   falaEl.hidden = false;
   const p = falaEl.querySelector('.fala-texto'), bts = falaEl.querySelector('.fala-botoes');
@@ -702,18 +804,18 @@ function start() {
   const s = carregar();
   hud(); desenharMundo();
   if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; hud(); desenharMundo();
-    return aviso(cap >= CAPITULOS.length ? 'A carta está completa! Suba até o castelo.' : `Bem-vinda de volta! Fale com ${artigo(NPCS[cap].nome)} ${NPCS[cap].nome}.`); }
+    return aviso(cap >= CAPITULOS.length ? 'A carta está completa! Suba até o castelo.' : `Bem-vinda de volta! Fale com ${com(NPCS[cap])}.`); }
   view(`<p class="kicker">${PROLOGO.kicker}</p><h1>${PROLOGO.titulo}</h1>${PROLOGO.texto}
     <div class="dica-jogo"><b>Como jogar:</b> use o controle no canto da tela (ou as setas do teclado) para andar, ou toque no mapa. Chegou perto de alguém, toque em <b>Falar</b>. Quem tem um desafio pra você mostra um <b>!</b> dourado.</div>
     <button class="primary">${PROLOGO.botao}</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt="${ELA}"></div>`);
-  const comecar = () => { cap = 0; xp = 0; salvar(); fecharPainel(); aviso(`Comece pelo ${NPCS[0].nome}, na tenda do cinema, aqui pertinho!`); };
+  const comecar = () => { cap = 0; xp = 0; salvar(); fecharPainel(); aviso(`Comece pelo ${NPCS[0].nome}, o ${NPCS[0].cargo.toLowerCase()}, na tenda do cinema aqui pertinho!`); };
   on('.primary', comecar); aoFechar = comecar;
 }
 async function falarCom(i) {
   if (pausado() || cap < 0) return;
   const n = NPCS[i];
-  if (i < cap) return falar(i, `Obrigado, ${ELA}! O pedaço ${i + 1} já está com você. Corre, que o ${ELE} está esperando!`, [['Até mais!', 'primary']]);
-  if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${artigo(NPCS[cap].nome)} ${NPCS[cap].nome}.`, [['Entendi', 'primary']]);
+  if (i < cap) return falar(i, `${n.a === 'a' ? 'Obrigada' : 'Obrigado'}, ${ELA}! O pedaço ${i + 1} já está com você. Corre, que o ${ELE} está esperando!`, [['Até mais!', 'primary']]);
+  if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${com(NPCS[cap])}, ${NPCS[cap].a} ${NPCS[cap].cargo.toLowerCase()}.`, [['Entendi', 'primary']]);
   const c = CAPITULOS[cap];
   const k = await falar(i, c.fala, [['Aceitar o desafio', 'primary'], ['Agora não', 'ghost']]);
   if (k !== 0) return;
@@ -735,7 +837,7 @@ function capituloCompleto() {
   view(`<p class="kicker">Pedaço ${i + 1} de ${CAPITULOS.length} encontrado!</p><div class="reward"><img src="img/${CAPITULOS[i].icone}.webp" alt=""></div>
     <p class="pedaco">“${CARTA[i]}”</p><div class="xp">+100 XP</div>${lvl() > antes ? `<div class="xp">⬆ Nível ${lvl()}!</div>` : ''}
     <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Guardar na mochila'}</button>`, iconeCap(i), true);
-  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${NPCS[cap].nome}.`); };
+  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${NPCS[cap].nome}, ${NPCS[cap].a} ${NPCS[cap].cargo.toLowerCase()}.`); };
   on('.primary', voltar); aoFechar = voltar;
 }
 // o ícone do pedaço voa até o lugar dele no topo
@@ -761,13 +863,13 @@ const topoJogo = () => iconeCap(cap);
 
 const JOGOS = {
   // 1. Charadas: três perguntas de múltipla escolha; errar não tem castigo
-  charadas(fim, k = 0) {
-    const q = CHARADAS[k];
-    view(`<p class="kicker">Charada ${k + 1} de ${CHARADAS.length}</p><h2>${q.p}</h2>
+  charadas(fim, k = 0, lista = CHARADAS, nome = 'Charada') {
+    const q = lista[k];
+    view(`<p class="kicker">${nome} ${k + 1} de ${lista.length}</p><h2>${q.p}</h2>
       <div class="answers">${embaralhar(q.o.map((t, j) => [t, j])).map(([t, j]) => `<button data-v="${j}">${t}</button>`).join('')}</div>
       <p class="note" id="msg" role="status"></p>`, topoJogo());
     on('.answers button', (v, b) => {
-      if (+v === q.c) { b.classList.add('certo'); depois(500, () => k + 1 < CHARADAS.length ? JOGOS.charadas(fim, k + 1) : fim()); }
+      if (+v === q.c) { b.classList.add('certo'); depois(500, () => k + 1 < lista.length ? JOGOS.charadas(fim, k + 1, lista, nome) : fim()); }
       else { b.classList.add('errado'); b.disabled = true; app.querySelector('#msg').textContent = 'Quase! Tenta outra.'; }
     });
   },
@@ -798,6 +900,51 @@ const JOGOS = {
     app.querySelector('#parar').onclick = parar;
     app.querySelector('.relogio').onclick = parar;
   },
+  // Poeta: desembaralhar as palavras do casamento (toque nas letras na ordem; Apagar desfaz)
+  palavras(fim, k = 0) {
+    const { dica, p } = PALAVRAS[k], certa = [...p];
+    let letras; do letras = embaralhar(certa); while (letras.join('') === p);
+    let escolha = [];
+    view(`<p class="kicker">Palavra ${k + 1} de ${PALAVRAS.length}</p><h2>${dica}</h2>
+      <div class="slots" aria-live="polite">${certa.map(() => '<span></span>').join('')}</div>
+      <div class="letras">${letras.map((l, i) => `<button data-v="${i}">${l}</button>`).join('')}</div>
+      <button class="ghost" id="apagar">Apagar</button><p class="note" id="msg" role="status"></p>`, topoJogo());
+    const caixa = app.querySelector('.slots'), slots = [...caixa.children], bts = [...app.querySelectorAll('.letras button')], msg = app.querySelector('#msg');
+    const pintar = () => slots.forEach((el, i) => { el.textContent = escolha[i] != null ? letras[escolha[i]] : ''; el.classList.toggle('cheio', escolha[i] != null); });
+    bts.forEach(b => b.onclick = () => {
+      if (b.disabled || escolha.length >= certa.length) return;
+      escolha.push(+b.dataset.v); b.disabled = true; pintar();
+      if (escolha.length < certa.length) return;
+      if (escolha.map(i => letras[i]).join('') === p) { caixa.classList.add('certo'); msg.textContent = 'Lindo!'; depois(900, () => k + 1 < PALAVRAS.length ? JOGOS.palavras(fim, k + 1) : fim()); }
+      else { caixa.classList.add('errado'); msg.textContent = 'Quase! Tenta outra ordem.';
+        depois(800, () => { escolha = []; bts.forEach(x => x.disabled = false); caixa.classList.remove('errado'); pintar(); }); }
+    });
+    app.querySelector('#apagar').onclick = () => { if (escolha.length >= certa.length) return; const i = escolha.pop(); if (i != null) bts[i].disabled = false; pintar(); };
+  },
+  // Jardineira: quebra-cabeça 3x3 com o quadro do casal; toque em duas peças para trocar
+  quebracabeca(fim) {
+    const N = 9, ok = o => o.every((v, i) => v === i);
+    let ordem; do ordem = embaralhar([...Array(N).keys()]); while (ok(ordem));
+    let sel = null, jogadas = 0;
+    view(`<p class="kicker">Jogadas: <span id="jog">0</span></p><h2>Monte o quadro!</h2>
+      <div class="quebra" role="group" aria-label="Quebra-cabeça de 9 peças">${ordem.map((_, i) => `<button class="peca" data-v="${i}"></button>`).join('')}</div>
+      <p class="note" id="msg" role="status">Toque em uma peça e depois em outra para trocar as duas de lugar.</p>`, topoJogo());
+    const pecas = [...app.querySelectorAll('.peca')], tela = app.querySelector('.quebra');
+    const pintar = () => pecas.forEach((b, pos) => { const v = ordem[pos];
+      b.style.backgroundPosition = `${v % 3 * 50}% ${(v / 3 | 0) * 50}%`; b.classList.toggle('certa', v === pos);
+      b.setAttribute('aria-label', `Posição ${pos + 1}: peça ${v + 1}${v === pos ? ', no lugar' : ''}`); });
+    pintar();
+    pecas.forEach((b, pos) => b.onclick = () => {
+      if (tela.classList.contains('pronto')) return;
+      if (sel === null) { sel = pos; b.classList.add('sel'); return; }
+      pecas[sel].classList.remove('sel');
+      if (sel !== pos) { [ordem[sel], ordem[pos]] = [ordem[pos], ordem[sel]]; app.querySelector('#jog').textContent = ++jogadas; pintar(); }
+      sel = null;
+      if (ok(ordem)) { tela.classList.add('pronto'); app.querySelector('#msg').textContent = 'Que quadro lindo! Vocês dois no jardim.'; depois(1600, fim); }
+    });
+  },
+  // Pastor: completar versículos de 1 Coríntios 13 (mesmo formato das charadas)
+  versiculos(fim) { JOGOS.charadas(fim, 0, VERSICULOS, 'Versículo'); },
   // 3. Bolo: toque nos ingredientes de bolo que aparecem; cebola, pimenta e alho tiram ponto
   bolo(fim) {
     const BONS = ['🥚', '🍓', '🍫', '🥛', '🧈', '🍯', '🍒'], RUINS = ['🧅', '🌶️', '🧄'], META = 10;

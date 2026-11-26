@@ -461,6 +461,95 @@
   .quebra.pronto .peca { border-radius:0; box-shadow:none; }
 
   @media (prefers-reduced-motion:reduce) { .mundo .npc img, .brilho, .nuvem, .borboleta, .bicho img, .peca { animation:none !important; transition:none !important; } }
+
+  /* ===== mundo vivo: entardecer, moradores olhando, notas, lugares ===== */
+  .mundo::after { content:''; position:absolute; inset:0; z-index:1700; pointer-events:none; background:linear-gradient(180deg, #ff9a4a, #ffcf7a 45%, #7a4bd0); mix-blend-mode:soft-light; opacity:0; animation:entardecer 180s ease-in-out infinite alternate; }
+  @keyframes entardecer { 0%, 30% { opacity:0; } 100% { opacity:.6; } }
+  .mundo .npc.olha img { scale:-1 1; }
+  .nota { position:absolute; translate:-50% -100%; width:max(22px, 2.8cqh); height:max(22px, 2.8cqh); border:0; padding:0; border-radius:50%; display:grid; place-items:center; cursor:pointer;
+    font-size:max(13px, 1.8cqh); color:#fff; background:radial-gradient(circle at 40% 35%, #fff6c8, #e3ae4a 55%, #9a6a1f); box-shadow:0 0 8px #ffe08acc, 0 2px 3px #0006; animation:flutuar 2.2s ease-in-out infinite; }
+  .nota.pegou { animation:pegar .6s ease forwards; pointer-events:none; }
+  @keyframes flutuar { 50% { transform:translateY(-6px); } }
+  @keyframes pegar { to { transform:translateY(-40px) scale(1.6); opacity:0; } }
+  .lugar { position:absolute; translate:-50% -100%; border:0; background:none; padding:0; cursor:pointer; display:flex; flex-direction:column; align-items:center; -webkit-tap-highlight-color:transparent; }
+  .lugar span { font-size:max(26px, 4cqh); filter:drop-shadow(0 0 8px #ffe08a); animation:flutuar 1.8s ease-in-out infinite; }
+  .lugar small { font:800 max(11px, 1.35cqh)/1.1 'Alegreya Sans', sans-serif; color:#2a1a06; background:linear-gradient(#ffe79a, var(--gold)); border:2px solid #fff4da; border-radius:9px; padding:2px 8px; white-space:nowrap; }
+  .lugar.perto small { box-shadow:0 0 0 3px #fff, 0 0 14px #ffe08a; }
+  .emote { position:absolute; translate:-50% -100%; z-index:1650; pointer-events:none; font-size:max(22px, 3cqh); animation:emote 1.4s ease-out forwards; }
+  @keyframes emote { from { transform:translateY(0) scale(.5); opacity:0; } 20% { transform:translateY(-10px) scale(1.2); opacity:1; } to { transform:translateY(-70px) scale(1); opacity:0; } }
+  .bolinha { position:absolute; translate:-50% -50%; z-index:1650; pointer-events:none; font-size:max(16px, 2cqh); transition:left .7s cubic-bezier(.3,.6,.4,1), top .7s cubic-bezier(.3,-.6,.6,1); }
+  .bicho.sumiu { visibility:hidden; }
+  .mundo.cena .npc { transition:left 2.4s ease-in-out, top 2.4s ease-in-out; pointer-events:none; }
+  .mundo.cena .npc small, .mundo.cena .npc .balao { display:none; }
+
+  /* ===== interface de MMO: missão, bússola, minimapa, canal da vila, diário ===== */
+  .missao { position:fixed; z-index:99; left:10px; top:calc(max(10px, env(safe-area-inset-top)) + 58px); max-width:min(60vw, 330px); padding:6px 12px; border-radius:12px; pointer-events:none;
+    font:700 13px/1.3 'Alegreya Sans', sans-serif; color:var(--parch); background:#2a180bcc; border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; }
+  .missao b { color:var(--gold2); }
+  @media (max-width:600px) { .missao { top:calc(max(10px, env(safe-area-inset-top)) + 106px); } }
+  .bussola { position:fixed; z-index:98; width:42px; height:42px; margin:-21px 0 0 -21px; pointer-events:none; display:grid; place-items:center; border-radius:50%;
+    background:radial-gradient(circle at 40% 35%, #ffe9a8, var(--gold) 60%, #9a6a1f); border:2px solid #5a3820; box-shadow:0 0 14px #ffd36e; font-size:20px; }
+  .bussola[hidden] { display:none; }
+  .bussola i { position:absolute; inset:-9px; background:conic-gradient(from -14deg, #a8323f 0 28deg, transparent 0); border-radius:50%; mask:radial-gradient(circle, transparent 60%, #000 61%); }
+  .lado { position:fixed; z-index:100; right:10px; top:calc(max(10px, env(safe-area-inset-top)) + 102px); display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+  .lado > button { width:44px; height:44px; border-radius:50%; font-size:20px; background:#2a180bcc; border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; cursor:pointer; color:var(--parch); }
+  .minimapa { position:relative; width:64px; height:115px; border-radius:10px; overflow:hidden; border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; cursor:pointer;
+    background:url(img/vila.webp) center / 100% 100%; transition:width .25s, height .25s; }
+  .minimapa.grande { width:150px; height:269px; }
+  .minimapa i { position:absolute; width:8px; height:8px; margin:-4px 0 0 -4px; border-radius:50%; background:#fff; box-shadow:0 0 0 1.5px #0009; }
+  .minimapa i.eu { background:#ff5fa2; width:10px; height:10px; margin:-5px 0 0 -5px; z-index:2; }
+  .minimapa i.alvo { background:var(--gold); animation:pop 1s ease infinite; }
+  .minimapa i.lug { background:#7fd3ff; }
+  .minimapa i.npcp { width:5px; height:5px; margin:-2.5px 0 0 -2.5px; background:#fff8; }
+  .canal { position:fixed; z-index:97; left:10px; bottom:calc(max(14px, env(safe-area-inset-bottom)) + 150px); width:min(66vw, 330px); pointer-events:none; display:flex; flex-direction:column; gap:3px; }
+  @media (hover:hover) and (pointer:fine) { .canal { bottom:18px; } }
+  @media not ((hover:hover) and (pointer:fine)) { .canal { bottom:auto; top:calc(max(10px, env(safe-area-inset-top)) + 176px); width:min(60vw, 250px); } .canal p { font-size:12px; } }
+  @media (max-width:600px) { .minimapa { width:50px; height:90px; } .minimapa.grande { width:140px; height:251px; } }
+  .canal p { margin:0; padding:3px 9px; border-radius:8px; font:600 12.5px/1.3 'Alegreya Sans', sans-serif; color:#fff4da; background:#0b0f24a8; text-shadow:0 1px 2px #000; animation:canal 12s ease forwards; }
+  .canal p b { color:var(--gold2); }
+  .canal p.sis { color:#bfe9ff; } .canal p.conq { color:#ffe08a; }
+  @keyframes canal { 0% { opacity:0; transform:translateX(-10px); } 4%, 85% { opacity:1; transform:none; } 100% { opacity:0; } }
+  .emo-bt { position:fixed; z-index:91; right:16px; bottom:calc(max(14px, env(safe-area-inset-bottom)) + 96px); width:52px; height:52px; border-radius:50%; font-size:24px; cursor:pointer;
+    background:radial-gradient(circle at 40% 35%, #ffd0e0, #e8638f 70%); border:3px solid #fff4da; box-shadow:0 4px 0 #8f2f50, 0 8px 16px #0007; }
+  .emo-bt:active { transform:translateY(3px); box-shadow:0 1px 0 #8f2f50; }
+  .conquista { position:fixed; z-index:450; left:50%; top:calc(max(10px, env(safe-area-inset-top)) + 8px); translate:-50% 0; display:flex; align-items:center; gap:10px; padding:8px 16px 8px 10px; border-radius:14px; pointer-events:none;
+    background:linear-gradient(#3a2210, #1d1006); border:2px solid var(--gold); box-shadow:0 0 24px #ffd36e88; color:var(--parch); font:700 14px 'Alegreya Sans', sans-serif; animation:conq 3.6s ease forwards; }
+  .conquista span { font-size:28px; } .conquista small { display:block; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--gold2); }
+  @keyframes conq { 0% { opacity:0; transform:translateY(-30px); } 10%, 85% { opacity:1; transform:none; } 100% { opacity:0; transform:translateY(-20px); } }
+  .cena-legenda { position:fixed; z-index:420; left:50%; bottom:calc(max(14px, env(safe-area-inset-bottom)) + 62px); translate:-50% 0; width:min(92vw, 520px); text-align:center; padding:12px 16px; border-radius:14px; pointer-events:none;
+    background:#0b0f24d9; border:2px solid var(--gold3); color:var(--parch); animation:pop .4s ease; }
+  .cena-legenda small { display:block; font:800 12px 'Alegreya Sans', sans-serif; letter-spacing:.18em; text-transform:uppercase; color:var(--gold2); }
+  .cena-legenda b { display:block; margin:4px 0; font:700 clamp(19px, 5vw, 26px) 'Cinzel Decorative', Georgia, serif; color:#ffe3a1; }
+  .cena-legenda p { margin:0; font:italic 500 15px/1.35 Alegreya, Georgia, serif; }
+  .pular { position:fixed; z-index:430; right:14px; bottom:calc(max(14px, env(safe-area-inset-bottom)) + 10px); padding:10px 16px; border-radius:12px; font:800 14px 'Alegreya Sans', sans-serif; cursor:pointer;
+    color:#2a1a06; background:linear-gradient(#ffe79a, var(--gold)); border:2px solid #fff4da; }
+  body.em-cena .controles, body.em-cena .emo-bt, body.em-cena .lado, body.em-cena .missao, body.em-cena .bussola, body.em-cena .canal { visibility:hidden; }
+
+  /* diário */
+  .diario h3 { margin:18px 0 8px; font:700 18px Alegreya, Georgia, serif; color:var(--wood); }
+  .conqs { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:8px; text-align:left; }
+  .conqs > div { display:flex; gap:8px; align-items:center; padding:8px; border-radius:10px; background:#fff8e6; border:2px solid #d9bf8a; font:600 13px/1.25 'Alegreya Sans', sans-serif; color:var(--ink); }
+  .conqs > div > span { font-size:24px; } .conqs > div.nao { opacity:.45; filter:grayscale(1); }
+  .trilha { list-style:none; margin:0; padding:0; display:grid; gap:6px; text-align:left; }
+  .trilha li { padding:8px 10px; border-radius:10px; background:#fff8e6; border:1.5px solid #d9bf8a; font:500 14px/1.35 Alegreya, Georgia, serif; color:var(--ink); }
+  .trilha li b { font-family:'Alegreya Sans', sans-serif; } .trilha li small { display:block; font:700 12px 'Alegreya Sans', sans-serif; color:var(--gold3); }
+  .trilha li.nao { color:#9a8a6a; font-style:italic; }
+
+  /* Pista de dança (ritmo) */
+  .pista { position:relative; height:330px; max-width:340px; margin:8px auto 0; display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; padding:0 6px; border-radius:12px; overflow:hidden;
+    background:linear-gradient(180deg, #1b0f2e, #3a1650 60%, #5a1f4a); box-shadow:inset 0 0 30px #000a; }
+  .pista .faixa-n { position:relative; height:100%; align-self:stretch; border-radius:8px; background:#ffffff0d; }
+  .pista .linha { position:absolute; left:0; right:0; bottom:58px; height:4px; background:#ffe08a; box-shadow:0 0 12px #ffe08a; z-index:2; }
+  .pista .nt { position:absolute; left:8%; width:84%; height:24px; margin-top:-12px; border-radius:10px; border:2px solid #fff9; box-shadow:0 0 10px currentColor; }
+  .pista .nt.ok { animation:pegar .3s ease forwards; }
+  .pista .bt-d { position:absolute; left:0; right:0; bottom:6px; height:46px; border-radius:10px; border:2px solid #fff6; font:800 13px 'Alegreya Sans', sans-serif; color:#fff; z-index:3; cursor:pointer; }
+  .pista .bt-d.on { filter:brightness(1.6); transform:scale(.95); }
+  .pista .juizo { position:absolute; left:0; right:0; top:38%; text-align:center; font:800 26px 'Alegreya Sans', sans-serif; color:#fff; text-shadow:0 0 12px #ff5fa2; z-index:4; pointer-events:none; }
+  .pista .luz { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 30% 0, #ff5fa233, transparent 50%), radial-gradient(circle at 70% 0, #5fd3ff33, transparent 50%); animation:luzes 1.07s ease-in-out infinite alternate; }
+  @keyframes luzes { to { filter:hue-rotate(120deg); opacity:.6; } }
+  /* Chuva de pétalas */
+  .petalas { display:block; width:100%; max-width:340px; aspect-ratio:3 / 4; margin:8px auto 0; border-radius:12px; touch-action:none; background:linear-gradient(#cfe9ff, #fdf0f5 70%, #cfe8c4); box-shadow:inset 0 0 20px #0002; }
+  @media (prefers-reduced-motion:reduce) { .mundo::after, .nota, .lugar span, .canal p, .pista .luz { animation:none !important; } .canal p { opacity:1; } }
 </style>
 </head>
 <body>
@@ -468,6 +557,11 @@
 <div class="jogo" id="jogo" aria-label="Vila: use o controle, as setas ou toque no mapa para andar"><div class="mundo" id="mundo"></div></div>
 <header class="topo" id="topo" aria-label="Progresso"></header>
 <div class="controles"><div class="stick" id="stick" aria-hidden="true"><i></i></div><button class="acao" id="acao" hidden></button></div>
+<p class="missao" id="missao" role="status" hidden></p>
+<div class="bussola" id="bussola" hidden aria-hidden="true"><i></i><span>!</span></div>
+<div class="lado" id="lado"><button id="bt-diario" aria-label="Diário: conquistas e trilha do casamento">📖</button><div class="minimapa" id="minimapa" role="img" aria-label="Minimapa da vila"></div></div>
+<button class="emo-bt" id="emo-bt" aria-label="Mandar um coração (tecla H)">❤️</button>
+<div class="canal" id="canal" aria-live="polite" aria-label="Canal da vila"></div>
 <p class="aviso" id="aviso" role="status" hidden></p>
 <div class="fala" id="fala" hidden></div>
 <div class="painel" id="painel" hidden><div id="app" aria-live="polite"></div></div>
@@ -567,6 +661,57 @@ const FINAL = {
   vales: ['Um jantar com todos que amamos, a família reunida', 'Um dia inteiro juntinhos na segunda, dia 30: nós dois vendo filmes até a hora de sair com todos que amamos', 'Beijinhos e abraços ilimitados, sem prazo de validade'],
   despedida: 'Até o infinito e amém!',
 };
+// A Trilha do Casamento: uma nota musical escondida pela vila para cada música da cerimônia (só o nome e o sentido, sem letra)
+const TRILHA = [
+  { m: 'Eu Te Vejo Em Tudo', q: 'Entrada da plaquinha e da Bíblia (Manu e Isabela)', s: 'Jesus como convidado de honra: a Palavra conduz a celebração e é o fundamento dessa história.' },
+  { m: 'Move Your Heart', q: 'Entrada dos pastores e do noivo', s: 'Antes da aliança com a noiva, uma vida entregue a Deus: sonhos, planos e futuro diante d’Ele.' },
+  { m: "You'll Be In My Heart", q: 'Entrada da florista (Rebeca)', s: 'Pureza, alegria e ternura antes da aliança ser celebrada.' },
+  { m: 'Amigo, Estou Aqui', q: 'Entrada dos padrinhos', s: 'As amizades verdadeiras que caminham junto com o casal, para todos os momentos.' },
+  { m: 'Nesta Noite o Amor Chegou', q: 'Entrada das demoiselles (Anna Isabel, Isabella, Gabriela e Sthefany)', s: 'Alegria e celebração preparando a chegada da noiva.' },
+  { m: 'From This Moment On', q: 'Placa “Lá vem a noiva” (Henrique)', s: 'O anúncio de uma nova história começando, lado a lado a partir daquele dia.' },
+  { m: 'A Thousand Years', q: 'Entrada da noiva com os pais', s: 'A promessa chegando ao altar: um amor que atravessa o tempo.' },
+  { m: 'Bondade de Deus', q: 'Adoração (Pastora Luzia e a banda)', s: 'Gratidão: Deus foi fiel em cada etapa e é o fundamento da nova família.' },
+  { m: 'Touch Of Heaven', q: 'Os votos', s: 'Duas vidas fazendo um compromisso diante do Senhor, querendo permanecer no amor d’Ele.' },
+  { m: 'Take All of Me', q: 'Entrada das alianças (Theo e Henrique)', s: 'Muito mais que um símbolo: entrega completa e promessa de amor.' },
+  { m: 'Jesus Meu Primeiro Amor', q: 'Santa Ceia', s: 'O primeiro ato como marido e mulher: Cristo no centro da nova família.' },
+  { m: 'Grace to Grace', q: 'As assinaturas', s: 'Uma aliança sustentada, todos os dias, pela graça de Deus.' },
+  { m: 'Touch The Sky', q: 'O beijo', s: 'A celebração da união, entregando planos e sonhos ao Senhor.' },
+  { m: 'Relentless', q: 'Fotos no altar', s: 'O registro de um amor que não desiste e permanece.' },
+  { m: 'Only Wanna Sing', q: 'Saída do cortejo', s: 'Alegria e gratidão pela nova história, para honrar a Deus.' },
+  { m: 'A Bênção', q: 'Saída dos noivos', s: 'Uma família debaixo da bênção de Deus, por todas as gerações.' },
+];
+// frases que cada um solta pela vila (aparecem em balões e no canal da vila)
+const FRASES = {
+  'Seu Diego': ['Minha filha cresceu rápido demais... 🥹', 'Entrei com ela ao som de A Thousand Years. Segurei o choro! (não segurei)', 'Feliz aniversário, minha princesa!', 'Lucas, cuida bem dela, hein! 😄', 'Convite às 16h? Cheguei às 15h30.', 'Quem quer foto com o pai da noiva?'],
+  'Dona Fran': ['Filha, já comeu alguma coisa hoje?', '16h em ponto, tudo pronto! ⏰', 'Chorei no primeiro acorde de A Thousand Years.', 'Que orgulho da minha menina!', 'Hoje é dia de festa e de bolo! 🎂'],
+  'Randerson': ['Amigo, estou aqui! 🤠', 'Padrinho Toy Story com muito orgulho.', 'Nada acontece por acaso, irmã!', 'Até o infinito... e amém! 🚀', 'Alguém viu o meu chapéu de cowboy?'],
+  'Radmila': ['Theo, não corre! 🏃', 'Madrinha guarda tudo, até o convite!', 'Irmã, você estava linda no altar!', 'Esse quadro do jardim ficou demais. 🖼️', 'Bora tirar uma selfie?'],
+  'Henrique': ['Lá vem a noiva! 🪧', 'A música do Flamengo foi só uma brincadeira de 5 segundos! ⚽', 'Eu e o Theo cuidamos das alianças! 💍', 'Quem topa um jogo da memória?'],
+  'Rangel e Ciane': ['A Bel e o Henrique arrasaram no cortejo!', 'Bel, cuidado com o vestido!', 'Que dia lindo pra um aniversário! ☀️', 'Já guardamos lugar na pista de dança! 💃🕺'],
+  'Pastora Luzia': ['Graça e Paz! 🙏', 'Deus é fiel em todo tempo!', 'Cantei Bondade de Deus com o coração cheio.', 'O Senhor abençoe esse novo ano da sua vida, filha!'],
+  'Pastor Lucas': ['Graça e Paz! 🙏', 'O amor é paciente, o amor é bondoso!', 'Celebrar o casamento do meu filho foi uma honra.', 'Feliz aniversário, filha! Deus te abençoe.'],
+  'Cayo': ['Padrinho mais top, presente! 😎', 'Arauto oficial do castelo, às ordens!', 'O bolo tá quase pronto... eu acho. 🎂', 'Quem vai abrir a pista comigo? 🕺'],
+  'Theo': ['Tia Vitória! 🎈', 'Eu levei as alianças! 💍', 'Hihihi! 😄', 'Vamos brincar de esconder?', 'Cadê o Snow? 🐶'],
+  'Snow': ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*traz a bolinha* 🎾'],
+  'Bel': ['Eu fui demoiselle! 💃', 'Feliz aniversário, Vitória! 🎉', 'Vamos jogar pétalas? 🌸', 'O Henrique é meu irmão!'],
+  'Paçoca': ['Miau 💛', 'Purr...', '*se espreguiça*', '*ignora todo mundo com classe*'],
+};
+const DICAS = ['💡 Há 16 notas musicais escondidas pela vila: cada uma é uma música do casamento.', '💡 Toque no Theo para brincar de esconde-esconde.', '💡 Toque no Snow para jogar a bolinha.', '💡 A festa está rolando na tenda: tem pista de dança!', '💡 Toque na Bel para a chuva de pétalas.', '💡 O botão ❤️ manda um coração pra quem estiver perto.', '💡 O minimapa mostra a próxima missão em dourado.'];
+// conquistas (aparecem no diário 📖)
+const CONQUISTAS = [
+  { id: 'passos', ic: '👣', t: 'Primeiros passos', d: 'Entrou na vila' },
+  { id: 'carta', ic: '💌', t: 'Carta completa', d: 'Juntou os 9 pedaços' },
+  { id: 'nota1', ic: '🎵', t: 'Primeira canção', d: 'Achou uma nota musical' },
+  { id: 'notas', ic: '🎼', t: 'Trilha completa', d: 'Achou as 16 notas do casamento' },
+  { id: 'theo', ic: '🙈', t: 'Achei o Theo!', d: 'Venceu o esconde-esconde' },
+  { id: 'snow', ic: '🎾', t: 'Melhor amiga do Snow', d: 'Jogou a bolinha 3 vezes' },
+  { id: 'pista', ic: '💃', t: 'Rainha da pista', d: 'Mandou muito bem na pista de dança' },
+  { id: 'petalas', ic: '🌸', t: 'Chuva de pétalas', d: 'Completou o jogo da Bel' },
+  { id: 'abracos', ic: '🤗', t: 'Abraço coletivo', d: 'Mandou 10 corações para a família' },
+  { id: 'todos', ic: '👨‍👩‍👧‍👦', t: 'A família toda', d: 'Conversou com todos da vila' },
+];
+// a festa (recepção de 01/08): na pista, a batida é da vila; os nomes são as músicas daquele dia
+const FESTA = ["I'm a Believer (entrada dos noivos)", "Don't Stop Believin' (abertura da pista)", "Summer Of '69", 'Vejo Enfim a Luz Brilhar (pedido da noiva)', 'Sentimentos São (pedido da noiva)', 'Heaven (a última da noite)'];
 // ===============================================================================================
 
 const app = document.getElementById('app'), painel = document.getElementById('painel');
@@ -580,13 +725,52 @@ const lvl = () => 1 + Math.floor(xp / 100);
 
 // ---- progresso salvo neste navegador ----
 const CHAVE = 'aventura-v2';  // v2: 8 capítulos (o progresso da versão de 5 recomeça)
-const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify({ cap, xp })); } catch {} };
+// extra: notas achadas, conquistas, com quem já conversou e contadores dos joguinhos da vila
+const novoExtra = () => ({ notas: [], conq: [], falou: [], bolas: 0, abracos: 0 });
+let extra = novoExtra();
+const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify({ cap, xp, extra })); } catch {} };
 const carregar = () => { try { return JSON.parse(localStorage.getItem(CHAVE)); } catch { return null; } };
 
 // ---- fanfarra e confete ----
 let mudo = (() => { try { return localStorage.getItem('aventura-mudo') === '1'; } catch { return false; } })();
 const FANFARRA = new Audio('sons/fanfarra.mp3'); FANFARRA.preload = 'auto'; FANFARRA.volume = .6;
 function fanfarra() { if (mudo) return; FANFARRA.currentTime = 0; FANFARRA.play().catch(() => {}); }
+// ---- sons sintetizados (melodia original da vila, batida da pista, plim das notas) ----
+let ac = null;
+function som() { try { ac ||= new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); } catch { ac = null; } return ac; }
+function tom(f, t0, dur, tipo = 'triangle', vol = .12) {
+  const a = som(); if (!a || mudo) return;
+  const o = a.createOscillator(), g = a.createGain(); o.type = tipo; o.frequency.value = f;
+  g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + .01); g.gain.exponentialRampToValueAtTime(.0005, t0 + dur);
+  o.connect(g).connect(a.destination); o.start(t0); o.stop(t0 + dur + .05);
+}
+function bumbo(t0, vol = .5) {
+  const a = som(); if (!a || mudo) return;
+  const o = a.createOscillator(), g = a.createGain(); o.frequency.setValueAtTime(140, t0); o.frequency.exponentialRampToValueAtTime(42, t0 + .14);
+  g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + .22); o.connect(g).connect(a.destination); o.start(t0); o.stop(t0 + .25);
+}
+function chimbal(t0, vol = .08) {
+  const a = som(); if (!a || mudo) return;
+  const b = a.createBuffer(1, a.sampleRate * .05, a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); s.buffer = b; f.type = 'highpass'; f.frequency.value = 7000;
+  g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + .05); s.connect(f).connect(g).connect(a.destination); s.start(t0);
+}
+const plim = () => { const a = som(); if (a) [784, 988, 1319].forEach((f, k) => tom(f, a.currentTime + k * .07, .35, 'sine', .1)); };
+// melodia da vila: caixinha de música em pentatônica, bem baixinho, só depois do primeiro toque (regra dos navegadores)
+const MELODIA = [0, 2, 4, 7, 9, 7, 4, 2, 0, 4, 7, 12, 9, 7, 4, 7], ESCALA = n => 392 * 2 ** (n / 12);
+let musicaT = null;
+function musica(ligar) {
+  clearInterval(musicaT); musicaT = null;
+  if (!ligar || mudo || reduz) return;
+  let k = 0;
+  musicaT = setInterval(() => {
+    const a = som(); if (!a) return;
+    if (!painel.hidden || !document.getElementById('final').hidden) return;  // os joguinhos e o final têm o próprio som
+    const n = MELODIA[k % MELODIA.length]; tom(ESCALA(n), a.currentTime, 1.1, 'sine', .035);
+    if (k % 4 === 0) tom(ESCALA(n - 12), a.currentTime, 1.8, 'triangle', .025);
+    k++;
+  }, 520);
+}
 function confete() {
   if (reduz) return;
   const c = document.createElement('canvas'); c.className = 'confete'; c.width = innerWidth; c.height = innerHeight; document.body.append(c);
@@ -607,7 +791,40 @@ function hud(brilho) {
       <div><b>${ELA}</b> <span class="lv">Nv ${lvl()}</span><div class="bar" role="progressbar" aria-label="Experiência" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${xp % 100}"><i style="width:${xp % 100}%"></i></div></div></div>
     <ol class="pedacos" aria-label="Pedaços da carta: ${Math.max(0, cap)} de ${CAPITULOS.length}">${CAPITULOS.map((c, i) => `<li class="${i < cap ? 'tem' : ''}" data-i="${i}"><img src="img/${c.icone}.webp" alt=""></li>`).join('')}</ol>
     <button class="mudo" aria-label="${mudo ? 'Ligar os sons' : 'Desligar os sons'}" aria-pressed="${mudo}">${mudo ? '🔇' : '🔊'}</button>`;
-  topoEl.querySelector('.mudo').onclick = () => { mudo = !mudo; try { localStorage.setItem('aventura-mudo', mudo ? '1' : '0'); } catch {} hud(); };
+  topoEl.querySelector('.mudo').onclick = () => { mudo = !mudo; try { localStorage.setItem('aventura-mudo', mudo ? '1' : '0'); } catch {} hud(); musica(!mudo); };
+  missao();
+}
+// ---- missão atual (canto da tela) ----
+function alvoMissao() { return cap < 0 ? null : cap < CAPITULOS.length ? NPCS[cap] : { x: PORTAO.x, y: PORTAO.y + 2, nome: 'Portão do castelo' }; }
+function missao() {
+  const el = document.getElementById('missao');
+  if (cap < 0) return el.hidden = true;
+  el.hidden = false;
+  el.innerHTML = cap < CAPITULOS.length
+    ? `📜 <b>Capítulo ${cap + 1}/${CAPITULOS.length}</b> · Fale com ${esc(NPCS[cap].nome)} <small>(${esc(NPCS[cap].cargo)})</small><br>🎵 Notas: ${extra.notas.length}/${TRILHA.length}`
+    : `🏰 <b>A carta está completa!</b> Suba até o castelo.<br>🎵 Notas: ${extra.notas.length}/${TRILHA.length}`;
+}
+// ---- canal da vila (mensagens no canto, estilo MMO) ----
+function canal(html, tipo = '') {
+  const c = document.getElementById('canal'), p = document.createElement('p');
+  p.className = tipo; p.innerHTML = html; c.append(p);
+  while (c.children.length > (matchMedia("(hover:hover) and (pointer:fine)").matches ? 4 : 3)) c.firstElementChild.remove();
+  setTimeout(() => p.remove(), 12000);
+}
+// ---- conquistas ----
+function conquistar(id) {
+  if (extra.conq.includes(id)) return;
+  const q = CONQUISTAS.find(c => c.id === id); if (!q) return;
+  extra.conq.push(id); xp += 30; salvar(); hud(true);
+  const t = document.createElement('div'); t.className = 'conquista'; t.setAttribute('role', 'status');
+  t.innerHTML = `<span>${q.ic}</span><div><small>Conquista desbloqueada · +30 XP</small>${q.t}</div>`;
+  document.body.append(t); setTimeout(() => t.remove(), 3700);
+  canal(`✨ <b>${ELA}</b> conquistou <b>${q.t}</b>!`, 'conq');
+  const a = som(); if (a) [523, 659, 784, 1047].forEach((f, k) => tom(f, a.currentTime + k * .09, .5, 'triangle', .09));
+}
+function conversou(nome) {
+  if (!extra.falou.includes(nome)) { extra.falou.push(nome); salvar(); }
+  if ([...NPCS.map(n => n.nome), ...BICHOS.map(b => b.nome)].every(n => extra.falou.includes(n))) conquistar('todos');
 }
 
 // ================= O MUNDO: mapa maior que a tela, câmera, controles e colisão =================
@@ -626,12 +843,18 @@ const NPCS = [
 const com = n => (n.a ? `${n.a} ${n.nome}` : n.nome);
 // quem anda sozinho pela vila (h = altura em % da altura do mapa; casa = onde passeia)
 const BICHOS = [
-  { img: 'amb-theo', nome: 'Theo', h: 5.6, casa: { x: 32, y: 53 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Eu levei as alianças! 💍', 'Hihihi! 😄', 'Vamos brincar?'] },
+  { img: 'amb-theo', nome: 'Theo', cargo: 'Pajem das alianças', h: 5.6, casa: { x: 32, y: 53 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Eu levei as alianças! 💍', 'Hihihi! 😄', 'Vamos brincar?'] },
   { img: 'amb-snow', nome: 'Snow', h: 5.4, casa: { x: 50, y: 88 }, raio: 14, vel: .13, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*pede carinho*'] },
-  { img: 'amb-bel', nome: 'Bel', h: 7.4, casa: { x: 58, y: 48 }, raio: 6, vel: .08, diz: ['Eu fui demoiselle! 💃', 'Feliz aniversário, Vitória! 🎉', 'Nesta noite o amor chegou! 🎶', 'O Henrique é meu irmão!'] },
+  { img: 'amb-bel', nome: 'Bel', cargo: 'Demoiselle', h: 7.4, casa: { x: 58, y: 48 }, raio: 6, vel: .08, diz: ['Eu fui demoiselle! 💃', 'Feliz aniversário, Vitória! 🎉', 'Nesta noite o amor chegou! 🎶', 'O Henrique é meu irmão!'] },
   { img: 'amb-gato', nome: 'Paçoca', h: 4.2, casa: { x: 47, y: 31 }, raio: 9, vel: .06, diz: ['Miau 💛', 'Purr...', '*se espreguiça*'] },
 ];
 const PORTAO = { x: 50.5, y: 17 }, INICIO = { x: 50, y: 89.5 };
+// onde ficam as 16 notas da Trilha do Casamento (pontos livres e alcançáveis, espalhados pelo mapa)
+const NOTAS_POS = [[89, 22], [12, 25], [13, 93], [86, 93], [47, 22], [68, 52], [28, 60], [68, 92], [32, 92], [29, 29], [65, 20.5], [49, 54], [12, 55], [84, 48], [61, 71], [40, 69]];
+// onde o Theo se esconde
+const ESCONDERIJOS = [[86, 93], [80, 19.5], [55, 93], [13, 93], [12, 25], [51, 21], [33, 91], [12, 60]];
+// lugares com joguinho, abertos a qualquer hora
+const LUGARES = [{ id: 'festa', nome: 'Festa · pista de dança', ic: '🎶', x: 26, y: 81.5 }];
 // áreas bloqueadas do mapa, em % (x0, y0, x1, y1): castelo, morros, loja, barraca, tenda, torre e bordas
 const BLOQUEIOS = [[20, 0, 80, 17.5], [0, 0, 18, 22], [82, 0, 100, 21], [53, 23, 91, 38], [69, 38, 87, 46], [17, 33, 43, 45], [13.5, 40.5, 25, 50],
   [8, 61, 37, 79], [70, 49.5, 90, 80], [0, 0, 8.5, 100], [91.5, 0, 100, 100], [0, 96.5, 100, 100]];
@@ -639,7 +862,8 @@ const livre = (x, y) => !BLOQUEIOS.some(([a, b, c, d]) => x > a && x < c && y > 
 const heroi = { x: INICIO.x, y: INICIO.y, esq: false };
 let W = 0, H = 0, camX = 0, camY = 0, alvo = null, aoChegar = null, perto = null;
 const joy = { x: 0, y: 0 }, teclas = new Set();
-const pausado = () => !painel.hidden || !falaEl.hidden || !document.getElementById('final').hidden;
+let cena = false;  // durante a cena do cortejo ninguém mexe
+const pausado = () => cena || !painel.hidden || !falaEl.hidden || !document.getElementById('final').hidden;
 
 function medir() {
   const vw = jogoEl.clientWidth, vh = jogoEl.clientHeight;
@@ -654,10 +878,13 @@ function montarMundo() {
     + `<div class="heroi" id="heroi"><span class="sombra"></span><img src="img/heroi-vitoria.webp" alt="${ELA}, a aventureira"></div>`
     + Array.from({ length: reduz ? 0 : 18 }, () => `<i class="brilho" style="left:${10 + Math.random() * 80}%;top:${14 + Math.random() * 80}%;animation-delay:${-Math.random() * 8}s;animation-duration:${6 + Math.random() * 6}s"></i>`).join('')
     + BICHOS.map((b, i) => `<button class="bicho" data-b="${i}" aria-label="${b.nome}"><span class="sombra"></span><img src="img/${b.img}.webp" alt="" style="height:${b.h}cqh"></button>`).join('')
-    + (reduz ? '' : '<i class="nuvem n1"></i><i class="nuvem n2"></i>' + [[27, 55], [33, 60], [58, 63]].map(([x, y], i) => `<i class="borboleta" style="left:${x}%;top:${y}%;animation-delay:${-i * 2.3}s">🦋</i>`).join('')));
+    + (reduz ? '' : '<i class="nuvem n1"></i><i class="nuvem n2"></i>' + [[27, 55], [33, 60], [58, 63], [72, 88], [20, 30]].map(([x, y], i) => `<i class="borboleta" style="left:${x}%;top:${y}%;animation-delay:${-i * 2.3}s">🦋</i>`).join(''))
+    + LUGARES.map((l, i) => `<button class="lugar" data-l="${i}" style="left:${l.x}%;top:${l.y}%;z-index:${Math.round(l.y * 10)}" aria-label="${l.nome}"><span aria-hidden="true">${l.ic}</span><small>${l.nome}</small></button>`).join(''));
   BICHOS.forEach((b, i) => { Object.assign(b, { x: b.casa.x, y: b.casa.y, alvo: null, espera: Math.random() * 2, esq: false, el: mundoEl.querySelector(`.bicho[data-b="${i}"]`) });
     Object.assign(b.el.style, { left: `${b.x}%`, top: `${b.y}%`, zIndex: Math.round(b.y * 10) });
-    b.el.onclick = e => { e.stopPropagation(); balaozinho(b); }; });
+    b.el.onclick = e => { e.stopPropagation(); if (!pausado()) tocarBicho(b); }; });
+  mundoEl.querySelectorAll('.lugar').forEach(b => b.onclick = e => { e.stopPropagation(); const l = LUGARES[+b.dataset.l]; irAte(l, () => abrirLugar(l)); });
+  desenharNotas();
   mundoEl.querySelectorAll('.npc').forEach(b => b.onclick = e => { e.stopPropagation(); irAte(NPCS[+b.dataset.i], () => falarCom(+b.dataset.i)); });
   mundoEl.querySelector('.portao').onclick = e => { e.stopPropagation(); irAte({ x: PORTAO.x + 8, y: PORTAO.y + 3 }, irAoPortao); };
   // toque no chão: anda até lá (o joystick tem prioridade)
@@ -697,7 +924,7 @@ function marcarAlvo(p) {
 let ultimo = 0, ultimaPoeira = 0, travado = 0;
 function passo(t) {
   const dt = Math.min(.05, (t - (ultimo || t)) / 1000); ultimo = t;
-  let vx = joy.x + (teclas.has('d') - teclas.has('a')), vy = joy.y + (teclas.has('s') - teclas.has('w'));
+  let vx = cena ? 0 : joy.x + (teclas.has('d') - teclas.has('a')), vy = cena ? 0 : joy.y + (teclas.has('s') - teclas.has('w'));
   const manual = Math.hypot(vx, vy) > .15;
   if (manual) { alvo = null; aoChegar = null; }
   else if (alvo) {
@@ -706,9 +933,9 @@ function passo(t) {
   }
   const mov = Math.hypot(vx, vy);
   const el = document.getElementById('heroi');
-  if (mov > .15 && !pausado()) {
+  if (mov > .15 && (!pausado() || cena)) {
     if (mov > 1) { vx /= mov; vy /= mov; }
-    const vel = W * .3 * dt;  // ~30% da largura do mapa por segundo
+    const vel = W * (cena ? .12 : .3) * dt;  // ~30% da largura do mapa por segundo (na cena, passo de cortejo)
     const nx = heroi.x + vx * vel / W * 100, ny = heroi.y + vy * vel / H * 100;
     const antes = [heroi.x, heroi.y];
     if (livre(nx, ny)) { heroi.x = nx; heroi.y = ny; }
@@ -722,10 +949,173 @@ function passo(t) {
   } else el.classList.remove('andando');
   el.classList.toggle('esquerda', heroi.esq);
   el.style.left = `${heroi.x}%`; el.style.top = `${heroi.y}%`; el.style.zIndex = Math.round(heroi.y * 10) + 1;
-  passear(dt);
+  if (!cena) passear(dt);
   camera(false);
   vizinho();
+  vidaDaVila(t);
   requestAnimationFrame(passo);
+}
+// ================= A VILA VIVA: notas, bússola, minimapa, conversas soltas, joguinhos com os bichos =================
+function desenharNotas() {
+  mundoEl.querySelectorAll('.nota').forEach(n => n.remove());
+  NOTAS_POS.forEach(([x, y], i) => {
+    if (extra.notas.includes(i)) return;
+    mundoEl.insertAdjacentHTML('beforeend', `<button class="nota" data-n="${i}" style="left:${x}%;top:${y}%;z-index:${Math.round(y * 10)};animation-delay:${-i * .3}s" aria-label="Nota musical escondida">♪</button>`);
+  });
+  mundoEl.querySelectorAll('.nota').forEach(b => b.onclick = e => { e.stopPropagation(); const [x, y] = NOTAS_POS[+b.dataset.n]; irAte({ x, y }, () => {}); });
+}
+function pegarNota(i) {
+  if (extra.notas.includes(i) || cap < 0) return;
+  extra.notas.push(i); xp += 15; salvar(); hud(true);
+  const el = mundoEl.querySelector(`.nota[data-n="${i}"]`); el?.classList.add('pegou'); setTimeout(() => el?.remove(), 700);
+  plim();
+  const t = TRILHA[i], n = extra.notas.length;
+  aviso(`🎵 ${t.m} · ${t.q} (${n}/${TRILHA.length})`);
+  canal(`🎵 <b>${ELA}</b> achou <b>${esc(t.m)}</b>: ${esc(t.s)}`, 'sis');
+  conquistar('nota1');
+  if (n >= TRILHA.length) { conquistar('notas'); fanfarra(); confete(); }
+}
+let proxFala = 4000, proxDica = 25000, ultimoT = 0, olhaT = 0;
+function vidaDaVila(t) {
+  if (cap < 0) return;
+  const dt = t - (ultimoT || t); ultimoT = t;
+  if (pausado()) return;
+  // notas: passou por cima, pegou
+  NOTAS_POS.forEach(([x, y], i) => { if (!extra.notas.includes(i) && Math.hypot((x - heroi.x) * W / 100, (y - heroi.y) * H / 100) < W * .05) pegarNota(i); });
+  // moradores e bichos soltam frases sozinhos (balão + canal da vila)
+  if ((proxFala -= dt) <= 0) {
+    proxFala = 5500 + Math.random() * 5000;
+    const todos = [...NPCS.map((n, i) => ({ nome: n.nome, el: mundoEl.querySelector(`.npc[data-i="${i}"]`) })), ...BICHOS.filter(b => !b.sumiu).map(b => ({ nome: b.nome, el: b.el, b }))];
+    const q = todos[Math.random() * todos.length | 0], f = FRASES[q.nome]; if (f) {
+      const frase = f[Math.random() * f.length | 0];
+      q.b ? balaozinho(q.b, frase) : balaoNpc(q.el, frase);
+      canal(`<b>[Vila] ${esc(q.nome)}:</b> ${esc(frase)}`);
+    }
+  }
+  if ((proxDica -= dt) <= 0) { proxDica = 45000; canal(DICAS[Math.random() * DICAS.length | 0], 'sis'); }
+  // moradores olham para a aventureira
+  if (t - olhaT > 300) { olhaT = t; mundoEl.querySelectorAll('.npc').forEach((b, i) => b.classList.toggle('olha', heroi.x < NPCS[i].x - 2)); }
+  bussolaEMapa();
+  esconde.tick?.(dt);
+}
+function balaoNpc(el, frase) {
+  if (!el) return;
+  el.querySelector('.fala-bicho')?.remove();
+  const f = document.createElement('span'); f.className = 'fala-bicho'; f.textContent = frase; el.append(f);
+  const z = el.style.zIndex; el.style.zIndex = 1600; setTimeout(() => { f.remove(); el.style.zIndex = z; }, 3000);
+}
+// bússola na borda da tela apontando a missão + minimapa
+const mini = document.getElementById('minimapa'), bussolaEl = document.getElementById('bussola');
+mini.onclick = () => mini.classList.toggle('grande');
+function bussolaEMapa() {
+  const a = alvoMissao();
+  if (a) {
+    const sx = a.x * W / 100 + camX, sy = a.y * H / 100 + camY - H * .04, vw = innerWidth, vh = innerHeight, m = 46;
+    const fora = sx < 0 || sx > vw || sy < 60 || sy > vh;
+    bussolaEl.hidden = !fora;
+    if (fora) {
+      const cx = vw / 2, cy = vh / 2, ang = Math.atan2(sy - cy, sx - cx);
+      const k = Math.min((vw / 2 - m) / Math.abs(Math.cos(ang) || 1e-6), (vh / 2 - m - 40) / Math.abs(Math.sin(ang) || 1e-6));
+      bussolaEl.style.left = `${cx + Math.cos(ang) * k}px`; bussolaEl.style.top = `${cy + Math.sin(ang) * k}px`;
+      bussolaEl.querySelector('i').style.transform = `rotate(${ang * 180 / Math.PI + 90}deg)`;
+    }
+  } else bussolaEl.hidden = true;
+  mini.innerHTML = NPCS.map(n => `<i class="npcp" style="left:${n.x}%;top:${n.y}%"></i>`).join('')
+    + LUGARES.map(l => `<i class="lug" style="left:${l.x}%;top:${l.y}%"></i>`).join('')
+    + (a ? `<i class="alvo" style="left:${a.x}%;top:${a.y}%"></i>` : '') + `<i class="eu" style="left:${heroi.x}%;top:${heroi.y}%"></i>`;
+}
+// coração para quem estiver perto
+function emote() {
+  if (pausado() || cap < 0) return;
+  const e = document.createElement('i'); e.className = 'emote'; e.textContent = ['❤️', '💛', '🥰', '💕'][Math.random() * 4 | 0];
+  e.style.left = `${heroi.x}%`; e.style.top = `${heroi.y - 9}%`; mundoEl.append(e); setTimeout(() => e.remove(), 1500);
+  const d = p => Math.hypot((p.x - heroi.x) * W / 100, (p.y - heroi.y) * H / 100);
+  const npc = NPCS.map((n, i) => ({ n, i, d: d(n) })).sort((a, b) => a.d - b.d)[0];
+  const bicho = BICHOS.filter(b => !b.sumiu).map(b => ({ b, d: d(b) })).sort((a, b) => a.d - b.d)[0];
+  const perto = [npc, bicho].filter(q => q && q.d < W * .16).sort((a, b) => a.d - b.d)[0];
+  if (!perto) return;
+  const RESP = ['❤️ Também te amo!', '🤗 Abraço!', '🥰 Que fofa!', '💛 Feliz aniversário!'];
+  const frase = RESP[Math.random() * RESP.length | 0];
+  perto.b ? balaozinho(perto.b, frase) : balaoNpc(mundoEl.querySelector(`.npc[data-i="${perto.i}"]`), frase);
+  if (++extra.abracos >= 10) conquistar('abracos'); salvar();
+}
+document.getElementById('emo-bt').onclick = emote;
+document.getElementById('bt-diario').onclick = () => { if (!pausado()) diario(); };
+// tocar num bicho: cada um tem a sua brincadeira
+function tocarBicho(b) {
+  conversou(b.nome);
+  if (b.nome === 'Snow') return jogarBolinha(b);
+  if (b.nome === 'Theo' && !esconde.ativo) return irAte(b, async () => {
+    const k = await falar(b, 'Tia Vitória! Vamos brincar de esconde-esconde? Eu me escondo e você me acha! 🙈', [['Bora!', 'primary'], ['Depois', 'ghost']]);
+    if (k === 0) esconde.comecar(b);
+  });
+  if (b.nome === 'Bel') return irAte(b, async () => {
+    const k = await falar(b, 'Tia! Na entrada das demoiselles foi tudo tão lindo... Vamos fazer uma chuva de pétalas? Pegue as pétalas e os corações, e fuja das abelhas! 🌸', [['Vamos!', 'primary'], ['Depois', 'ghost']]);
+    if (k === 0) JOGOS.petalas(() => { conquistar('petalas'); fecharPainel(); balaozinho(b, 'Que lindo, tia! 🌸'); });
+  });
+  balaozinho(b);
+}
+function jogarBolinha(b) {
+  if (b.buscando) return balaozinho(b, '*já tá correndo* 🐾');
+  let p;
+  for (let k = 0; k < 20 && !p; k++) { const a = Math.random() * Math.PI * 2, r = 8 + Math.random() * 8, q = { x: heroi.x + Math.cos(a) * r, y: heroi.y + Math.sin(a) * r * .6 }; if (livre(q.x, q.y)) p = q; }
+  if (!p) return balaozinho(b, 'Au? 🐾');
+  const bola = document.createElement('i'); bola.className = 'bolinha'; bola.textContent = '🎾';
+  bola.style.left = `${heroi.x}%`; bola.style.top = `${heroi.y - 5}%`; mundoEl.append(bola);
+  requestAnimationFrame(() => requestAnimationFrame(() => { bola.style.left = `${p.x}%`; bola.style.top = `${p.y}%`; }));
+  b.buscando = true; b.alvo = p; b.velAntes = b.vel; b.vel = .28; balaozinho(b, 'AU AU! 🎾');
+  const busca = setInterval(() => {
+    if (b.alvo) return;
+    clearInterval(busca); bola.remove();
+    b.alvo = { x: heroi.x + (heroi.x > 50 ? -4 : 4), y: heroi.y }; b.espera = 0;
+    const volta = setInterval(() => { if (b.alvo) return; clearInterval(volta); b.vel = b.velAntes; b.buscando = false; balaozinho(b, '*trouxe a bolinha* 🎾❤️');
+      if (++extra.bolas >= 3) conquistar('snow'); salvar(); }, 200);
+  }, 200);
+}
+// esconde-esconde com o Theo: ele some, e um "quente/frio" ajuda a achar
+const esconde = {
+  ativo: false,
+  comecar(b) {
+    const [x, y] = ESCONDERIJOS[Math.random() * ESCONDERIJOS.length | 0];
+    Object.assign(this, { ativo: true, b, x, y, tempo: 75000, ultimo: '' });
+    b.sumiu = true; b.el.classList.add('sumiu'); b.alvo = null;
+    aviso('Theo: “1, 2, 3... me acha!” 🙈'); canal('🙈 O Theo se escondeu! Siga o quente/frio.', 'sis');
+    this.tick = dt => {
+      if (!this.ativo) return;
+      this.tempo -= dt;
+      const d = Math.hypot(this.x - heroi.x, (this.y - heroi.y) * .56);
+      if (d < 4.5) return this.fim(true);
+      if (this.tempo <= 0) return this.fim(false);
+      const q = d < 9 ? '🔥 Pelando! Ele tá aqui pertinho!' : d < 17 ? '♨️ Quente!' : d < 28 ? '🌤️ Morno...' : '❄️ Frio!';
+      if (q !== this.ultimo) { this.ultimo = q; aviso(q); }
+    };
+  },
+  fim(achou) {
+    const b = this.b; this.ativo = false; this.tick = null;
+    Object.assign(b, { x: this.x, y: this.y, sumiu: false, alvo: null, espera: 2 }); b.el.classList.remove('sumiu');
+    b.el.style.left = `${b.x}%`; b.el.style.top = `${b.y}%`;
+    balaozinho(b, achou ? 'Achou! Hihihi 😄' : 'Tô aqui! Você não me achou! 😜');
+    if (achou) { conquistar('theo'); confete(); } else aviso('O tempo acabou! Toque no Theo para brincar de novo.');
+  },
+};
+// lugares com joguinho
+function abrirLugar(l) {
+  if (pausado()) return;
+  if (l.id === 'festa') {
+    const n = NPCS.findIndex(x => x.nome === 'Cayo');
+    falar(n, `A festa da recepção continua aqui na tenda! Lembra? Vocês entraram com I'm a Believer e a pista abriu com Don't Stop Believin'. Bora dançar? Toque nas faixas quando as notas passarem na linha dourada! 🕺`, [['Bora dançar!', 'primary'], ['Depois', 'ghost']])
+      .then(k => { if (k === 0) JOGOS.danca(nota => { if (nota >= 70) conquistar('pista'); }); });
+  }
+}
+// diário: conquistas e a trilha do casamento
+function diario() {
+  view(`<p class="kicker">Diário da aventureira</p><h2>${ELA} · Nível ${lvl()}</h2><div class="diario">
+    <h3>Conquistas (${extra.conq.length}/${CONQUISTAS.length})</h3>
+    <div class="conqs">${CONQUISTAS.map(q => `<div class="${extra.conq.includes(q.id) ? '' : 'nao'}"><span>${q.ic}</span><div><b>${q.t}</b><br>${q.d}</div></div>`).join('')}</div>
+    <h3>A Trilha do Casamento (${extra.notas.length}/${TRILHA.length})</h3>
+    <ol class="trilha">${TRILHA.map((t, i) => extra.notas.includes(i) ? `<li><b>🎵 ${t.m}</b><small>${t.q}</small>${t.s}</li>` : `<li class="nao">🎵 ??? · ache a nota escondida pela vila</li>`).join('')}</ol>
+    </div><button class="primary" style="margin-top:16px">Voltar para a vila</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt=""></div>`);
+  on('.primary', fecharPainel);
 }
 // menino, cachorro e gato passeiam sozinhos: escolhem um ponto livre perto de casa, andam, param um pouco
 function passear(dt) {
@@ -745,10 +1135,10 @@ function passear(dt) {
     b.el.style.left = `${b.x}%`; b.el.style.top = `${b.y}%`; b.el.style.zIndex = b.falando ? 1600 : Math.round(b.y * 10);
   });
 }
-function balaozinho(b) {
+function balaozinho(b, frase) {
   b.el.querySelector('.fala-bicho')?.remove();
   const f = document.createElement('span'); f.className = 'fala-bicho'; f.setAttribute('role', 'status');
-  f.textContent = `${b.nome}: ${b.diz[Math.random() * b.diz.length | 0]}`; b.el.append(f);
+  f.textContent = `${b.nome}: ${frase || b.diz[Math.random() * b.diz.length | 0]}`; b.el.append(f);
   b.el.classList.remove('feliz'); void b.el.offsetWidth; b.el.classList.add('feliz');
   b.falando = true; b.el.style.zIndex = 1600;  // balão por cima dos nomes dos moradores
   clearTimeout(b.tFala); b.tFala = setTimeout(() => { f.remove(); b.falando = false; b.el.style.zIndex = Math.round(b.y * 10); }, 2600);
@@ -759,7 +1149,8 @@ function poeira() {
 }
 function camera(direto) {
   const vw = jogoEl.clientWidth, vh = jogoEl.clientHeight;
-  const hx = heroi.x * W / 100, hy = heroi.y * H / 100 - vh * .06;
+  // na cena do cortejo a câmera fica no corredor do castelo; fora dela, segue a aventureira
+  const hx = (cena ? 50.5 : heroi.x) * W / 100, hy = (cena ? Math.min(heroi.y, 34) : heroi.y) * H / 100 - vh * .06;
   const tx = W <= vw ? (vw - W) / 2 : -Math.min(W - vw, Math.max(0, hx - vw / 2));
   const ty = H <= vh ? (vh - H) / 2 : -Math.min(H - vh, Math.max(0, hy - vh / 2));
   const k = direto || reduz ? 1 : .14;
@@ -773,14 +1164,17 @@ function vizinho() {
   let achou = null;
   NPCS.forEach((n, i) => { if (dist(n) < W * .13 && (!achou || dist(n) < achou.d)) achou = { tipo: 'npc', i, d: dist(n) }; });
   if (!achou && dist({ x: PORTAO.x, y: PORTAO.y + 3 }) < W * .16) achou = { tipo: 'portao' };
+  LUGARES.forEach((l, i) => { if (!achou && dist(l) < W * .13) achou = { tipo: 'lugar', i }; });
   const chave = achou ? achou.tipo + (achou.i ?? '') : '';
   if (chave === (perto?.chave ?? '')) return;
   perto = achou ? { ...achou, chave } : null;
   mundoEl.querySelectorAll('.npc').forEach((b, i) => b.classList.toggle('perto', perto?.tipo === 'npc' && perto.i === i));
+  mundoEl.querySelectorAll('.lugar').forEach((b, i) => b.classList.toggle('perto', perto?.tipo === 'lugar' && perto.i === i));
   acaoEl.hidden = !perto;
-  if (perto) acaoEl.innerHTML = perto.tipo === 'npc' ? `💬 Falar com ${com(NPCS[perto.i])}` : (cap >= CAPITULOS.length ? '🏰 Entrar no castelo' : '🔒 Portão trancado');
+  if (perto) acaoEl.innerHTML = perto.tipo === 'npc' ? `💬 Falar com ${com(NPCS[perto.i])}` : perto.tipo === 'lugar' ? `${LUGARES[perto.i].ic} Entrar na ${LUGARES[perto.i].nome.split(' ·')[0]}`
+    : (cap >= CAPITULOS.length ? '🏰 Entrar no castelo' : '🔒 Portão trancado');
 }
-function agir() { if (!perto || pausado()) return; perto.tipo === 'npc' ? falarCom(perto.i) : irAoPortao(); }
+function agir() { if (!perto || pausado()) return; perto.tipo === 'npc' ? falarCom(perto.i) : perto.tipo === 'lugar' ? abrirLugar(LUGARES[perto.i]) : irAoPortao(); }
 acaoEl.onclick = agir;
 
 // joystick: arrastar a partir da base
@@ -805,6 +1199,7 @@ addEventListener('keydown', e => {
   if (e.key === 'Escape') { if (!painel.hidden) (aoFechar || fecharPainel)(); else if (!falaEl.hidden) fecharFala(); return; }
   if (pausado() || e.target.closest?.('input, textarea')) return;
   if (MAPA_TECLAS[k]) { teclas.add(MAPA_TECLAS[k]); e.preventDefault(); }
+  else if (k === 'h') emote();
   else if ((k === 'enter' || k === ' ' || k === 'e') && perto && !e.target.closest?.('button')) { agir(); e.preventDefault(); }
 });
 addEventListener('keyup', e => { const k = MAPA_TECLAS[e.key.toLowerCase()]; if (k) teclas.delete(k); });
@@ -829,9 +1224,9 @@ function aviso(txt) {
 // ================= FALAS (caixa de diálogo de RPG, letra por letra) =================
 let digitando = null;
 function falar(i, texto, botoes) {
-  const n = NPCS[i];
-  falaEl.innerHTML = `<div class="fala-caixa" role="dialog" aria-modal="true" aria-label="${n.nome}, ${n.cargo}">
-      <img class="fala-rosto" src="img/${n.img}.webp" alt=""><div class="fala-corpo"><b class="fala-nome">${n.nome}</b> <span class="fala-cargo">${n.cargo}</span>
+  const n = typeof i === 'number' ? NPCS[i] : i, cargo = n.cargo || '';  // morador (índice) ou quem passeia (objeto)
+  falaEl.innerHTML = `<div class="fala-caixa" role="dialog" aria-modal="true" aria-label="${n.nome}${cargo ? `, ${cargo}` : ''}">
+      <img class="fala-rosto" src="img/${n.img}.webp" alt=""><div class="fala-corpo"><b class="fala-nome">${n.nome}</b> <span class="fala-cargo">${cargo}</span>
       <p class="fala-texto" aria-live="polite"></p><div class="fala-botoes">${botoes.map(([t, cls], k) => `<button class="${cls || ''}" data-k="${k}">${t}</button>`).join('')}</div></div></div>`;
   falaEl.hidden = false;
   const p = falaEl.querySelector('.fala-texto'), bts = falaEl.querySelector('.fala-botoes');
@@ -859,20 +1254,31 @@ function view(html, topo, brilho) {
 }
 const on = (sel, fn) => app.querySelectorAll(sel).forEach(b => b.onclick = () => fn(b.dataset.v, b));
 
+// a melodia da vila só pode começar depois de um toque (regra dos navegadores)
+addEventListener('pointerdown', () => { if (!musicaT) musica(true); }, { once: true });
+addEventListener('keydown', () => { if (!musicaT) musica(true); }, { once: true });
+function boasVindas() {
+  canal(`🟢 <b>${ELA}</b> entrou na vila. A família toda está online!`, 'sis');
+  setTimeout(() => canal('<b>[Vila] Cayo:</b> Chegou a aniversariante! 🎉'), 1500);
+  setTimeout(() => canal(DICAS[0], 'sis'), 4000);
+  conquistar('passos');
+}
 function start() {
   const s = carregar();
-  hud(); desenharMundo();
-  if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; hud(); desenharMundo();
+  extra = { ...novoExtra(), ...(s?.extra || {}) };
+  hud(); desenharMundo(); desenharNotas();
+  if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; hud(); desenharMundo(); boasVindas();
     return aviso(cap >= CAPITULOS.length ? 'A carta está completa! Suba até o castelo.' : `Bem-vinda de volta! Fale com ${com(NPCS[cap])}.`); }
   view(`<p class="kicker">${PROLOGO.kicker}</p><h1>${PROLOGO.titulo}</h1>${PROLOGO.texto}
     <div class="dica-jogo"><b>Como jogar:</b> use o controle no canto da tela (ou as setas do teclado) para andar, ou toque no mapa. Chegou perto de alguém, toque em <b>Falar</b>. Quem tem um desafio pra você mostra um <b>!</b> dourado.</div>
     <button class="primary">${PROLOGO.botao}</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt="${ELA}"></div>`);
-  const comecar = () => { cap = 0; xp = 0; salvar(); fecharPainel(); aviso(`Comece pelo seu pai, o ${NPCS[0].nome}, perto da tenda, aqui pertinho!`); };
+  const comecar = () => { cap = 0; xp = 0; salvar(); fecharPainel(); boasVindas(); musica(true); aviso(`Comece pelo seu pai, o ${NPCS[0].nome}, perto da tenda, aqui pertinho!`); };
   on('.primary', comecar); aoFechar = comecar;
 }
 async function falarCom(i) {
   if (pausado() || cap < 0) return;
   const n = NPCS[i];
+  conversou(n.nome);
   if (i < cap) return falar(i, `${n.a === 'a' ? 'Obrigada' : 'Obrigado'}, ${ELA}! O pedaço ${i + 1} já está com você. Corre, que o ${ELE} está esperando!`, [['Até mais!', 'primary']]);
   if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${com(NPCS[cap])} (${NPCS[cap].cargo}).`, [['Entendi', 'primary']]);
   const c = CAPITULOS[cap];
@@ -896,7 +1302,9 @@ function capituloCompleto() {
   view(`<p class="kicker">Pedaço ${i + 1} de ${CAPITULOS.length} encontrado!</p><div class="reward"><img src="img/${CAPITULOS[i].icone}.webp" alt=""></div>
     <p class="pedaco">“${CARTA[i]}”</p><div class="xp">+100 XP</div>${lvl() > antes ? `<div class="xp">⬆ Nível ${lvl()}!</div>` : ''}
     <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Guardar na mochila'}</button>`, iconeCap(i), true);
-  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${NPCS[cap].nome} (${NPCS[cap].cargo}).`); };
+  canal(`📜 <b>${esc(NPCS[i].nome)}</b> entregou o pedaço ${i + 1} da carta para <b>${ELA}</b>!`, 'sis');
+  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${NPCS[cap].nome} (${NPCS[cap].cargo}).`);
+    if (ultimo) { conquistar('carta'); canal('<b>[Vila] Cayo:</b> O PORTÃO ABRIU! Todo mundo pro castelo! 🏰'); } };
   on('.primary', voltar); aoFechar = voltar;
 }
 // o ícone do pedaço voa até o lugar dele no topo
@@ -911,12 +1319,62 @@ function voar(i) {
 function irAoPortao() {
   if (pausado()) return;
   if (cap < CAPITULOS.length) return aviso(`O portão está trancado. Faltam ${CAPITULOS.length - Math.max(cap, 0)} pedaços da carta.`);
-  final();
+  cortejo().then(final);
+}
+// ================= CENA: o cortejo até o castelo, como as entradas do casamento =================
+function cortejo() {
+  if (reduz) return Promise.resolve();
+  const elNpc = nome => mundoEl.querySelector(`.npc[data-i="${NPCS.findIndex(n => n.nome === nome)}"]`);
+  const bicho = nome => BICHOS.find(b => b.nome === nome);
+  const mover = (nome, x, y) => { const el = elNpc(nome); if (el) { el.style.left = `${x}%`; el.style.top = `${y}%`; el.style.zIndex = Math.round(y * 10); } };
+  const andarBicho = (nome, x, y) => { const b = bicho(nome); if (!b) return; b.el.style.transition = 'left 2.4s ease-in-out, top 2.4s ease-in-out'; Object.assign(b, { x, y, alvo: null });
+    b.el.style.left = `${x}%`; b.el.style.top = `${y}%`; b.el.style.zIndex = Math.round(y * 10); b.el.classList.add('andando'); setTimeout(() => b.el.classList.remove('andando'), 2400); };
+  if (esconde.ativo) esconde.fim(false);
+  const PASSOS = [
+    { q: 'O cortejo da aniversariante', m: 'Todos de volta ao caminho', s: 'A família toda se reuniu de novo, como no dia 01/08.', f() {} },
+    { q: 'Entrada dos pastores', m: 'Move Your Heart', s: 'O Pastor Lucas e a Pastora Luzia, que celebraram aquele dia, vão na frente.', f() { mover('Pastor Lucas', 44.5, 21); mover('Pastora Luzia', 56.5, 21); } },
+    { q: 'Entrada dos padrinhos', m: 'Amigo, Estou Aqui', s: 'Cayo, Randerson e Radmila: amizade para todos os momentos.', f() { mover('Cayo', 39.5, 25); mover('Randerson', 39.5, 29.5); mover('Radmila', 40, 34); } },
+    { q: 'As crianças do cortejo', m: 'Nesta Noite o Amor Chegou · Take All of Me', s: 'A Bel de demoiselle, o Theo e o Henrique com as alianças.', f() { mover('Henrique', 61, 25); andarBicho('Bel', 61.5, 29.5); andarBicho('Theo', 61, 33.5); } },
+    { q: 'Lá vem a noiva!', m: 'From This Moment On', s: 'A placa do Henrique anuncia... e dessa vez não tocou o Flamengo! 😄', f() { balaoNpc(elNpc('Henrique'), 'Lá vem a noiva! 🪧'); mover('Rangel e Ciane', 62, 39); andarBicho('Snow', 43, 43); andarBicho('Paçoca', 58, 44); } },
+    { q: 'A aniversariante com os pais', m: 'A Thousand Years', s: 'Seu Diego e Dona Fran levam a filha até a porta do castelo, como levaram até o altar.', dur: 5200,
+      f() { mover('Seu Diego', 46, 27); mover('Dona Fran', 55, 27); alvo = { x: 50.5, y: 26.5 }; aoChegar = null; } },
+    { q: 'O escudeiro está lá dentro', m: 'Nada acontece por acaso', s: 'O portão se abre devagar...', dur: 2600, f() { alvo = { x: 50.5, y: 21.5 }; aoChegar = null; balaoNpc(elNpc('Seu Diego'), 'Vai, filha! ❤️'); } },
+  ];
+  return new Promise(res => {
+    cena = true; fecharFala(); document.body.classList.add('em-cena'); mundoEl.classList.add('cena');
+    // todo mundo começa perto da entrada do caminho
+    Object.assign(heroi, { x: 50.5, y: 44, esq: false }); alvo = null; aoChegar = null; camera(true);
+    mover('Seu Diego', 46, 44.5); mover('Dona Fran', 55, 44.5);
+    const leg = document.createElement('div'); leg.className = 'cena-legenda'; leg.setAttribute('role', 'status');
+    const pular = document.createElement('button'); pular.className = 'pular'; pular.textContent = 'Pular cena ⏭';
+    document.body.append(leg, pular);
+    let k = 0, t = null, acabou = false;
+    const fim = () => {
+      if (acabou) return; acabou = true; clearTimeout(t); leg.remove(); pular.remove();
+      mundoEl.classList.remove('cena'); cena = false; document.body.classList.remove('em-cena');
+      NPCS.forEach((n, i) => { const el = mundoEl.querySelector(`.npc[data-i="${i}"]`); el.style.left = `${n.x}%`; el.style.top = `${n.y}%`; el.style.zIndex = Math.round(n.y * 10); });
+      BICHOS.forEach(b => { b.el.style.transition = ''; b.espera = 3; });
+      Object.assign(heroi, { x: 50.5, y: 24 }); alvo = null;
+      res();
+    };
+    pular.onclick = fim;
+    const proximo = () => {
+      if (acabou) return;
+      if (k >= PASSOS.length) return fim();
+      const p = PASSOS[k++];
+      leg.innerHTML = `<small>${p.q}</small><b>${p.m}</b><p>${p.s}</p>`; leg.style.animation = 'none'; void leg.offsetWidth; leg.style.animation = '';
+      p.f(); const a = som(); if (a) tom(ESCALA(MELODIA[k % MELODIA.length]), a.currentTime, 1.4, 'sine', .06);
+      t = setTimeout(proximo, p.dur || 2800);
+    };
+    proximo();
+  });
 }
 
 // ================= MINIJOGOS =================
-let timers = [], quadro = null;
-function pararJogo() { timers.forEach(clearTimeout); timers.forEach(clearInterval); timers = []; cancelAnimationFrame(quadro); }
+let timers = [], quadro = null, limpar = [];
+function pararJogo() { timers.forEach(clearTimeout); timers.forEach(clearInterval); timers = []; cancelAnimationFrame(quadro); limpar.forEach(f => f()); limpar = []; }
+const topoLivre = ic => `<div class="crest"><span style="font-size:46px;line-height:1">${ic}</span></div>`;
+const ganharXp = n => { const antes = lvl(); xp += n; salvar(); hud(true); return lvl() > antes; };
 const depois = (ms, fn) => timers.push(setTimeout(fn, ms));
 const topoJogo = () => iconeCap(cap);
 
@@ -1104,6 +1562,96 @@ const JOGOS = {
     });
     nova();
   },
+  // Pista de dança da festa: as notas descem; toque na faixa quando passarem na linha dourada (teclas D F J K ou setas)
+  danca(fim) {
+    const BPM = 112, BATIDA = 60 / BPM, QUEDA = 1.6, LEAD = 2.2;
+    const PADRAO = [0, 1, 2, 3, 3, 2, 1, 0, 0, 2, 1, 3, 1, 1, 2, 2, 0, 3, 0, 3, 1, 2, 1, 2, 3, 2, 1, 0, 0, 1, 2, 3];
+    const NOTAS = [69, 72, 74, 76, 79];  // pentatônica para a melodia de quem acerta
+    const notas = PADRAO.map((f, b) => ({ f, t: LEAD + b * BATIDA }));
+    PADRAO.slice(16).forEach((f, b) => { if (b % 3 === 1) notas.push({ f: (f + 2) % 4, t: LEAD + (16 + b + .5) * BATIDA }); });
+    notas.sort((a, b) => a.t - b.t);
+    const CORES = ['#ff5fa2', '#7fd3ff', '#8ff0b4', '#ffe08a'], TECLAS = [['d', 'arrowleft'], ['f', 'arrowdown'], ['j', 'arrowup'], ['k', 'arrowright']];
+    const faixa = FESTA[Math.random() * FESTA.length | 0];
+    view(`<p class="kicker">🎶 Tocando na festa: ${esc(faixa)}</p><h2>Pista de dança!</h2>
+      <div class="pista"><i class="luz"></i>${[0, 1, 2, 3].map(f => `<div class="faixa-n" data-f="${f}"><button class="bt-d" data-f="${f}" style="background:${CORES[f]}66" aria-label="Faixa ${f + 1}">${['D', 'F', 'J', 'K'][f]}</button></div>`).join('')}<i class="linha"></i><div class="juizo" aria-live="polite"></div></div>
+      <p class="note" id="msg">A batida é da vila; a música, na nossa memória. 😉</p>`, topoLivre('💃'));
+    const pista = app.querySelector('.pista'), faixas = [...app.querySelectorAll('.faixa-n')], juizo = app.querySelector('.juizo');
+    const ALT = pista.clientHeight, LINHA = ALT - 58;
+    notas.forEach(n => { n.el = document.createElement('i'); n.el.className = 'nt'; n.el.style.background = CORES[n.f]; n.el.style.color = CORES[n.f]; n.el.style.top = '-30px'; faixas[n.f].append(n.el); });
+    const a = som(), inicio = performance.now() / 1000, base = a ? a.currentTime - inicio : 0;
+    // a batida inteira já fica agendada no relógio de áudio
+    if (a) for (let b = 0; b < PADRAO.length + 4; b++) { const tt = inicio + base + LEAD + b * BATIDA; bumbo(tt, .35); chimbal(tt + BATIDA / 2); if (b % 4 === 0) tom(ESCALA(-12 + [0, 5, 7, 4][b / 4 % 4 | 0]), tt, BATIDA * 3.6, 'triangle', .05); }
+    let pontos = 0, acertos = 0, acabou = false;
+    const julgar = (txt, cor) => { juizo.textContent = txt; juizo.style.color = cor; juizo.style.animation = 'none'; void juizo.offsetWidth; juizo.style.animation = 'pop .25s ease'; };
+    const bater = f => {
+      if (acabou) return;
+      const bt = faixas[f].querySelector('.bt-d'); bt.classList.add('on'); depois(110, () => bt.classList.remove('on'));
+      const t = performance.now() / 1000 - inicio;
+      const n = notas.find(x => x.f === f && !x.feito && Math.abs(x.t - t) < .16);
+      if (!n) return;
+      n.feito = true; n.el.classList.add('ok'); acertos++;
+      const d = Math.abs(n.t - t); pontos += d < .07 ? 100 : 70; julgar(d < .07 ? 'Perfeito! ✨' : 'Boa! 👍', d < .07 ? '#ffe08a' : '#8ff0b4');
+      if (a) tom(ESCALA(NOTAS[(acertos + f) % NOTAS.length] - 67), a.currentTime, .3, 'square', .05);
+    };
+    app.querySelectorAll('.bt-d').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); bater(+b.dataset.f); }));
+    const tecla = e => { const f = TECLAS.findIndex(k => k.includes(e.key.toLowerCase())); if (f >= 0) { e.preventDefault(); if (!e.repeat) bater(f); } };
+    addEventListener('keydown', tecla); limpar.push(() => removeEventListener('keydown', tecla));
+    const fimT = notas[notas.length - 1].t + 1;
+    const quadroD = () => {
+      const t = performance.now() / 1000 - inicio;
+      notas.forEach(n => {
+        if (n.feito) return;
+        const y = LINHA - (n.t - t) / QUEDA * LINHA;
+        n.el.style.top = `${y}px`;
+        if (t - n.t > .16) { n.feito = true; n.el.style.opacity = .25; julgar('Ops!', '#ff9aa2'); }
+      });
+      if (t < fimT) { quadro = requestAnimationFrame(quadroD); return; }
+      acabou = true;
+      const pct = Math.round(pontos / (notas.length * 100) * 100), subiu = ganharXp(Math.max(10, Math.round(pct / 2)));
+      fim(pct);
+      view(`<p class="kicker">Fim da música!</p><h2>${pct >= 70 ? 'Rainha da pista! 👑' : pct >= 50 ? 'Arrasou na pista! 💃' : 'A pista é sua, é só treinar! 🕺'}</h2>
+        <div class="xp">${acertos}/${notas.length} passos · ${pct}%</div><div class="xp">+${Math.max(10, Math.round(pct / 2))} XP${subiu ? ` · ⬆ Nível ${lvl()}!` : ''}</div>
+        <div class="actions"><button class="primary" id="denovo">Dançar de novo</button><button class="ghost" id="sair">Voltar à vila</button></div>`, topoLivre(pct >= 70 ? '👑' : '💃'), true);
+      if (pct >= 50) { fanfarra(); confete(); }
+      app.querySelector('#denovo').onclick = () => JOGOS.danca(fim);
+      app.querySelector('#sair').onclick = fecharPainel;
+    };
+    quadro = requestAnimationFrame(quadroD);
+  },
+  // Chuva de pétalas (com a Bel): mova a cesta, pegue pétalas e corações, fuja das abelhas
+  petalas(fim) {
+    const META = 25;
+    let pontos = 0, tempo = 40, cx = 150, itens = [], ult = 0, prox = 0, acabou = false;
+    view(`<p class="kicker">Pétalas: <span id="pts">0</span>/${META} · <span id="tmp">${tempo}</span>s</p><h2>Chuva de pétalas!</h2>
+      <canvas class="petalas" width="300" height="400" aria-label="Arraste para mover a cesta"></canvas>
+      <p class="note" id="msg" role="status">Arraste (ou use as setas) para mover a cesta. 🌸 +1 · 💗 +2 · 🐝 −2</p>`, topoLivre('🌸'));
+    const cv = app.querySelector('canvas'), g = cv.getContext('2d'), msg = app.querySelector('#msg');
+    const mover = e => { const r = cv.getBoundingClientRect(); cx = Math.max(25, Math.min(275, (e.clientX - r.left) / r.width * 300)); };
+    cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); mover(e); });
+    cv.addEventListener('pointermove', e => { if (e.buttons || e.pointerType !== 'mouse') mover(e); });
+    const setas = new Set(), tecla = e => { const k = e.key.toLowerCase(); if (k === 'arrowleft' || k === 'arrowright' || k === 'a' || k === 'd') { e.preventDefault(); e.type === 'keydown' ? setas.add(k) : setas.delete(k); } };
+    addEventListener('keydown', tecla); addEventListener('keyup', tecla); limpar.push(() => { removeEventListener('keydown', tecla); removeEventListener('keyup', tecla); });
+    timers.push(setInterval(() => { if (acabou) return; tempo--; app.querySelector('#tmp').textContent = tempo;
+      if (tempo <= 0) { acabou = true; msg.innerHTML = 'O tempo acabou! <button class="ghost" id="denovo">Tentar de novo</button>'; app.querySelector('#denovo').onclick = () => JOGOS.petalas(fim); } }, 1000));
+    const loop = t => {
+      const dt = Math.min(.05, (t - (ult || t)) / 1000); ult = t;
+      if (!acabou) {
+        if (setas.has('arrowleft') || setas.has('a')) cx = Math.max(25, cx - 260 * dt);
+        if (setas.has('arrowright') || setas.has('d')) cx = Math.min(275, cx + 260 * dt);
+        if ((prox -= dt) <= 0) { prox = .38; const r = Math.random(); itens.push({ x: 20 + Math.random() * 260, y: -20, v: 110 + Math.random() * 110, s: (Math.random() - .5) * 40, ic: r < .68 ? '🌸' : r < .84 ? '💗' : '🐝' }); }
+        itens.forEach(it => { it.y += it.v * dt; it.x += Math.sin(it.y / 30) * it.s * dt;
+          if (!it.fora && it.y > 352 && it.y < 384 && Math.abs(it.x - cx) < 32) { it.fora = true; const v = it.ic === '🌸' ? 1 : it.ic === '💗' ? 2 : -2;
+            pontos = Math.max(0, pontos + v); app.querySelector('#pts').textContent = pontos; const a = som(); if (a) tom(v > 0 ? 880 + pontos * 12 : 180, a.currentTime, .18, v > 0 ? 'sine' : 'sawtooth', .06);
+            if (pontos >= META) { acabou = true; msg.textContent = 'Que chuva de pétalas linda! 🌸'; ganharXp(40); depois(900, fim); } } });
+        itens = itens.filter(it => !it.fora && it.y < 420);
+      }
+      g.clearRect(0, 0, 300, 400); g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = '26px serif'; itens.forEach(it => g.fillText(it.ic, it.x, it.y));
+      g.font = '46px serif'; g.fillText('🧺', cx, 372);
+      quadro = requestAnimationFrame(loop);
+    };
+    quadro = requestAnimationFrame(loop);
+  },
 };
 
 
@@ -1127,7 +1675,7 @@ function final() {
     f.hidden = false; f.scrollTop = 0;
     fanfarra(); confete(); setTimeout(confete, 2200);
     f.querySelector('#vila-de-novo').onclick = () => { f.hidden = true; };
-    f.querySelector('#recomecar').onclick = () => { try { localStorage.removeItem(CHAVE); } catch {} f.hidden = true; cap = -1; xp = 0; Object.assign(heroi, INICIO); start(); };
+    f.querySelector('#recomecar').onclick = () => { try { localStorage.removeItem(CHAVE); } catch {} f.hidden = true; cap = -1; xp = 0; extra = novoExtra(); Object.assign(heroi, INICIO); start(); };
     f.querySelector('#vila-de-novo').focus({ preventScroll: true });
   }, reduz ? 0 : 450);
   setTimeout(() => clarao.remove(), 1400);

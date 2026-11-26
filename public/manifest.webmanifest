@@ -1,0 +1,13 @@
+{
+  "name": "A Aventura da Aniversariante",
+  "short_name": "Aventura",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121833",
+  "theme_color": "#121833",
+  "icons": [
+    { "src": "img/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icone-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

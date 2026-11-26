@@ -1,6 +1,6 @@
 # A Aventura da Aniversariante
 
-Jogo de aniversário da Vitória: na manhã do aniversário, o escudeiro Lucas some e deixa pistas pela vila. Ela anda pelo mapa (toque no chão), cumpre um desafio com cada um dos 5 moradores, junta os 5 pedaços da carta e, no alto do castelo, encontra o prêmio: o próprio escudeiro, com a carta inteira e alguns vales.
+Jogo de aniversário da Vitória: na manhã do aniversário, o escudeiro Lucas some e deixa pistas pela vila. Ela anda pelo mapa em tela cheia (joystick, setas/WASD ou toque no chão, com colisão nas construções e a câmera seguindo), cumpre um desafio com cada um dos 5 moradores, junta os 5 pedaços da carta e, no alto do castelo, encontra o prêmio: o próprio escudeiro, com a carta inteira e alguns vales.
 
 No ar em https://aniversario.lucasjrdev.com
 

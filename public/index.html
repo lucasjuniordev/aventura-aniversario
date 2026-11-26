@@ -311,15 +311,113 @@
   .premio { font:800 20px/1.35 Alegreya, Georgia, serif; color:var(--ruby2); margin:28px 0 10px; }
   .vales { list-style:none; padding:0; margin:0 0 20px; display:grid; gap:8px; text-align:left; }
   .vales li { font-weight:700; padding:10px 14px; border:2px dashed var(--gold3); border-radius:10px; background:#fff8e6; }
+
+  /* ================= jogo em tela cheia ================= */
+  body { padding:0; display:block; overflow:hidden; }
+  .jogo { position:fixed; inset:0; overflow:hidden; touch-action:none; user-select:none; -webkit-user-select:none; }
+  .jogo .mundo { position:absolute; left:0; top:0; margin:0; container-type:size; will-change:transform;
+    background:#3c5a2a url(img/vila.webp) 0 0 / 100% 100% no-repeat; box-shadow:0 0 0 4px #2a180b, 0 0 60px #000; }
+  .mundo .npc img { height:8.6cqh; animation:respira 2.6s ease-in-out infinite; transform-origin:50% 100%; animation-delay:inherit; }
+  @keyframes respira { 50% { transform:scale(1.025, 1.04); } }
+  .mundo .npc small { font-size:max(11px, 1.35cqh); }
+  .mundo .npc.perto small { background:var(--gold); color:#2a1a06; border-color:#fff4da; }
+  .mundo .npc.perto::after { content:''; position:absolute; left:50%; bottom:1.2cqh; width:7cqh; height:2cqh; translate:-50% 50%; z-index:-1;
+    border:3px solid #ffe79a; border-radius:50%; animation:anel 1.2s ease-in-out infinite; }
+  @keyframes anel { 50% { scale:1.2; opacity:.5; } }
+  .mundo .balao { top:-3cqh; }
+  .jogo .heroi { position:absolute; translate:-50% -100%; pointer-events:none; height:auto; filter:none; transition:none; animation:none; scale:none; }
+  .heroi img { display:block; height:9.6cqh; filter:drop-shadow(0 2px 2px #0006); transform-origin:50% 100%; }
+  .heroi.esquerda img { scale:-1 1; }
+  .heroi.andando img { animation:andar .36s ease-in-out infinite; }
+  @keyframes andar { 25% { transform:translateY(-6%) rotate(-3deg); } 50% { transform:translateY(0) scale(1.03, .97); } 75% { transform:translateY(-6%) rotate(3deg); } }
+  .heroi .sombra { position:absolute; left:50%; bottom:.2cqh; width:5.4cqh; height:1.5cqh; translate:-50% 0; border-radius:50%; background:radial-gradient(#000a, transparent 70%); }
+  .poeira { position:absolute; width:2cqh; height:1.2cqh; translate:-50% -50%; border-radius:50%; background:#e8dcc0; pointer-events:none; animation:poeira .6s ease-out forwards; }
+  @keyframes poeira { from { opacity:.7; scale:.5; } to { opacity:0; scale:2.2; translate:-50% -140%; } }
+  .marca { position:absolute; width:4cqh; height:1.6cqh; translate:-50% -50%; border:3px solid #ffe79a; border-radius:50%; pointer-events:none; animation:marca .7s ease-out forwards; }
+  @keyframes marca { from { scale:.4; opacity:1; } to { scale:1.6; opacity:0; } }
+  .brilho { position:absolute; width:.7cqh; height:.7cqh; border-radius:50%; background:#fff3b0; box-shadow:0 0 1.2cqh .4cqh #ffe08a; pointer-events:none; z-index:1500;
+    animation:vagalume 8s ease-in-out infinite; }
+  @keyframes vagalume { 0%, 100% { opacity:0; transform:translate(0, 0); } 20% { opacity:.9; } 50% { opacity:.4; transform:translate(3cqh, -4cqh); } 80% { opacity:.9; transform:translate(-2cqh, -1cqh); } }
+  .nuvem { position:absolute; width:70%; height:22%; border-radius:50%; background:radial-gradient(#0b0f2438, transparent 70%); pointer-events:none; z-index:1400; animation:nuvem 46s linear infinite; }
+  .nuvem.n1 { top:18%; } .nuvem.n2 { top:58%; animation-delay:-23s; animation-duration:58s; }
+  @keyframes nuvem { from { left:-75%; } to { left:105%; } }
+  .portao.aberto::before { content:''; position:absolute; inset:-40% -60%; border-radius:50%; background:radial-gradient(#ffe7a0cc, transparent 65%); animation:portal 1.6s ease-in-out infinite alternate; z-index:-1; }
+
+  /* topo: perfil, pedaços da carta e som */
+  .topo { position:fixed; z-index:100; top:max(10px, env(safe-area-inset-top)); left:10px; right:10px; display:flex; align-items:flex-start; gap:8px; pointer-events:none; }
+  .topo > * { pointer-events:auto; }
+  .perfil { display:flex; align-items:center; gap:8px; padding:5px 12px 5px 5px; border-radius:999px; color:var(--parch);
+    background:linear-gradient(180deg, #5a3820f0, #2a180bf0); border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; }
+  .perfil img { width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); }
+  .perfil b { font:800 16px Alegreya, Georgia, serif; color:var(--gold2); }
+  .perfil .lv { font-size:12px; padding:0 7px; }
+  .perfil .bar { width:92px; height:9px; margin-top:4px; }
+  .perfil.ganhou .bar i { animation:brilho .9s ease-out; }
+  .pedacos { list-style:none; margin:4px 0 0 auto; padding:5px 7px; display:flex; gap:4px; border-radius:999px; background:#2a180bcc; border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; }
+  .pedacos li { width:30px; height:30px; border-radius:50%; display:grid; place-items:center; background:#121833; border:1.5px solid #6b5a3a; }
+  .pedacos img { width:24px; height:24px; filter:grayscale(1) brightness(.45); }
+  .pedacos li.tem { border-color:var(--gold); } .pedacos li.tem img { filter:none; }
+  .pedacos li.chegou { animation:pop .5s ease; box-shadow:0 0 16px #ffd36e; }
+  @media (max-width:440px) { .pedacos { position:absolute; left:0; top:64px; margin:0; } .topo .mudo { top:6px !important; } }
+  .topo .mudo { position:absolute; right:0; top:52px; margin:0; width:44px; height:44px; border-radius:50%; background:#2a180bcc; border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; }
+
+  /* controles */
+  .controles { position:fixed; z-index:90; left:0; right:0; bottom:max(14px, env(safe-area-inset-bottom)); pointer-events:none; }
+  .stick { position:absolute; left:18px; bottom:0; width:124px; height:124px; border-radius:50%; pointer-events:auto; touch-action:none;
+    background:radial-gradient(circle, #0b0f2455, #0b0f24aa); border:3px solid #e3ae4a99; box-shadow:0 8px 20px #0007; display:grid; place-items:center; }
+  .stick i { width:56px; height:56px; border-radius:50%; background:radial-gradient(circle at 40% 35%, #ffe9a8, var(--gold) 60%, #9a6a1f); border:3px solid #5a3820; box-shadow:0 4px 10px #0008; transition:transform .08s; }
+  .stick.ativo { border-color:var(--gold); }
+  .acao { position:absolute; right:16px; bottom:30px; pointer-events:auto; max-width:calc(100% - 175px); min-height:54px; padding:12px 18px; border-radius:16px;
+    font:800 16px/1.2 'Alegreya Sans', sans-serif; color:#3e2405; background:linear-gradient(180deg, #ffe79a, var(--gold)); border:3px solid #9a6a1f; box-shadow:0 5px 0 #6b4a12, 0 10px 20px #0007; animation:pop .25s ease; }
+  .acao[hidden] { display:none; }
+  .acao:active { transform:translateY(3px); box-shadow:0 2px 0 #6b4a12; }
+  @media (hover:hover) and (pointer:fine) { .stick { display:none; } .acao { max-width:none; } .acao::after { content:'  (Enter)'; font-weight:600; opacity:.7; } }
+  .aviso { position:fixed; left:50%; bottom:calc(max(14px, env(safe-area-inset-bottom)) + 140px); z-index:95; }
+
+  /* caixa de fala de RPG */
+  .fala { position:fixed; z-index:200; left:0; right:0; bottom:0; padding:12px 12px max(14px, env(safe-area-inset-bottom)); background:linear-gradient(transparent, #0b0f24cc 40%); }
+  .fala[hidden] { display:none; }
+  .fala-caixa { position:relative; max-width:640px; margin:0 auto; display:grid; grid-template-columns:auto 1fr; gap:12px; padding:14px 14px 12px; border-radius:14px; animation:subir .3s ease;
+    background:radial-gradient(ellipse at 50% 30%, #fbf2da, var(--parch) 60%, var(--parch2)); border:3px solid var(--gold); box-shadow:0 0 0 6px var(--wood), 0 18px 40px #000b; }
+  @keyframes subir { from { transform:translateY(30px); opacity:0; } }
+  .fala-rosto { width:76px; height:76px; border-radius:50%; object-fit:cover; object-position:50% 4%; background:radial-gradient(circle at 50% 35%, #34418a, #121833); border:3px solid var(--gold); box-shadow:0 0 0 3px var(--wood); }
+  .fala-nome { display:inline-block; font:800 15px 'Alegreya Sans', sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--ruby); margin-bottom:2px; }
+  .fala-texto { margin:0 0 10px; min-height:3.2em; font:500 18px/1.45 Alegreya, Georgia, serif; color:var(--ink); }
+  .fala-botoes { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+  .fala-botoes.esperando { visibility:hidden; }
+  .fala-botoes button:not(.primary):not(.ghost) { padding:12px 18px; border-radius:12px; border:2px solid #b48a4a; background:linear-gradient(180deg, #fffaf0, #f1dfb4); }
+  .fala-botoes .primary { padding:12px 20px; }
+
+  /* painel dos desafios */
+  .painel { position:fixed; inset:0; z-index:300; overflow-y:auto; overscroll-behavior:contain; background:#0b0f24c4; padding:80px 16px 28px; }
+  .painel[hidden] { display:none; }
+  .painel .card { max-width:540px; margin:0 auto; }
+
+  /* faixa de capítulo, voo do pedaço, clarão e corações */
+  .faixa { position:fixed; z-index:400; left:0; right:0; top:40%; text-align:center; padding:18px 12px; pointer-events:none;
+    background:linear-gradient(90deg, transparent, #2a180bf2 12%, #4a2c17f2 50%, #2a180bf2 88%, transparent); border-block:3px solid var(--gold);
+    animation:faixa 1.5s ease forwards; }
+  .faixa small { display:block; font:800 13px 'Alegreya Sans', sans-serif; letter-spacing:.2em; text-transform:uppercase; color:var(--gold2); }
+  .faixa b { font:700 clamp(22px, 6.5vw, 34px) 'Cinzel Decorative', Georgia, serif; color:#ffe3a1; text-shadow:0 2px 8px #000; }
+  @keyframes faixa { 0% { opacity:0; transform:scaleY(0); } 15%, 80% { opacity:1; transform:none; } 100% { opacity:0; transform:translateY(-20px); } }
+  .voando { position:fixed; z-index:9000; pointer-events:none; filter:drop-shadow(0 0 12px #ffd36e); }
+  .clarao { position:fixed; inset:0; z-index:7000; background:#fff8e1; pointer-events:none; animation:clarao 1.4s ease forwards; }
+  @keyframes clarao { 0% { opacity:0; } 30% { opacity:1; } 100% { opacity:0; } }
+  .final { overflow-x:hidden; }
+  .coracao { position:fixed; bottom:-40px; font-size:26px; pointer-events:none; z-index:6001; animation:subir-coracao 7s ease-in infinite; }
+  @keyframes subir-coracao { 0% { transform:translateY(0) rotate(-10deg); opacity:0; } 10% { opacity:1; } 100% { transform:translateY(-110vh) rotate(15deg); opacity:0; } }
+  .despedida { font:700 clamp(22px, 6vw, 30px) 'Cinzel Decorative', Georgia, serif; color:var(--ruby2); margin:6px 0 18px; }
+  @media (prefers-reduced-motion:reduce) { .mundo .npc img, .brilho, .nuvem { animation:none !important; } }
 </style>
 </head>
 <body>
 <video class="bg" id="bg" src="img/cenario.mp4" poster="img/cenario.webp" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
-<main>
-  <div id="hud" aria-label="Progresso"></div>
-  <div class="mundo"><div class="vila" id="vila" aria-label="Vila: toque no chão para andar"><p class="aviso" id="aviso" role="status" hidden></p></div></div>
-  <div class="dialogo" id="dialogo" hidden><div id="app" aria-live="polite"></div></div>
-</main>
+<div class="jogo" id="jogo" aria-label="Vila: use o controle, as setas ou toque no mapa para andar"><div class="mundo" id="mundo"></div></div>
+<header class="topo" id="topo" aria-label="Progresso"></header>
+<div class="controles"><div class="stick" id="stick" aria-hidden="true"><i></i></div><button class="acao" id="acao" hidden></button></div>
+<p class="aviso" id="aviso" role="status" hidden></p>
+<div class="fala" id="fala" hidden></div>
+<div class="painel" id="painel" hidden><div id="app" aria-live="polite"></div></div>
 <div class="final" id="final" hidden aria-live="polite"></div>
 <script>
 // ================= ROTEIRO (edite à vontade: textos, charadas, carta e vales) =================
@@ -329,44 +427,46 @@ const PROLOGO = {
   titulo: 'A Aventura da Aniversariante',
   texto: `<p>Feliz aniversário, ${ELA}! Mas... cadê o seu escudeiro?</p>
     <p>Ao lado da cama, um bilhete selado:</p>
-    <p class="bilhete">“Minha aventureira, sumi de propósito. Cada morador da vila guarda um pedaço da minha carta. Junte os cinco e suba até o castelo: o seu presente está te esperando lá.<br>— L.”</p>`,
+    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, cada morador da vila guarda um pedaço da minha carta. Junte os cinco e suba até o castelo: o seu presente está te esperando lá.<br>— L.”</p>`,
   botao: 'Partir em busca do escudeiro',
 };
 // a carta que ela monta, um pedaço por morador (a ordem é a ordem dos capítulos)
 const CARTA = [
-  `${ELA}, minha aventureira preferida,`,
-  'cada dia ao seu lado é uma aventura que eu escolheria de novo, mil vezes.',
-  'Agradeço a Deus por mais um ano da sua vida e por me deixar caminhar com você.',
-  'Você é a minha alegria, a minha parceira e o meu lar.',
-  `Feliz aniversário! Agora suba até o castelo: o seu prêmio está te esperando.<br>Com todo o amor, seu escudeiro, ${ELE}.`,
+  `${ELA}, minha aventureira preferida: nada acontece por acaso.`,
+  'Deus colocou você no meu caminho, e cada dia ao seu lado é uma aventura que eu escolheria de novo, mil vezes.',
+  'Agradeço a Ele por mais um ano da sua vida e por me deixar caminhar com você.',
+  'Você é a minha alegria, a minha parceira e o meu lar. Te amo mil milhões!',
+  `Feliz aniversário! Agora suba até o castelo: o seu prêmio está te esperando.<br>Até o infinito e amém! Seu escudeiro, ${ELE}.`,
 ];
 const CAPITULOS = [
   { npc: 0, icone: 'filme', jogo: 'charadas', titulo: 'As Charadas do Bilheteiro',
     fala: `Ora, ora, a aniversariante! O ${ELE} passou por aqui e deixou um pedaço da carta comigo. Mas só entrego para quem acertar as minhas três charadas!` },
   { npc: 1, icone: 'dia', jogo: 'relogio', titulo: 'A Hora Certa',
-    fala: `Tic-tac! O ${ELE} me pediu para guardar isto até a hora certa: a hora da festa! Pare o ponteiro na faixa dourada três vezes.` },
+    fala: `Tic-tac! Nada acontece por acaso, nem na hora errada. O ${ELE} me pediu para guardar isto até a hora da festa: pare o ponteiro na faixa dourada três vezes.` },
   { npc: 2, icone: 'comida', jogo: 'bolo', titulo: 'O Bolo de Aniversário',
     fala: 'Estou fazendo o seu bolo, mas os ingredientes fugiram! Pegue 10 ingredientes de bolo e deixe a cebola, a pimenta e o alho de fora.' },
   { npc: 3, icone: 'presente', jogo: 'memoria', titulo: 'Os Tesouros Embaralhados',
-    fala: 'Psiu! Embaralhei os meus tesouros. Ache todos os pares e o pedaço da carta é seu.' },
+    fala: `Psiu! O ${ELE} disse que te ama mil milhões e pediu segredo. Embaralhei os meus tesouros: ache todos os pares e o pedaço da carta é seu.` },
   { npc: 4, icone: 'festa', jogo: 'sequencia', titulo: 'A Fanfarra do Castelo',
-    fala: 'Tu-tu-ruuu! Para abrir o portão do castelo, repita a sequência das gemas: observe e depois toque na mesma ordem.' },
+    fala: 'Tu-tu-ruuu! Para abrir o portão do castelo, repita a sequência das gemas: observe e depois toque na mesma ordem. Até o infinito e amém!' },
 ];
 const CHARADAS = [
   { p: 'O que é, o que é: quanto mais se tira, maior fica?', o: ['O buraco', 'A sombra', 'A fila do cinema'], c: 0 },
   { p: 'Tem coroa mas não é rei, tem escamas mas não é peixe. O que é?', o: ['O abacaxi', 'A sereia', 'O pavão'], c: 0 },
-  { p: 'O que é que sobe quando a chuva desce?', o: ['O arco-íris', 'O guarda-chuva', 'A pipoca'], c: 1 },
+  { p: 'Complete a frase do casamento: “Te amo...”', o: ['mil milhões', 'até amanhã', 'só um pouquinho'], c: 0 },
 ];
 const FINAL = {
   kicker: 'Você me encontrou!',
   titulo: `Feliz aniversário, ${ELA}!`,
-  premio: 'O prêmio desta aventura... sou eu! E com ele vêm estes vales:',
+  premio: 'O prêmio desta aventura... sou eu! Te amo mil milhões. E com ele vêm estes vales:',
   vales: ['Um dia inteirinho só nosso', 'Um jantar a dois do jeito que você quiser', 'Abraços ilimitados, sem prazo de validade'],
+  despedida: 'Até o infinito e amém!',
 };
 // ===============================================================================================
 
-const app = document.getElementById('app'), hudEl = document.getElementById('hud');
-const dialogo = document.getElementById('dialogo'), vilaEl = document.getElementById('vila'), avisoEl = document.getElementById('aviso');
+const app = document.getElementById('app'), painel = document.getElementById('painel');
+const mundoEl = document.getElementById('mundo'), jogoEl = document.getElementById('jogo'), avisoEl = document.getElementById('aviso');
+const falaEl = document.getElementById('fala'), acaoEl = document.getElementById('acao'), topoEl = document.getElementById('topo');
 const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 const embaralhar = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -396,17 +496,16 @@ function confete() {
   })();
 }
 
-// ---- HUD: retrato, nível e a carta (pedaços encontrados) ----
+// ---- HUD por cima do mapa: retrato, nível, pedaços da carta e som ----
 function hud(brilho) {
-  hudEl.innerHTML = `<div class="hud${brilho ? ' ganhou' : ''}"><div class="portrait"><img src="img/aventureira.webp" alt="Retrato de ${ELA}, a aventureira"></div><div class="who">
-      <div class="row"><b>${ELA}</b><span class="lv">Nível ${lvl()}</span><span class="xpn">${xp} XP</span>
-        <button class="mudo" aria-label="${mudo ? 'Ligar os sons' : 'Desligar os sons'}" aria-pressed="${mudo}">${mudo ? '🔇' : '🔊'}</button></div>
-      <div class="bar" role="progressbar" aria-label="Experiência até o próximo nível" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${xp % 100}"><i style="width:${xp % 100}%"></i></div></div></div>
-    <ol class="map" aria-label="Pedaços da carta">${CAPITULOS.map((c, i) => `<li class="${i < cap ? 'done' : i === cap ? 'on' : 'locked'}"><span><img src="img/${c.icone}.webp" alt=""></span><small>${i < cap ? `Pedaço ${i + 1}` : '?'}</small></li>`).join('')}</ol>`;
-  hudEl.querySelector('.mudo').onclick = () => { mudo = !mudo; try { localStorage.setItem('aventura-mudo', mudo ? '1' : '0'); } catch {} hud(); };
+  topoEl.innerHTML = `<div class="perfil${brilho ? ' ganhou' : ''}"><img src="img/aventureira.webp" alt="Retrato de ${ELA}">
+      <div><b>${ELA}</b> <span class="lv">Nv ${lvl()}</span><div class="bar" role="progressbar" aria-label="Experiência" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${xp % 100}"><i style="width:${xp % 100}%"></i></div></div></div>
+    <ol class="pedacos" aria-label="Pedaços da carta: ${Math.max(0, cap)} de ${CAPITULOS.length}">${CAPITULOS.map((c, i) => `<li class="${i < cap ? 'tem' : ''}" data-i="${i}"><img src="img/${c.icone}.webp" alt=""></li>`).join('')}</ol>
+    <button class="mudo" aria-label="${mudo ? 'Ligar os sons' : 'Desligar os sons'}" aria-pressed="${mudo}">${mudo ? '🔇' : '🔊'}</button>`;
+  topoEl.querySelector('.mudo').onclick = () => { mudo = !mudo; try { localStorage.setItem('aventura-mudo', mudo ? '1' : '0'); } catch {} hud(); };
 }
 
-// ---- a vila ----
+// ================= O MUNDO: mapa maior que a tela, câmera, controles e colisão =================
 const NPCS = [
   { nome: 'Bilheteiro', img: 'npc-bilheteiro', x: 39, y: 80.5 },
   { nome: 'Relojoeira', img: 'npc-relojoeira', x: 61, y: 76.5 },
@@ -415,98 +514,219 @@ const NPCS = [
   { nome: 'Arauto', img: 'npc-arauto', x: 39, y: 20.5 },
 ];
 const PORTAO = { x: 50.5, y: 17 }, INICIO = { x: 50, y: 89.5 };
-const pos = { ...INICIO };
-function montarVila() {
-  vilaEl.insertAdjacentHTML('beforeend', NPCS.map((n, i) => `<button class="npc" data-i="${i}" style="left:${n.x}%;top:${n.y}%;z-index:${Math.round(n.y * 10)}">
+// áreas bloqueadas do mapa, em % (x0, y0, x1, y1): castelo, morros, loja, barraca, tenda, torre e bordas
+const BLOQUEIOS = [[20, 0, 80, 17.5], [0, 0, 18, 22], [82, 0, 100, 21], [53, 23, 91, 38], [69, 38, 87, 46], [17, 33, 43, 45], [13.5, 40.5, 25, 50],
+  [8, 61, 37, 79], [70, 49.5, 90, 80], [0, 0, 8.5, 100], [91.5, 0, 100, 100], [0, 96.5, 100, 100]];
+const livre = (x, y) => !BLOQUEIOS.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+const heroi = { x: INICIO.x, y: INICIO.y, esq: false };
+let W = 0, H = 0, camX = 0, camY = 0, alvo = null, aoChegar = null, perto = null;
+const joy = { x: 0, y: 0 }, teclas = new Set();
+const pausado = () => !painel.hidden || !falaEl.hidden || !document.getElementById('final').hidden;
+
+function medir() {
+  const vw = jogoEl.clientWidth, vh = jogoEl.clientHeight;
+  W = Math.round(Math.min(vw * 1.55, vh * 1.02)); H = Math.round(W * 1376 / 768);
+  mundoEl.style.width = `${W}px`; mundoEl.style.height = `${H}px`;
+  camera(true);
+}
+function montarMundo() {
+  mundoEl.insertAdjacentHTML('beforeend', NPCS.map((n, i) => `<button class="npc" data-i="${i}" style="left:${n.x}%;top:${n.y}%;z-index:${Math.round(n.y * 10)};animation-delay:${-i * .7}s">
       <span class="balao" aria-hidden="true"></span><img src="img/${n.img}.webp" alt=""><small>${n.nome}</small></button>`).join('')
     + `<button class="portao" style="left:${PORTAO.x}%;top:${PORTAO.y}%"><span class="balao" aria-hidden="true"></span></button>`
-    + `<img class="heroi" id="vitoria" src="img/heroi-vitoria.webp" alt="${ELA}, a aventureira">`);
-  vilaEl.querySelectorAll('.npc').forEach(b => b.onclick = e => { e.stopPropagation(); falarCom(+b.dataset.i); });
-  vilaEl.querySelector('.portao').onclick = e => { e.stopPropagation(); irAoPortao(); };
-  vilaEl.onclick = e => {
-    if (!dialogo.hidden) return;
-    const r = vilaEl.getBoundingClientRect();
-    andar(Math.min(92, Math.max(8, (e.clientX - r.left) / r.width * 100)), Math.min(95, Math.max(22, (e.clientY - r.top) / r.height * 100)));
-  };
-  colocar(0);
+    + `<div class="heroi" id="heroi"><span class="sombra"></span><img src="img/heroi-vitoria.webp" alt="${ELA}, a aventureira"></div>`
+    + Array.from({ length: reduz ? 0 : 18 }, () => `<i class="brilho" style="left:${10 + Math.random() * 80}%;top:${14 + Math.random() * 80}%;animation-delay:${-Math.random() * 8}s;animation-duration:${6 + Math.random() * 6}s"></i>`).join('')
+    + (reduz ? '' : '<i class="nuvem n1"></i><i class="nuvem n2"></i>'));
+  mundoEl.querySelectorAll('.npc').forEach(b => b.onclick = e => { e.stopPropagation(); irAte(NPCS[+b.dataset.i], () => falarCom(+b.dataset.i)); });
+  mundoEl.querySelector('.portao').onclick = e => { e.stopPropagation(); irAte({ x: PORTAO.x + 8, y: PORTAO.y + 3 }, irAoPortao); };
+  // toque no chão: anda até lá (o joystick tem prioridade)
+  mundoEl.addEventListener('pointerdown', e => {
+    if (pausado() || e.target.closest('button')) return;
+    const r = mundoEl.getBoundingClientRect();
+    alvo = { x: (e.clientX - r.left) / r.width * 100, y: (e.clientY - r.top) / r.height * 100 }; aoChegar = null;
+    marcarAlvo(alvo);
+  });
+  medir(); addEventListener('resize', medir);
+  requestAnimationFrame(passo);
 }
-function desenharVila() {
-  vilaEl.querySelectorAll('.npc').forEach((b, i) => {
+// chega perto de algo antes de interagir
+function irAte(p, depois) {
+  if (pausado()) return;
+  const lado = p.x > 50 ? -7 : 7;
+  alvo = { x: p.x + lado, y: p.y + 2 }; aoChegar = depois; marcarAlvo(alvo);
+}
+function marcarAlvo(p) {
+  if (reduz) return;
+  const m = document.createElement('i'); m.className = 'marca'; m.style.left = `${p.x}%`; m.style.top = `${p.y}%`;
+  mundoEl.append(m); setTimeout(() => m.remove(), 700);
+}
+let ultimo = 0, ultimaPoeira = 0, travado = 0;
+function passo(t) {
+  const dt = Math.min(.05, (t - (ultimo || t)) / 1000); ultimo = t;
+  let vx = joy.x + (teclas.has('d') - teclas.has('a')), vy = joy.y + (teclas.has('s') - teclas.has('w'));
+  const manual = Math.hypot(vx, vy) > .15;
+  if (manual) { alvo = null; aoChegar = null; }
+  else if (alvo) {
+    const dx = (alvo.x - heroi.x) * W / 100, dy = (alvo.y - heroi.y) * H / 100, d = Math.hypot(dx, dy);
+    if (d < 6) { alvo = null; const f = aoChegar; aoChegar = null; f?.(); vx = vy = 0; } else { vx = dx / d; vy = dy / d; }
+  }
+  const mov = Math.hypot(vx, vy);
+  const el = document.getElementById('heroi');
+  if (mov > .15 && !pausado()) {
+    if (mov > 1) { vx /= mov; vy /= mov; }
+    const vel = W * .3 * dt;  // ~30% da largura do mapa por segundo
+    const nx = heroi.x + vx * vel / W * 100, ny = heroi.y + vy * vel / H * 100;
+    const antes = [heroi.x, heroi.y];
+    if (livre(nx, ny)) { heroi.x = nx; heroi.y = ny; }
+    else if (livre(nx, heroi.y)) heroi.x = nx;   // desliza pela parede
+    else if (livre(heroi.x, ny)) heroi.y = ny;
+    const andou = heroi.x !== antes[0] || heroi.y !== antes[1];
+    if (Math.abs(vx) > .2) heroi.esq = vx < 0;
+    el.classList.toggle('andando', andou);
+    if (!andou && alvo && ++travado > 20) { alvo = null; aoChegar = null; travado = 0; }   // bateu numa parede: desiste
+    if (andou) { travado = 0; if (t - ultimaPoeira > 170 && !reduz) { ultimaPoeira = t; poeira(); } }
+  } else el.classList.remove('andando');
+  el.classList.toggle('esquerda', heroi.esq);
+  el.style.left = `${heroi.x}%`; el.style.top = `${heroi.y}%`; el.style.zIndex = Math.round(heroi.y * 10) + 1;
+  camera(false);
+  vizinho();
+  requestAnimationFrame(passo);
+}
+function poeira() {
+  const p = document.createElement('i'); p.className = 'poeira'; p.style.left = `${heroi.x}%`; p.style.top = `${heroi.y}%`;
+  mundoEl.append(p); setTimeout(() => p.remove(), 600);
+}
+function camera(direto) {
+  const vw = jogoEl.clientWidth, vh = jogoEl.clientHeight;
+  const hx = heroi.x * W / 100, hy = heroi.y * H / 100 - vh * .06;
+  const tx = W <= vw ? (vw - W) / 2 : -Math.min(W - vw, Math.max(0, hx - vw / 2));
+  const ty = H <= vh ? (vh - H) / 2 : -Math.min(H - vh, Math.max(0, hy - vh / 2));
+  const k = direto || reduz ? 1 : .14;
+  camX += (tx - camX) * k; camY += (ty - camY) * k;
+  mundoEl.style.transform = `translate3d(${camX.toFixed(1)}px, ${camY.toFixed(1)}px, 0)`;
+}
+// quem está perto? mostra o botão de ação
+function vizinho() {
+  if (pausado()) { acaoEl.hidden = true; return; }
+  const dist = p => Math.hypot((p.x - heroi.x) * W / 100, (p.y - heroi.y) * H / 100);
+  let achou = null;
+  NPCS.forEach((n, i) => { if (dist(n) < W * .13 && (!achou || dist(n) < achou.d)) achou = { tipo: 'npc', i, d: dist(n) }; });
+  if (!achou && dist({ x: PORTAO.x, y: PORTAO.y + 3 }) < W * .16) achou = { tipo: 'portao' };
+  const chave = achou ? achou.tipo + (achou.i ?? '') : '';
+  if (chave === (perto?.chave ?? '')) return;
+  perto = achou ? { ...achou, chave } : null;
+  mundoEl.querySelectorAll('.npc').forEach((b, i) => b.classList.toggle('perto', perto?.tipo === 'npc' && perto.i === i));
+  acaoEl.hidden = !perto;
+  if (perto) acaoEl.innerHTML = perto.tipo === 'npc' ? `💬 Falar com ${artigo(NPCS[perto.i].nome)} ${NPCS[perto.i].nome}` : (cap >= CAPITULOS.length ? '🏰 Entrar no castelo' : '🔒 Portão trancado');
+}
+function agir() { if (!perto || pausado()) return; perto.tipo === 'npc' ? falarCom(perto.i) : irAoPortao(); }
+acaoEl.onclick = agir;
+
+// joystick: arrastar a partir da base
+(() => {
+  const base = document.getElementById('stick'), bola = base.querySelector('i');
+  let id = null;
+  const mover = e => {
+    const r = base.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, raio = r.width / 2;
+    let dx = (e.clientX - cx) / raio, dy = (e.clientY - cy) / raio; const d = Math.hypot(dx, dy);
+    if (d > 1) { dx /= d; dy /= d; }
+    joy.x = dx; joy.y = dy; bola.style.transform = `translate(${dx * raio * .55}px, ${dy * raio * .55}px)`;
+  };
+  base.addEventListener('pointerdown', e => { id = e.pointerId; base.setPointerCapture(id); base.classList.add('ativo'); mover(e); e.preventDefault(); });
+  base.addEventListener('pointermove', e => { if (e.pointerId === id) mover(e); });
+  const soltar = e => { if (e.pointerId !== id) return; id = null; joy.x = joy.y = 0; bola.style.transform = ''; base.classList.remove('ativo'); };
+  base.addEventListener('pointerup', soltar); base.addEventListener('pointercancel', soltar);
+})();
+// teclado: setas/WASD andam; Enter/Espaço/E falam; Esc fecha
+const MAPA_TECLAS = { arrowup: 'w', w: 'w', arrowdown: 's', s: 's', arrowleft: 'a', a: 'a', arrowright: 'd', d: 'd' };
+addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if (e.key === 'Escape') { if (!painel.hidden) (aoFechar || fecharPainel)(); else if (!falaEl.hidden) fecharFala(); return; }
+  if (pausado() || e.target.closest?.('input, textarea')) return;
+  if (MAPA_TECLAS[k]) { teclas.add(MAPA_TECLAS[k]); e.preventDefault(); }
+  else if ((k === 'enter' || k === ' ' || k === 'e') && perto && !e.target.closest?.('button')) { agir(); e.preventDefault(); }
+});
+addEventListener('keyup', e => { const k = MAPA_TECLAS[e.key.toLowerCase()]; if (k) teclas.delete(k); });
+addEventListener('blur', () => teclas.clear());
+
+function desenharMundo() {
+  mundoEl.querySelectorAll('.npc').forEach((b, i) => {
     const estado = i < cap ? 'feito' : i === cap ? 'agora' : 'depois';
-    b.className = `npc ${estado}`;
+    b.classList.remove('feito', 'agora', 'depois'); b.classList.add(estado);
     b.setAttribute('aria-label', `${NPCS[i].nome}: ${estado === 'feito' ? 'pedaço da carta entregue' : estado === 'agora' ? 'tem um desafio para você' : 'ainda não é a vez'}`);
   });
-  const p = vilaEl.querySelector('.portao'), aberto = cap >= CAPITULOS.length;
+  const p = mundoEl.querySelector('.portao'), aberto = cap >= CAPITULOS.length;
   p.classList.toggle('aberto', aberto);
   p.setAttribute('aria-label', aberto ? 'Portão do castelo: aberto, entrar' : 'Portão do castelo: trancado');
-}
-function colocar(dur) {
-  const el = document.getElementById('vitoria');
-  el.style.transitionDuration = `${dur}s`; el.style.left = `${pos.x}%`; el.style.top = `${pos.y}%`; el.style.zIndex = Math.round(pos.y * 10) + 1;
-}
-let chegada = null;
-function andar(x, y, depois) {
-  clearTimeout(chegada);
-  const r = vilaEl.getBoundingClientRect(), el = document.getElementById('vitoria');
-  const dur = reduz ? 0 : Math.min(2.2, Math.hypot((x - pos.x) * r.width, (y - pos.y) * r.height) / 100 / 170);
-  el.classList.toggle('esquerda', x < pos.x);
-  if (dur) el.classList.add('andando');
-  pos.x = Math.min(95, Math.max(5, x)); pos.y = Math.min(97, y);
-  colocar(dur);
-  chegada = setTimeout(() => { el.classList.remove('andando'); depois?.(); }, dur * 1000 + (dur ? 220 : 0));
+  perto = null;
 }
 function aviso(txt) {
   avisoEl.textContent = txt; avisoEl.hidden = false;
-  clearTimeout(aviso.t); aviso.t = setTimeout(() => { avisoEl.hidden = true; }, 3400);
-}
-function falarCom(i) {
-  const n = NPCS[i];
-  andar(n.x + (n.x > 50 ? -9 : 9), n.y + 1.5, () => {
-    if (cap < 0) return;
-    if (i < cap) return aviso(`${n.nome}: "Já te entreguei o pedaço ${i + 1}! Corre, que o ${ELE} está esperando."`);
-    if (i > cap) return aviso(`${n.nome}: "Ainda não! Primeiro fale com ${artigo(NPCS[cap].nome)} ${NPCS[cap].nome}."`);
-    abrirCapitulo();
-  });
+  clearTimeout(aviso.t); aviso.t = setTimeout(() => { avisoEl.hidden = true; }, 3600);
 }
 const artigo = nome => /a$/.test(nome) ? 'a' : 'o';
-function irAoPortao() {
-  andar(PORTAO.x + 10, PORTAO.y + 7, () => {
-    if (cap < CAPITULOS.length) return aviso(`O portão está trancado. Faltam ${CAPITULOS.length - Math.max(cap, 0)} pedaços da carta.`);
-    final();
-  });
-}
 
-// ---- diálogo ----
+// ================= FALAS (caixa de diálogo de RPG, letra por letra) =================
+let digitando = null;
+function falar(i, texto, botoes) {
+  const n = NPCS[i];
+  falaEl.innerHTML = `<div class="fala-caixa" role="dialog" aria-modal="true" aria-label="${n.nome}">
+      <img class="fala-rosto" src="img/${n.img}.webp" alt=""><div class="fala-corpo"><b class="fala-nome">${n.nome}</b>
+      <p class="fala-texto" aria-live="polite"></p><div class="fala-botoes">${botoes.map(([t, cls], k) => `<button class="${cls || ''}" data-k="${k}">${t}</button>`).join('')}</div></div></div>`;
+  falaEl.hidden = false;
+  const p = falaEl.querySelector('.fala-texto'), bts = falaEl.querySelector('.fala-botoes');
+  clearInterval(digitando);
+  if (reduz) p.textContent = texto;
+  else {
+    let k = 0; bts.classList.add('esperando');
+    digitando = setInterval(() => { p.textContent = texto.slice(0, ++k); if (k >= texto.length) { clearInterval(digitando); bts.classList.remove('esperando'); } }, 22);
+    p.onclick = () => { clearInterval(digitando); p.textContent = texto; bts.classList.remove('esperando'); };
+  }
+  return new Promise(res => falaEl.querySelectorAll('.fala-botoes button').forEach(b => b.onclick = () => { fecharFala(); res(+b.dataset.k); }));
+}
+function fecharFala() { clearInterval(digitando); falaEl.hidden = true; }
+
+// ================= PAINEL (desafios, prólogo, pedaços) =================
 let aoFechar = null;
-function fechar() { dialogo.hidden = true; pararJogo(); hud(); desenharVila(); }
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dialogo.hidden) (aoFechar || fechar)(); });
-const rostoNpc = i => `<div class="crest"><img class="face npc-rosto" src="img/${NPCS[i].img}.webp" alt="${NPCS[i].nome}"></div>`;
+function fecharPainel() { painel.hidden = true; pararJogo(); hud(); desenharMundo(); }
 const iconeCap = i => `<div class="crest"><img src="img/${CAPITULOS[i].icone}.webp" alt=""></div>`;
 function view(html, topo, brilho) {
-  pararJogo(); aoFechar = fechar;
+  pararJogo(); aoFechar = fecharPainel;
   app.innerHTML = `<div class="card" role="dialog" aria-modal="true">${topo}<button class="fechar" aria-label="Voltar para a vila">✕</button>${html}</div>`;
-  app.querySelector('.fechar').onclick = () => (aoFechar || fechar)();
-  dialogo.hidden = false; hud(brilho); desenharVila(); dialogo.scrollTop = 0;
+  app.querySelector('.fechar').onclick = () => (aoFechar || fecharPainel)();
+  painel.hidden = false; hud(brilho); painel.scrollTop = 0;
   app.querySelector('.card button:not(.fechar)')?.focus({ preventScroll: true });
 }
 const on = (sel, fn) => app.querySelectorAll(sel).forEach(b => b.onclick = () => fn(b.dataset.v, b));
 
 function start() {
   const s = carregar();
-  if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; hud(); desenharVila();
+  hud(); desenharMundo();
+  if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; hud(); desenharMundo();
     return aviso(cap >= CAPITULOS.length ? 'A carta está completa! Suba até o castelo.' : `Bem-vinda de volta! Fale com ${artigo(NPCS[cap].nome)} ${NPCS[cap].nome}.`); }
-  hud(); desenharVila();
   view(`<p class="kicker">${PROLOGO.kicker}</p><h1>${PROLOGO.titulo}</h1>${PROLOGO.texto}
-    <p class="dica-jogo">Toque no chão para andar e nos moradores para conversar. Quem tem um desafio pra você mostra um <b>!</b> dourado.</p>
+    <div class="dica-jogo"><b>Como jogar:</b> use o controle no canto da tela (ou as setas do teclado) para andar, ou toque no mapa. Chegou perto de alguém, toque em <b>Falar</b>. Quem tem um desafio pra você mostra um <b>!</b> dourado.</div>
     <button class="primary">${PROLOGO.botao}</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt="${ELA}"></div>`);
-  const comecar = () => { cap = 0; xp = 0; salvar(); fechar(); aviso(`Comece pelo ${NPCS[0].nome}, na tenda do cinema!`); };
+  const comecar = () => { cap = 0; xp = 0; salvar(); fecharPainel(); aviso(`Comece pelo ${NPCS[0].nome}, na tenda do cinema, aqui pertinho!`); };
   on('.primary', comecar); aoFechar = comecar;
 }
-function abrirCapitulo() {
-  const c = CAPITULOS[cap], n = NPCS[c.npc];
-  view(`<p class="kicker">Capítulo ${cap + 1} de ${CAPITULOS.length}</p><h2 class="title">${c.titulo}</h2><p class="fala"><b>${n.nome}:</b> “${c.fala}”</p>
-    <button class="primary">Aceitar o desafio</button>`, rostoNpc(c.npc));
-  on('.primary', () => JOGOS[c.jogo](capituloCompleto));
+async function falarCom(i) {
+  if (pausado() || cap < 0) return;
+  const n = NPCS[i];
+  if (i < cap) return falar(i, `Obrigado, ${ELA}! O pedaço ${i + 1} já está com você. Corre, que o ${ELE} está esperando!`, [['Até mais!', 'primary']]);
+  if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${artigo(NPCS[cap].nome)} ${NPCS[cap].nome}.`, [['Entendi', 'primary']]);
+  const c = CAPITULOS[cap];
+  const k = await falar(i, c.fala, [['Aceitar o desafio', 'primary'], ['Agora não', 'ghost']]);
+  if (k !== 0) return;
+  await faixaCapitulo(cap);
+  JOGOS[c.jogo](capituloCompleto);
+}
+function faixaCapitulo(i) {
+  return new Promise(res => {
+    if (reduz) return res();
+    const f = document.createElement('div'); f.className = 'faixa';
+    f.innerHTML = `<small>Capítulo ${i + 1} de ${CAPITULOS.length}</small><b>${CAPITULOS[i].titulo}</b>`;
+    document.body.append(f); setTimeout(() => { f.remove(); res(); }, 1500);
+  });
 }
 function capituloCompleto() {
   const i = cap, antes = lvl();
@@ -514,9 +734,23 @@ function capituloCompleto() {
   const ultimo = cap >= CAPITULOS.length;
   view(`<p class="kicker">Pedaço ${i + 1} de ${CAPITULOS.length} encontrado!</p><div class="reward"><img src="img/${CAPITULOS[i].icone}.webp" alt=""></div>
     <p class="pedaco">“${CARTA[i]}”</p><div class="xp">+100 XP</div>${lvl() > antes ? `<div class="xp">⬆ Nível ${lvl()}!</div>` : ''}
-    <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Voltar à vila'}</button>`, iconeCap(i), true);
-  const voltar = () => { fechar(); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${NPCS[cap].nome}.`); };
+    <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Guardar na mochila'}</button>`, iconeCap(i), true);
+  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${NPCS[cap].nome}.`); };
   on('.primary', voltar); aoFechar = voltar;
+}
+// o ícone do pedaço voa até o lugar dele no topo
+function voar(i) {
+  const dest = topoEl.querySelector(`.pedacos li[data-i="${i}"]`); if (!dest || reduz) return;
+  const r = dest.getBoundingClientRect(), img = document.createElement('img');
+  img.src = `img/${CAPITULOS[i].icone}.webp`; img.className = 'voando'; img.alt = ''; document.body.append(img);
+  img.animate([{ left: `${innerWidth / 2 - 50}px`, top: `${innerHeight / 2 - 50}px`, width: '100px', height: '100px', opacity: 1 },
+    { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`, opacity: .9 }], { duration: 750, easing: 'cubic-bezier(.5,0,.2,1)' })
+    .onfinish = () => { img.remove(); dest.classList.add('chegou'); setTimeout(() => dest.classList.remove('chegou'), 600); };
+}
+function irAoPortao() {
+  if (pausado()) return;
+  if (cap < CAPITULOS.length) return aviso(`O portão está trancado. Faltam ${CAPITULOS.length - Math.max(cap, 0)} pedaços da carta.`);
+  final();
 }
 
 // ================= MINIJOGOS =================
@@ -645,28 +879,35 @@ const JOGOS = {
   },
 };
 
+
 // ================= FINAL: o castelo e o prêmio =================
 function final() {
-  pararJogo(); dialogo.hidden = true;
+  pararJogo(); fecharFala(); painel.hidden = true;
   const f = document.getElementById('final');
-  f.innerHTML = `<div class="final-cena"><img src="img/final.webp" alt="${ELE}, o escudeiro, esperando no salão do castelo com flores e um bolo de aniversário">
-      <div class="final-titulo"><p class="kicker">${FINAL.kicker}</p><h1>${FINAL.titulo}</h1></div></div>
-    <div class="card final-carta">
-      <div class="carta"><h2 class="title">A carta do escudeiro</h2>${CARTA.map(t => `<p class="abre">${t}</p>`).join('')}<div class="selo" aria-hidden="true">♥</div></div>
-      <p class="premio">${FINAL.premio}</p>
-      <ul class="vales">${FINAL.vales.map(v => `<li><span aria-hidden="true">🎟️</span> ${v}</li>`).join('')}</ul>
-      <div class="actions"><button class="primary" id="vila-de-novo">Voltar à vila</button><button class="ghost" id="recomecar">Jogar a aventura de novo</button></div>
-    </div>`;
-  f.hidden = false; f.scrollTop = 0; document.body.classList.add('no-final');
-  fanfarra(); confete(); depois(2200, confete);
-  f.querySelector('#vila-de-novo').onclick = () => { f.hidden = true; document.body.classList.remove('no-final'); };
-  f.querySelector('#recomecar').onclick = () => { try { localStorage.removeItem(CHAVE); } catch {} f.hidden = true; document.body.classList.remove('no-final'); cap = -1; xp = 0; Object.assign(pos, INICIO); colocar(0); start(); };
-  f.querySelector('#vila-de-novo').focus({ preventScroll: true });
+  const clarao = document.createElement('div'); clarao.className = 'clarao'; document.body.append(clarao);
+  setTimeout(() => {
+    f.innerHTML = `<div class="final-cena"><img src="img/final.webp" alt="${ELE}, o escudeiro, esperando no salão do castelo com flores e um bolo de aniversário">
+        <div class="final-titulo"><p class="kicker">${FINAL.kicker}</p><h1>${FINAL.titulo}</h1></div></div>
+      <div class="card final-carta">
+        <div class="carta"><h2 class="title">A carta do escudeiro</h2>${CARTA.map(t => `<p class="abre">${t}</p>`).join('')}<div class="selo" aria-hidden="true">♥</div></div>
+        <p class="premio">${FINAL.premio}</p>
+        <ul class="vales">${FINAL.vales.map(v => `<li><span aria-hidden="true">🎟️</span> ${v}</li>`).join('')}</ul>
+        <p class="despedida">${FINAL.despedida}</p>
+        <div class="actions"><button class="primary" id="vila-de-novo">Voltar à vila</button><button class="ghost" id="recomecar">Jogar a aventura de novo</button></div>
+      </div>
+      ${reduz ? '' : Array.from({ length: 16 }, () => `<i class="coracao" style="left:${Math.random() * 100}%;animation-delay:${Math.random() * 6}s;animation-duration:${5 + Math.random() * 4}s">${Math.random() < .5 ? '❤️' : '💛'}</i>`).join('')}`;
+    f.hidden = false; f.scrollTop = 0;
+    fanfarra(); confete(); setTimeout(confete, 2200);
+    f.querySelector('#vila-de-novo').onclick = () => { f.hidden = true; };
+    f.querySelector('#recomecar').onclick = () => { try { localStorage.removeItem(CHAVE); } catch {} f.hidden = true; cap = -1; xp = 0; Object.assign(heroi, INICIO); start(); };
+    f.querySelector('#vila-de-novo').focus({ preventScroll: true });
+  }, reduz ? 0 : 450);
+  setTimeout(() => clarao.remove(), 1400);
 }
 
 const bg = document.getElementById('bg');
 if (reduz || navigator.connection?.saveData) { bg.removeAttribute('autoplay'); bg.preload = 'none'; bg.pause(); }
-montarVila();
+montarMundo();
 start();
 </script>
 </body>

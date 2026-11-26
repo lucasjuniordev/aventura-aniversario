@@ -8,20 +8,22 @@ Nasceu como cópia da [Jornada da Aniversariante](https://github.com/lucasjunior
 
 ## Roteiro
 
-Tudo o que aparece na história fica no topo do `<script>` de `public/index.html`, no bloco **ROTEIRO**: prólogo, falas dos moradores, charadas, palavras do poeta, versículos, os 8 pedaços da carta e o final (título, prêmio e vales). Para mudar um texto, é só editar ali.
+Tudo o que aparece na história fica no topo do `<script>` de `public/index.html`, no bloco **ROTEIRO**: prólogo, falas dos moradores, charadas, palavras, versículos, os 8 pedaços da carta e o final (título, prêmio e vales). Para mudar um texto, é só editar ali.
 
-| Capítulo | Morador | Desafio |
-| --- | --- | --- |
-| 1 | Seu Bento, o Bilheteiro | 3 charadas de múltipla escolha |
-| 2 | Dona Cida, a Relojoeira | parar o ponteiro na faixa dourada 3 vezes (fica mais rápido) |
-| 3 | Dom Otávio, o Poeta | desembaralhar 3 palavras do casamento (ACASO, MILHÕES, INFINITO) |
-| 4 | Lia, a Jardineira | quebra-cabeça 3x3 com o quadro do casal no jardim (trocar peças) |
-| 5 | Tia Rosa, a Cozinheira | pegar 10 ingredientes de bolo em 40 s, sem cebola, pimenta ou alho |
-| 6 | Tomé, o Mercador | jogo da memória com 6 pares |
-| 7 | Pastor Lucas, pastor metodista ("Graça e Paz!") | completar 3 versículos de 1 Coríntios 13 |
-| 8 | Gaspar, o Arauto | repetir a sequência das gemas (3 rodadas) |
+Os moradores são a família, cada um lembrando o que fez no casamento (01/08/2026): o caminho da vila até o castelo é como o caminho até o altar.
 
-Pela vila também passeiam o Theo, o Snow (cachorro) e a Paçoca (gata): toque neles para ver o que dizem. A ordem dos moradores na lista `NPCS` é a ordem dos capítulos. Theo, Snow e o Pastor Lucas são pessoas (e cachorro) de verdade, desenhados no Google Flow a partir de fotos.
+| Capítulo | Quem | No casamento | Desafio |
+| --- | --- | --- | --- |
+| 1 | Seu Diego, pai da noiva | entrou com ela | 3 charadas (uma clássica e duas do casamento) |
+| 2 | Dona Fran, mãe da noiva | entrou com ela (A Thousand Years) | parar o ponteiro na faixa dourada 3 vezes |
+| 3 | Randerson, irmão e padrinho | padrinhos entraram com Amigo, Estou Aqui | desembaralhar ACASO, MILHÕES e INFINITO |
+| 4 | Radmila, irmã e madrinha (mãe do Theo) | madrinha | quebra-cabeça 3x3 com o quadro do casal |
+| 5 | Henrique, pajem da placa | placa "lá vem a noiva" e alianças com o Theo | jogo da memória com 6 pares |
+| 6 | Pastora Luzia, pastora e cantora | celebrou e cantou Bondade de Deus | repetir a melodia das gemas (3 rodadas) |
+| 7 | Pastor Lucas, pastor metodista ("Graça e Paz!") | celebrou | completar 3 versículos de 1 Coríntios 13 |
+| 8 | Cayo, o padrinho mais top (arauto do castelo) | padrinho | pegar 10 ingredientes de bolo em 40 s |
+
+Pela vila também passeiam o Theo, o Snow (cachorro) e a Paçoca (gata): toque neles para ver o que dizem. A ordem da lista `NPCS` é a ordem dos capítulos. Theo, Snow e o Pastor Lucas já têm desenho feito no Google Flow a partir de fotos; os outros ainda usam os desenhos antigos dos moradores até chegarem as fotos. Se a personagem não consegue ir reto até alguém (uma construção no meio), ela passa antes por pontos da estrada de pedras (`ESTRADA`).
 
 O progresso fica salvo no navegador dela. Artes: Google Flow (mapa, personagens, retratos e a cena final). Som: `public/sons/fanfarra.mp3` ("Success Fanfare Trumpets", freesound_community no Pixabay).
 

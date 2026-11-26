@@ -467,60 +467,61 @@ const PROLOGO = {
   titulo: 'A Aventura da Aniversariante',
   texto: `<p>Feliz aniversário, ${ELA}! Mas... cadê o seu escudeiro?</p>
     <p>Ao lado da cama, um bilhete selado:</p>
-    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, cada morador da vila guarda um pedaço da minha carta. Junte os oito e suba até o castelo: o seu presente está te esperando lá.<br>— Lucas Junior”</p>`,
+    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, quem caminhou com a gente até o altar no dia 01/08 está espalhado pela vila, e cada um guarda um pedaço da minha carta. Junte os oito e suba até o castelo: o seu presente está te esperando lá.<br>— Lucas Junior”</p>`,
   botao: 'Partir em busca do escudeiro',
 };
 // a carta que ela monta, um pedaço por morador (a ordem é a ordem dos capítulos)
 const CARTA = [
   `${ELA}, minha aventureira preferida: nada acontece por acaso.`,
   'Deus colocou você no meu caminho, e cada dia ao seu lado é uma aventura que eu escolheria de novo, mil vezes.',
-  'Se eu fosse escrever um livro, você seria a melhor parte de cada capítulo.',
+  'E olha quanta gente te ama: cada pessoa desta vila caminhou com a gente até o altar, e continua caminhando.',
   'Você deixa tudo mais bonito, como um jardim depois da chuva.',
   'Agradeço a Ele por mais um ano da sua vida e por me deixar caminhar com você.',
   'Você é a minha alegria, a minha parceira e o meu lar. Te amo mil milhões!',
   'O amor é paciente, o amor é bondoso, e é assim que eu quero te amar todos os dias.',
   `Feliz aniversário! Agora suba até o castelo: o seu prêmio está te esperando.<br>Até o infinito e amém! Seu escudeiro, ${ELE}.`,
 ];
-// um capítulo por morador, na ordem do caminho (de baixo do mapa até o castelo)
+// um capítulo por pessoa da família, na ordem do caminho (de baixo do mapa até o castelo), como no casamento
 const CAPITULOS = [
-  { icone: 'filme', jogo: 'charadas', titulo: 'As Charadas do Bilheteiro',
-    fala: `Ora, ora, a aniversariante! O ${ELE} passou por aqui e deixou um pedaço da carta comigo. Mas só entrego para quem acertar as minhas três charadas!` },
+  { icone: 'escudo', jogo: 'charadas', titulo: 'As Charadas do Pai da Noiva',
+    fala: `Minha filha! No dia 01/08 eu e a sua mãe te levamos até o altar. Hoje o ${ELE} me pediu para te levar só até o primeiro pedaço da carta. Mas antes, três charadas do seu pai!` },
   { icone: 'dia', jogo: 'relogio', titulo: 'A Hora Certa',
-    fala: `Tic-tac! Nada acontece por acaso, nem na hora errada. O ${ELE} me pediu para guardar isto até a hora da festa: pare o ponteiro na faixa dourada três vezes.` },
-  { icone: 'poeta', jogo: 'palavras', titulo: 'As Palavras do Poeta',
-    fala: `Ah, a aniversariante! O ${ELE} me pediu ajuda para escrever a carta, mas o vento embaralhou as letras das palavras mais importantes. Desembaralhe três palavras e o pedaço é seu.` },
-  { icone: 'flor', jogo: 'quebracabeca', titulo: 'O Quadro do Jardim',
-    fala: `Bom dia, ${ELA}! O ${ELE} encomendou um quadro de vocês dois no meu jardim, mas as peças se misturaram. Monte o quadro de novo e eu te entrego o pedaço da carta.` },
-  { icone: 'comida', jogo: 'bolo', titulo: 'O Bolo de Aniversário',
-    fala: 'Estou fazendo o seu bolo, mas os ingredientes fugiram! Pegue 10 ingredientes de bolo e deixe a cebola, a pimenta e o alho de fora.' },
-  { icone: 'presente', jogo: 'memoria', titulo: 'Os Tesouros Embaralhados',
-    fala: `Psiu! O ${ELE} disse que te ama mil milhões e pediu segredo. Embaralhei os meus tesouros: ache todos os pares e o pedaço da carta é seu.` },
+    fala: `Filha, lembra? Convite às 16h, cerimônia às 16h30, e você entrou com a gente ao som de A Thousand Years. Tudo na hora certa, porque nada acontece por acaso. Pare o ponteiro na faixa dourada três vezes e o pedaço da carta é seu.` },
+  { icone: 'poeta', jogo: 'palavras', titulo: 'As Palavras do Padrinho',
+    fala: `E aí, irmã! Lembra que os padrinhos entraram ao som de Amigo, Estou Aqui, do Toy Story? Pois é: estou aqui de novo. O ${ELE} embaralhou as palavras do casamento. Desembaralhe as três e o pedaço é seu.` },
+  { icone: 'flor', jogo: 'quebracabeca', titulo: 'O Quadro da Madrinha',
+    fala: `Irmã! Madrinha que é madrinha guarda tudo, e eu guardei este quadro de vocês dois no jardim. Só que o Theo brincou com ele e as peças se misturaram! Monte de novo e eu te entrego o pedaço da carta.` },
+  { icone: 'presente', jogo: 'memoria', titulo: 'Os Pares de Alianças',
+    fala: `Lá vem a noiva! E não é o Flamengo, hein? 😄 No casamento eu levei a placa e, junto com o Theo, as alianças. Aliança anda sempre em par: ache todos os pares e o pedaço da carta é seu.` },
+  { icone: 'festa', jogo: 'sequencia', titulo: 'A Canção da Pastora',
+    fala: `Graça e Paz, filha! No casamento eu celebrei junto com o Pastor Lucas e cantei Bondade de Deus com a banda. Agora é a sua vez de fazer música: observe a melodia das gemas e toque na mesma ordem.` },
   { icone: 'biblia', jogo: 'versiculos', titulo: 'O Amor de 1 Coríntios 13',
-    fala: `Graça e Paz, ${ELA}! O ${ELE} deixou um pedaço comigo e pediu que eu lembrasse você do amor de 1 Coríntios 13. Complete os versículos e ele é seu.` },
-  { icone: 'festa', jogo: 'sequencia', titulo: 'A Fanfarra do Castelo',
-    fala: 'Tu-tu-ruuu! Para abrir o portão do castelo, repita a sequência das gemas: observe e depois toque na mesma ordem. Até o infinito e amém!' },
+    fala: `Graça e Paz, ${ELA}! A Pastora Luzia e eu celebramos o casamento de vocês, e o amor de 1 Coríntios 13 é o fundamento dessa aliança. O ${ELE} deixou o penúltimo pedaço comigo: complete os versículos.` },
+  { icone: 'comida', jogo: 'bolo', titulo: 'O Banquete do Padrinho Mais Top',
+    fala: `Chegou a aniversariante! Aqui é o Cayo, o padrinho mais top do casamento e arauto oficial do castelo. Antes de eu anunciar a sua chegada, o bolo da festa precisa ficar pronto: pegue 10 ingredientes e deixe a cebola, a pimenta e o alho de fora.` },
 ];
-// Poeta: palavras embaralhadas (dica e resposta)
+// Randerson (padrinho): palavras do casamento embaralhadas (dica e resposta)
 const PALAVRAS = [
   { dica: 'Nada acontece por...', p: 'ACASO' },
   { dica: 'Te amo mil...', p: 'MILHÕES' },
   { dica: 'Até o ... e amém!', p: 'INFINITO' },
 ];
-// Pastor: versículos de 1 Coríntios 13 (NVI)
+// Pastor Lucas: versículos de 1 Coríntios 13 (NVI)
 const VERSICULOS = [
   { p: '“O amor é paciente, o amor é...” (1 Coríntios 13:4)', o: ['bondoso', 'apressado', 'orgulhoso'], c: 0 },
   { p: '“Tudo sofre, tudo crê, tudo espera, tudo...” (1 Coríntios 13:7)', o: ['suporta', 'esquece', 'reclama'], c: 0 },
   { p: '“Assim, permanecem agora estes três: a fé, a esperança e o amor. O maior deles, porém, é...” (1 Coríntios 13:13)', o: ['o amor', 'a fé', 'a esperança'], c: 0 },
 ];
+// Seu Diego (pai): uma charada clássica e duas do casamento
 const CHARADAS = [
   { p: 'O que é, o que é: quanto mais se tira, maior fica?', o: ['O buraco', 'A sombra', 'A fila do cinema'], c: 0 },
-  { p: 'Tem coroa mas não é rei, tem escamas mas não é peixe. O que é?', o: ['O abacaxi', 'A sereia', 'O pavão'], c: 0 },
+  { p: 'No casamento, qual música tocou quando você entrou comigo e com a sua mãe?', o: ['A Thousand Years', 'From This Moment On', 'Bondade de Deus'], c: 0 },
   { p: 'Complete a frase do casamento: “Te amo...”', o: ['mil milhões', 'até amanhã', 'só um pouquinho'], c: 0 },
 ];
 const FINAL = {
   kicker: 'Você me encontrou!',
   titulo: `Feliz aniversário, ${ELA}!`,
-  premio: 'O prêmio desta aventura... sou eu! Te amo mil milhões. E com ele vêm estes vales:',
+  premio: 'Como no dia 01/08, você atravessou o caminho e me encontrou no fim dele. O prêmio desta aventura... sou eu! Te amo mil milhões. E com ele vêm estes vales:',
   vales: ['Um jantar com todos que amamos, a família reunida', 'Um dia inteiro juntinhos na segunda, dia 30: nós dois vendo filmes até a hora de sair com todos que amamos', 'Beijinhos e abraços ilimitados, sem prazo de validade'],
   despedida: 'Até o infinito e amém!',
 };
@@ -570,20 +571,20 @@ function hud(brilho) {
 // ================= O MUNDO: mapa maior que a tela, câmera, controles e colisão =================
 // moradores na ordem dos capítulos (NPCS[i] dá o capítulo i); a = artigo ("falar com o/a ...")
 const NPCS = [
-  { nome: 'Seu Bento', cargo: 'Bilheteiro', a: 'o', img: 'npc-bilheteiro', x: 39, y: 80.5 },
-  { nome: 'Dona Cida', cargo: 'Relojoeira', a: 'a', img: 'npc-relojoeira', x: 61, y: 76.5 },
-  { nome: 'Dom Otávio', cargo: 'Poeta', a: 'o', img: 'npc-poeta', x: 62, y: 60 },
-  { nome: 'Lia', cargo: 'Jardineira', a: 'a', img: 'npc-jardineira', x: 24, y: 57 },
-  { nome: 'Tia Rosa', cargo: 'Cozinheira', a: 'a', img: 'npc-cozinheira', x: 43, y: 47.5 },
-  { nome: 'Tomé', cargo: 'Mercador', a: 'o', img: 'npc-mercador', x: 65, y: 44.5 },
-  { nome: 'Pastor Lucas', cargo: 'Pastor metodista', a: 'o', img: 'npc-pastor', x: 62, y: 21.5 },
-  { nome: 'Gaspar', cargo: 'Arauto', a: 'o', img: 'npc-arauto', x: 39, y: 20.5 },
+  { nome: 'Seu Diego', cargo: 'Pai da noiva', a: 'o', img: 'npc-bilheteiro', x: 39, y: 80.5 },
+  { nome: 'Dona Fran', cargo: 'Mãe da noiva', a: 'a', img: 'npc-relojoeira', x: 61, y: 76.5 },
+  { nome: 'Randerson', cargo: 'Irmão e padrinho', a: 'o', img: 'npc-mercador', x: 62, y: 60 },
+  { nome: 'Radmila', cargo: 'Irmã e madrinha', a: 'a', img: 'npc-jardineira', x: 24, y: 57 },
+  { nome: 'Henrique', cargo: 'Pajem da placa', a: 'o', img: 'npc-poeta', x: 43, y: 47.5 },
+  { nome: 'Pastora Luzia', cargo: 'Pastora e cantora', a: 'a', img: 'npc-cozinheira', x: 75, y: 22 },
+  { nome: 'Pastor Lucas', cargo: 'Pastor metodista', a: 'o', img: 'npc-pastor', x: 58, y: 21.5 },
+  { nome: 'Cayo', cargo: 'O padrinho mais top', a: 'o', img: 'npc-arauto', x: 39, y: 20.5 },
 ];
 const com = n => `${n.a} ${n.nome}`;
 // quem anda sozinho pela vila (h = altura em % da altura do mapa; casa = onde passeia)
 const BICHOS = [
-  { img: 'amb-theo', nome: 'Theo', h: 5.6, casa: { x: 50, y: 88 }, raio: 14, vel: .09, diz: ['Feliz aniversário! 🎈', 'Hihihi! 😄', 'Vamos brincar?', 'Cadê o escudeiro? 🙈'] },
-  { img: 'amb-snow', nome: 'Snow', h: 5.4, casa: { x: 30, y: 54 }, raio: 16, vel: .13, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*pede carinho*'] },
+  { img: 'amb-theo', nome: 'Theo', h: 5.6, casa: { x: 32, y: 53 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Eu levei as alianças! 💍', 'Hihihi! 😄', 'Vamos brincar?'] },
+  { img: 'amb-snow', nome: 'Snow', h: 5.4, casa: { x: 50, y: 88 }, raio: 14, vel: .13, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*pede carinho*'] },
   { img: 'amb-gato', nome: 'Paçoca', h: 4.2, casa: { x: 47, y: 31 }, raio: 9, vel: .06, diz: ['Miau 💛', 'Purr...', '*se espreguiça*'] },
 ];
 const PORTAO = { x: 50.5, y: 17 }, INICIO = { x: 50, y: 89.5 };
@@ -629,7 +630,20 @@ function montarMundo() {
 function irAte(p, depois) {
   if (pausado()) return;
   const lado = p.x > 50 ? -7 : 7;
-  alvo = { x: p.x + lado, y: p.y + 2 }; aoChegar = depois; marcarAlvo(alvo);
+  const dest = [[lado, 2], [lado, -1.5], [-lado, 2], [0, 3], [-lado, -1.5]].map(([dx, dy]) => ({ x: p.x + dx, y: p.y + dy })).find(q => livre(q.x, q.y)) || { x: p.x + lado, y: p.y + 2 };
+  const via = rota(heroi, dest);
+  if (via) { alvo = via; aoChegar = () => irAte(p, depois); } else { alvo = dest; aoChegar = depois; }
+  marcarAlvo(dest);
+}
+// se uma construção está no meio, passa antes por um ponto da estrada de pedras
+const ESTRADA = [{ x: 50, y: 88 }, { x: 47, y: 75 }, { x: 50, y: 62 }, { x: 46, y: 50 }, { x: 48, y: 38 }, { x: 50, y: 27 }, { x: 51, y: 20.5 }];
+const limpo = (a, b) => Array.from({ length: 41 }, (_, k) => k / 40).every(f => livre(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f));
+const dist2 = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+function rota(de, para) {
+  if (limpo(de, para)) return null;
+  const vistos = ESTRADA.filter(w => dist2(w, de) > 2 && limpo(de, w));
+  return vistos.filter(w => limpo(w, para)).sort((a, b) => dist2(de, a) + dist2(a, para) - dist2(de, b) - dist2(b, para))[0]
+    || vistos.sort((a, b) => dist2(a, para) - dist2(b, para))[0] || null;
 }
 function marcarAlvo(p) {
   if (reduz) return;
@@ -809,14 +823,14 @@ function start() {
   view(`<p class="kicker">${PROLOGO.kicker}</p><h1>${PROLOGO.titulo}</h1>${PROLOGO.texto}
     <div class="dica-jogo"><b>Como jogar:</b> use o controle no canto da tela (ou as setas do teclado) para andar, ou toque no mapa. Chegou perto de alguém, toque em <b>Falar</b>. Quem tem um desafio pra você mostra um <b>!</b> dourado.</div>
     <button class="primary">${PROLOGO.botao}</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt="${ELA}"></div>`);
-  const comecar = () => { cap = 0; xp = 0; salvar(); fecharPainel(); aviso(`Comece pelo ${NPCS[0].nome}, o ${NPCS[0].cargo.toLowerCase()}, na tenda do cinema aqui pertinho!`); };
+  const comecar = () => { cap = 0; xp = 0; salvar(); fecharPainel(); aviso(`Comece pelo seu pai, o ${NPCS[0].nome}, perto da tenda, aqui pertinho!`); };
   on('.primary', comecar); aoFechar = comecar;
 }
 async function falarCom(i) {
   if (pausado() || cap < 0) return;
   const n = NPCS[i];
   if (i < cap) return falar(i, `${n.a === 'a' ? 'Obrigada' : 'Obrigado'}, ${ELA}! O pedaço ${i + 1} já está com você. Corre, que o ${ELE} está esperando!`, [['Até mais!', 'primary']]);
-  if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${com(NPCS[cap])}, ${NPCS[cap].a} ${NPCS[cap].cargo.toLowerCase()}.`, [['Entendi', 'primary']]);
+  if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${com(NPCS[cap])} (${NPCS[cap].cargo}).`, [['Entendi', 'primary']]);
   const c = CAPITULOS[cap];
   const k = await falar(i, c.fala, [['Aceitar o desafio', 'primary'], ['Agora não', 'ghost']]);
   if (k !== 0) return;
@@ -838,7 +852,7 @@ function capituloCompleto() {
   view(`<p class="kicker">Pedaço ${i + 1} de ${CAPITULOS.length} encontrado!</p><div class="reward"><img src="img/${CAPITULOS[i].icone}.webp" alt=""></div>
     <p class="pedaco">“${CARTA[i]}”</p><div class="xp">+100 XP</div>${lvl() > antes ? `<div class="xp">⬆ Nível ${lvl()}!</div>` : ''}
     <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Guardar na mochila'}</button>`, iconeCap(i), true);
-  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${NPCS[cap].nome}, ${NPCS[cap].a} ${NPCS[cap].cargo.toLowerCase()}.`); };
+  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${NPCS[cap].nome} (${NPCS[cap].cargo}).`); };
   on('.primary', voltar); aoFechar = voltar;
 }
 // o ícone do pedaço voa até o lugar dele no topo
@@ -1019,7 +1033,7 @@ const JOGOS = {
       if (+v !== seq[pos]) { ouvindo = false; msg.textContent = 'Nota errada! Olha de novo.'; return depois(900, () => { msg.textContent = ''; mostrar(); }); }
       if (++pos === seq.length) {
         ouvindo = false; rodada++;
-        if (rodada >= 3) { tit.textContent = 'Fanfarra perfeita!'; return depois(700, fim); }
+        if (rodada >= 3) { tit.textContent = 'Que lindo! Melodia perfeita!'; return depois(700, fim); }
         msg.textContent = 'Isso! Próxima rodada.'; depois(1000, () => { msg.textContent = ''; nova(); });
       }
     });

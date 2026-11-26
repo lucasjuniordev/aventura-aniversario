@@ -567,16 +567,18 @@ const JOGOS = {
   // 3. Bolo: toque nos ingredientes de bolo que aparecem; cebola, pimenta e alho tiram ponto
   bolo(fim) {
     const BONS = ['🥚', '🍓', '🍫', '🥛', '🧈', '🍯', '🍒'], RUINS = ['🧅', '🌶️', '🧄'], META = 10;
+    const NOMES = { '🥚':'ovo', '🍓':'morango', '🍫':'chocolate', '🥛':'leite', '🧈':'manteiga', '🍯':'mel', '🍒':'cereja', '🧅':'cebola', '🌶️':'pimenta', '🧄':'alho' };
+    const marcar = (b, it) => { b.dataset.item = it; b.textContent = it; b.setAttribute('aria-label', it ? NOMES[it] : 'Espaço vazio'); };
     let pontos = 0, tempo = 40;
     view(`<p class="kicker">Ingredientes: <span id="pts">0</span>/${META} · <span id="tmp">${tempo}</span>s</p><h2>Pegue os ingredientes do bolo!</h2>
       <div class="bar bolo-barra"><i id="prog" style="width:0%"></i></div>
-      <div class="buracos">${Array.from({ length: 9 }, (_, i) => `<button class="buraco" data-v="${i}" aria-label="Espaço ${i + 1}"></button>`).join('')}</div>
+      <div class="buracos">${Array.from({ length: 9 }, (_, i) => `<button class="buraco" data-v="${i}" aria-label="Espaço vazio"></button>`).join('')}</div>
       <p class="note" id="msg" role="status"></p>`, topoJogo());
     const casas = [...app.querySelectorAll('.buraco')], msg = app.querySelector('#msg');
     const atualizar = () => { app.querySelector('#pts').textContent = pontos; app.querySelector('#prog').style.width = `${pontos / META * 100}%`; };
     casas.forEach(b => b.onclick = () => {
       const it = b.dataset.item; if (!it) return;
-      b.dataset.item = ''; b.textContent = '';
+      marcar(b, '');
       if (BONS.includes(it)) { pontos++; b.classList.add('pegou'); depois(250, () => b.classList.remove('pegou')); }
       else { pontos = Math.max(0, pontos - 1); b.classList.add('errado'); msg.textContent = 'Eca! Isso não vai no bolo.'; depois(400, () => b.classList.remove('errado')); }
       atualizar();
@@ -586,8 +588,8 @@ const JOGOS = {
       const livres = casas.filter(b => !b.dataset.item); if (!livres.length) return;
       const b = livres[Math.random() * livres.length | 0];
       const it = Math.random() < .72 ? BONS[Math.random() * BONS.length | 0] : RUINS[Math.random() * RUINS.length | 0];
-      b.dataset.item = it; b.textContent = it;
-      depois(reduz ? 1900 : 1250, () => { if (b.dataset.item === it) { b.dataset.item = ''; b.textContent = ''; } });
+      marcar(b, it);
+      depois(reduz ? 1900 : 1250, () => { if (b.dataset.item === it) marcar(b, ''); });
     };
     timers.push(setInterval(surgir, reduz ? 900 : 620));
     timers.push(setInterval(() => {

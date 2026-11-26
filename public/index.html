@@ -12,7 +12,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="A Aventura da Aniversariante">
 <meta property="og:title" content="🎂 A Aventura da Aniversariante">
-<meta property="og:description" content="O escudeiro sumiu e deixou pistas pela vila. Encontre os 8 pedaços da carta e descubra o seu presente!">
+<meta property="og:description" content="O escudeiro sumiu e deixou pistas pela vila. Encontre os 9 pedaços da carta e descubra o seu presente!">
 <meta property="og:url" content="https://aniversario.lucasjrdev.com/">
 <meta property="og:image" content="https://aniversario.lucasjrdev.com/img/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -408,6 +408,19 @@
   .coracao { position:fixed; bottom:-40px; font-size:26px; pointer-events:none; z-index:6001; animation:subir-coracao 7s ease-in infinite; }
   @keyframes subir-coracao { 0% { transform:translateY(0) rotate(-10deg); opacity:0; } 10% { opacity:1; } 100% { transform:translateY(-110vh) rotate(15deg); opacity:0; } }
   .despedida { font:700 clamp(22px, 6vw, 30px) 'Cinzel Decorative', Georgia, serif; color:var(--ruby2); margin:6px 0 18px; }
+  .creditos { margin:8px 0 22px; padding:18px 12px; border-block:2px solid var(--gold3); }
+  .creditos h3 { margin:0 0 12px; font:700 18px 'Cinzel Decorative', Georgia, serif; color:var(--wood); }
+  .creditos dl { margin:0; }
+  .creditos dt { font:800 12px 'Alegreya Sans', sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--ruby); margin-top:10px; }
+  .creditos dd { margin:2px 0 0; font:600 17px/1.3 Alegreya, Georgia, serif; color:var(--ink); }
+  .creditos dt, .creditos dd { animation:in .6s ease both; }
+  .creditos-fim { margin:16px 0 0; font-style:italic; color:var(--ink2); }
+  .answers.cortejo button { flex-direction:column; align-items:flex-start; gap:2px; }
+  .answers.cortejo button::before { display:none; }
+  .answers.cortejo small { font-weight:600; font-size:13px; opacity:.7; }
+  .answers.cortejo button.dica { border-color:var(--gold); box-shadow:0 0 0 3px var(--gold), 0 0 16px #ffd36e; }
+  .cortejo-feito { text-align:left; margin:0 0 12px; padding-left:24px; font-weight:700; color:var(--emerald); }
+  .cortejo-feito li { animation:pop .3s ease; }
   /* nome e cargo dos moradores; aceno quando ela chega perto */
   .mundo .npc small { display:flex; flex-direction:column; align-items:center; line-height:1.05; border-radius:9px; padding:2px 8px 3px; }
   .mundo .npc small em { font-style:normal; font-weight:600; font-size:.78em; color:var(--gold2); letter-spacing:.03em; }
@@ -467,7 +480,7 @@ const PROLOGO = {
   titulo: 'A Aventura da Aniversariante',
   texto: `<p>Feliz aniversário, ${ELA}! Mas... cadê o seu escudeiro?</p>
     <p>Ao lado da cama, um bilhete selado:</p>
-    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, quem caminhou com a gente até o altar no dia 01/08 está espalhado pela vila, e cada um guarda um pedaço da minha carta. Junte os oito e suba até o castelo: o seu presente está te esperando lá.<br>— Lucas Junior”</p>`,
+    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, quem caminhou com a gente até o altar no dia 01/08 está espalhado pela vila, e cada um guarda um pedaço da minha carta. Junte os nove e suba até o castelo: o seu presente está te esperando lá.<br>— Lucas Junior”</p>`,
   botao: 'Partir em busca do escudeiro',
 };
 // a carta que ela monta, um pedaço por morador (a ordem é a ordem dos capítulos)
@@ -477,22 +490,25 @@ const CARTA = [
   'E olha quanta gente te ama: cada pessoa desta vila caminhou com a gente até o altar, e continua caminhando.',
   'Você deixa tudo mais bonito, como um jardim depois da chuva.',
   'Agradeço a Ele por mais um ano da sua vida e por me deixar caminhar com você.',
+  'E cada criança daquele cortejo me lembra que o melhor da vida é ser família.',
   'Você é a minha alegria, a minha parceira e o meu lar. Te amo mil milhões!',
   'O amor é paciente, o amor é bondoso, e é assim que eu quero te amar todos os dias.',
   `Feliz aniversário! Agora suba até o castelo: o seu prêmio está te esperando.<br>Até o infinito e amém! Seu escudeiro, ${ELE}.`,
 ];
 // um capítulo por pessoa da família, na ordem do caminho (de baixo do mapa até o castelo), como no casamento
 const CAPITULOS = [
-  { icone: 'escudo', jogo: 'charadas', titulo: 'As Charadas do Pai da Noiva',
-    fala: `Minha filha! No dia 01/08 eu e a sua mãe te levamos até o altar. Hoje o ${ELE} me pediu para te levar só até o primeiro pedaço da carta. Mas antes, três charadas do seu pai!` },
+  { icone: 'escudo', jogo: 'charadas', titulo: 'O Quiz do Pai da Noiva',
+    fala: `Minha filha! No dia 01/08 eu e a sua mãe te levamos até o altar. Hoje o ${ELE} me pediu para te levar só até o primeiro pedaço da carta. Mas antes, três perguntas do seu pai sobre aquele dia!` },
   { icone: 'dia', jogo: 'relogio', titulo: 'A Hora Certa',
     fala: `Filha, lembra? Convite às 16h, cerimônia às 16h30, e você entrou com a gente ao som de A Thousand Years. Tudo na hora certa, porque nada acontece por acaso. Pare o ponteiro na faixa dourada três vezes e o pedaço da carta é seu.` },
   { icone: 'poeta', jogo: 'palavras', titulo: 'As Palavras do Padrinho',
     fala: `E aí, irmã! Lembra que os padrinhos entraram ao som de Amigo, Estou Aqui, do Toy Story? Pois é: estou aqui de novo. O ${ELE} embaralhou as palavras do casamento. Desembaralhe as três e o pedaço é seu.` },
   { icone: 'flor', jogo: 'quebracabeca', titulo: 'O Quadro da Madrinha',
     fala: `Irmã! Madrinha que é madrinha guarda tudo, e eu guardei este quadro de vocês dois no jardim. Só que o Theo brincou com ele e as peças se misturaram! Monte de novo e eu te entrego o pedaço da carta.` },
-  { icone: 'presente', jogo: 'memoria', titulo: 'Os Pares de Alianças',
-    fala: `Lá vem a noiva! E não é o Flamengo, hein? 😄 No casamento eu levei a placa e, junto com o Theo, as alianças. Aliança anda sempre em par: ache todos os pares e o pedaço da carta é seu.` },
+  { icone: 'aliancas', jogo: 'memoria', titulo: 'Os Pares do Casamento',
+    fala: `Lá vem a noiva! E não é o Flamengo, hein? 😄 No casamento eu levei a placa e, junto com o Theo, as alianças. Aliança anda sempre em par, e o resto do casamento também: ache todos os pares e o pedaço da carta é seu.` },
+  { icone: 'convite', jogo: 'cortejo', titulo: 'A Ordem do Cortejo',
+    fala: `Oi, ${ELA}! Aqui são o Rangel e a Ciane, os pais do Henrique e da Bel. Nossos dois entraram no cortejo: a Bel como demoiselle e o Henrique com a placa. Ajuda a gente a lembrar a ordem das entradas do casamento?` },
   { icone: 'festa', jogo: 'sequencia', titulo: 'A Canção da Pastora',
     fala: `Graça e Paz, filha! No casamento eu celebrei junto com o Pastor Lucas e cantei Bondade de Deus com a banda. Agora é a sua vez de fazer música: observe a melodia das gemas e toque na mesma ordem.` },
   { icone: 'biblia', jogo: 'versiculos', titulo: 'O Amor de 1 Coríntios 13',
@@ -512,11 +528,37 @@ const VERSICULOS = [
   { p: '“Tudo sofre, tudo crê, tudo espera, tudo...” (1 Coríntios 13:7)', o: ['suporta', 'esquece', 'reclama'], c: 0 },
   { p: '“Assim, permanecem agora estes três: a fé, a esperança e o amor. O maior deles, porém, é...” (1 Coríntios 13:13)', o: ['o amor', 'a fé', 'a esperança'], c: 0 },
 ];
-// Seu Diego (pai): uma charada clássica e duas do casamento
+// Seu Diego (pai): quiz do casamento
 const CHARADAS = [
-  { p: 'O que é, o que é: quanto mais se tira, maior fica?', o: ['O buraco', 'A sombra', 'A fila do cinema'], c: 0 },
   { p: 'No casamento, qual música tocou quando você entrou comigo e com a sua mãe?', o: ['A Thousand Years', 'From This Moment On', 'Bondade de Deus'], c: 0 },
-  { p: 'Complete a frase do casamento: “Te amo...”', o: ['mil milhões', 'até amanhã', 'só um pouquinho'], c: 0 },
+  { p: 'Quem levou as alianças até o altar?', o: ['O Theo e o Henrique', 'O Cayo e o Randerson', 'A Manu e a Isabela'], c: 0 },
+  { p: 'E qual música tocou na saída de vocês, já casados?', o: ['A Bênção', 'Amigo, Estou Aqui', 'Move Your Heart'], c: 0 },
+  { p: 'Pra fechar: complete a frase do casamento, “Te amo...”', o: ['mil milhões', 'até amanhã', 'só um pouquinho'], c: 0 },
+];
+// Rangel e Ciane: a ordem das entradas do cortejo (roteiro da cerimônia de 01/08)
+const CORTEJO = [
+  { quem: 'Plaquinha e Bíblia (Manu e Isabela)', musica: 'Eu Te Vejo Em Tudo' },
+  { quem: 'Pastores e noivo', musica: 'Move Your Heart' },
+  { quem: 'Florista (Rebeca)', musica: "You'll Be In My Heart" },
+  { quem: 'Padrinhos', musica: 'Amigo, Estou Aqui' },
+  { quem: 'Demoiselles', musica: 'Nesta Noite o Amor Chegou' },
+  { quem: 'Placa “Lá vem a noiva” (Henrique)', musica: 'From This Moment On' },
+  { quem: 'A noiva com os pais', musica: 'A Thousand Years' },
+];
+// Henrique: jogo da memória com coisas do casamento (arquivo em img/ e nome lido pelo leitor de tela)
+const PARES = [['aliancas', 'alianças'], ['bolo-casamento', 'bolo de casamento'], ['gravata', 'gravata-borboleta'], ['veu', 'véu'], ['sino', 'sino'], ['convite', 'convite']];
+// créditos no final, como o cortejo
+const CREDITOS = [
+  ['Celebrantes', 'Pastor Lucas e Pastora Luzia'],
+  ['Pais da noiva', 'Seu Diego e Dona Fran'],
+  ['Padrinhos e madrinha', 'Cayo (o padrinho mais top), Randerson e Radmila'],
+  ['Plaquinha e Bíblia', 'Manu e Isabela'],
+  ['Florista', 'Rebeca'],
+  ['Demoiselles', 'Anna Isabel, Isabella, Gabriela e Sthefany'],
+  ['Placa “Lá vem a noiva”', 'Henrique'],
+  ['Alianças', 'Theo e Henrique'],
+  ['Pais do Henrique e da Bel', 'Rangel e Ciane'],
+  ['Mascote da vila', 'Snow'],
 ];
 const FINAL = {
   kicker: 'Você me encontrou!',
@@ -571,16 +613,17 @@ function hud(brilho) {
 // ================= O MUNDO: mapa maior que a tela, câmera, controles e colisão =================
 // moradores na ordem dos capítulos (NPCS[i] dá o capítulo i); a = artigo ("falar com o/a ...")
 const NPCS = [
-  { nome: 'Seu Diego', cargo: 'Pai da noiva', a: 'o', img: 'npc-bilheteiro', x: 39, y: 80.5 },
-  { nome: 'Dona Fran', cargo: 'Mãe da noiva', a: 'a', img: 'npc-relojoeira', x: 61, y: 76.5 },
+  { nome: 'Seu Diego', cargo: 'Pai da noiva', a: 'o', img: 'npc-diego', x: 39, y: 80.5 },
+  { nome: 'Dona Fran', cargo: 'Mãe da noiva', a: 'a', img: 'npc-fran', x: 61, y: 76.5 },
   { nome: 'Randerson', cargo: 'Irmão e padrinho', a: 'o', img: 'npc-mercador', x: 62, y: 60 },
-  { nome: 'Radmila', cargo: 'Irmã e madrinha', a: 'a', img: 'npc-jardineira', x: 24, y: 57 },
-  { nome: 'Henrique', cargo: 'Pajem da placa', a: 'o', img: 'npc-poeta', x: 43, y: 47.5 },
-  { nome: 'Pastora Luzia', cargo: 'Pastora e cantora', a: 'a', img: 'npc-cozinheira', x: 75, y: 22 },
+  { nome: 'Radmila', cargo: 'Irmã e madrinha', a: 'a', img: 'npc-radmila', x: 24, y: 57 },
+  { nome: 'Henrique', cargo: 'Pajem da placa', a: 'o', img: 'npc-arauto', x: 43, y: 47.5 },
+  { nome: 'Rangel e Ciane', cargo: 'Pais do Henrique e da Bel', a: '', img: 'npc-bilheteiro', x: 65, y: 44.5 },
+  { nome: 'Pastora Luzia', cargo: 'Pastora e cantora', a: 'a', img: 'npc-luzia', x: 75, y: 22 },
   { nome: 'Pastor Lucas', cargo: 'Pastor metodista', a: 'o', img: 'npc-pastor', x: 58, y: 21.5 },
-  { nome: 'Cayo', cargo: 'O padrinho mais top', a: 'o', img: 'npc-arauto', x: 39, y: 20.5 },
+  { nome: 'Cayo', cargo: 'O padrinho mais top', a: 'o', img: 'npc-cayo', x: 39, y: 20.5 },
 ];
-const com = n => `${n.a} ${n.nome}`;
+const com = n => (n.a ? `${n.a} ${n.nome}` : n.nome);
 // quem anda sozinho pela vila (h = altura em % da altura do mapa; casa = onde passeia)
 const BICHOS = [
   { img: 'amb-theo', nome: 'Theo', h: 5.6, casa: { x: 32, y: 53 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Eu levei as alianças! 💍', 'Hihihi! 😄', 'Vamos brincar?'] },
@@ -878,7 +921,7 @@ const topoJogo = () => iconeCap(cap);
 
 const JOGOS = {
   // 1. Charadas: três perguntas de múltipla escolha; errar não tem castigo
-  charadas(fim, k = 0, lista = CHARADAS, nome = 'Charada') {
+  charadas(fim, k = 0, lista = CHARADAS, nome = 'Pergunta') {
     const q = lista[k];
     view(`<p class="kicker">${nome} ${k + 1} de ${lista.length}</p><h2>${q.p}</h2>
       <div class="answers">${embaralhar(q.o.map((t, j) => [t, j])).map(([t, j]) => `<button data-v="${j}">${t}</button>`).join('')}</div>
@@ -994,15 +1037,36 @@ const JOGOS = {
     }, 1000));
   },
   // 4. Memória: 6 pares com os ícones da aventura
+  // Rangel e Ciane: tocar nas entradas do cortejo na ordem certa; depois de 2 erros a próxima brilha
+  cortejo(fim) {
+    let ordem; do ordem = embaralhar(CORTEJO.map((_, i) => i)); while (ordem.every((v, i) => v === i));
+    let prox = 0, erros = 0;
+    view(`<p class="kicker">Entradas: <span id="pts">0</span>/${CORTEJO.length}</p><h2>Quem entrou primeiro?</h2>
+      <ol class="cortejo-feito" aria-label="Cortejo até agora"></ol>
+      <div class="answers cortejo">${ordem.map(i => `<button data-v="${i}">${CORTEJO[i].quem}<small>${CORTEJO[i].musica}</small></button>`).join('')}</div>
+      <p class="note" id="msg" role="status">Toque nas entradas na ordem em que aconteceram.</p>`, topoJogo());
+    const lista = app.querySelector('.cortejo-feito'), msg = app.querySelector('#msg');
+    on('.cortejo button', (v, b) => {
+      if (+v === prox) {
+        b.remove(); lista.insertAdjacentHTML('beforeend', `<li>${CORTEJO[prox].quem}</li>`);
+        prox++; erros = 0; app.querySelector('#pts').textContent = prox; msg.textContent = '';
+        if (prox === CORTEJO.length) { msg.textContent = 'Lá vem a noiva! Cortejo perfeito.'; depois(1000, fim); }
+        return;
+      }
+      b.classList.add('errado'); depois(400, () => b.classList.remove('errado'));
+      if (++erros >= 2) { app.querySelector(`.cortejo button[data-v="${prox}"]`)?.classList.add('dica'); msg.textContent = 'Dica: a entrada que brilha vem agora.'; }
+      else msg.textContent = 'Quase! Essa entrou depois.';
+    });
+  },
   memoria(fim) {
-    const ICONES = ['filme', 'dia', 'comida', 'presente', 'festa', 'escudo'];
+    const ICONES = PARES.map(p => p[0]), NOME = Object.fromEntries(PARES);
     const cartas = embaralhar([...ICONES, ...ICONES]);
     let abertas = [], pares = 0, jogadas = 0, travado = false;
     view(`<p class="kicker">Pares: <span id="pares">0</span>/${ICONES.length} · jogadas: <span id="jog">0</span></p><h2>Ache os pares!</h2>
       <div class="memoria">${cartas.map((ic, i) => `<button class="carta-mem" data-v="${i}" aria-label="Carta virada"><img src="img/${ic}.webp" alt=""></button>`).join('')}</div>`, topoJogo());
     on('.carta-mem', (v, b) => {
       if (travado || b.classList.contains('virada')) return;
-      b.classList.add('virada'); b.setAttribute('aria-label', cartas[v]); abertas.push(b);
+      b.classList.add('virada'); b.setAttribute('aria-label', NOME[cartas[v]]); abertas.push(b);
       if (abertas.length < 2) return;
       jogadas++; app.querySelector('#jog').textContent = jogadas;
       const [a, c] = abertas; abertas = [];
@@ -1055,6 +1119,7 @@ function final() {
         <p class="premio">${FINAL.premio}</p>
         <ul class="vales">${FINAL.vales.map(v => `<li><span aria-hidden="true">🎟️</span> ${v}</li>`).join('')}</ul>
         <p class="despedida">${FINAL.despedida}</p>
+        <div class="creditos"><h3>O cortejo desta aventura de uma vida</h3><dl>${CREDITOS.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl><p class="creditos-fim">01/08/2026 · nada acontece por acaso</p></div>
         <div class="actions"><button class="primary" id="vila-de-novo">Voltar à vila</button><button class="ghost" id="recomecar">Jogar a aventura de novo</button></div>
       </div>
       ${reduz ? '' : Array.from({ length: 16 }, () => `<i class="coracao" style="left:${Math.random() * 100}%;animation-delay:${Math.random() * 6}s;animation-duration:${5 + Math.random() * 4}s">${Math.random() < .5 ? '❤️' : '💛'}</i>`).join('')}`;

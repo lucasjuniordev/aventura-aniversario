@@ -14,16 +14,19 @@ Os moradores são a família, cada um lembrando o que fez no casamento (01/08/20
 
 | Capítulo | Quem | No casamento | Desafio |
 | --- | --- | --- | --- |
-| 1 | Seu Diego, pai da noiva | entrou com ela | 3 charadas (uma clássica e duas do casamento) |
+| 1 | Seu Diego, pai da noiva | entrou com ela | quiz do casamento (música da entrada, quem levou as alianças, música da saída, "te amo mil milhões") |
 | 2 | Dona Fran, mãe da noiva | entrou com ela (A Thousand Years) | parar o ponteiro na faixa dourada 3 vezes |
 | 3 | Randerson, irmão e padrinho | padrinhos entraram com Amigo, Estou Aqui | desembaralhar ACASO, MILHÕES e INFINITO |
 | 4 | Radmila, irmã e madrinha (mãe do Theo) | madrinha | quebra-cabeça 3x3 com o quadro do casal |
-| 5 | Henrique, pajem da placa | placa "lá vem a noiva" e alianças com o Theo | jogo da memória com 6 pares |
-| 6 | Pastora Luzia, pastora e cantora | celebrou e cantou Bondade de Deus | repetir a melodia das gemas (3 rodadas) |
-| 7 | Pastor Lucas, pastor metodista ("Graça e Paz!") | celebrou | completar 3 versículos de 1 Coríntios 13 |
-| 8 | Cayo, o padrinho mais top (arauto do castelo) | padrinho | pegar 10 ingredientes de bolo em 40 s |
+| 5 | Henrique, pajem da placa | placa "lá vem a noiva" e alianças com o Theo | jogo da memória com coisas do casamento (alianças, bolo, gravata, véu, sino, convite) |
+| 6 | Rangel e Ciane, pais do Henrique e da Bel | filhos no cortejo | pôr as 7 entradas do cortejo na ordem (depois de 2 erros a certa brilha) |
+| 7 | Pastora Luzia, pastora e cantora | celebrou e cantou Bondade de Deus | repetir a melodia das gemas (3 rodadas) |
+| 8 | Pastor Lucas, pastor metodista ("Graça e Paz!") | celebrou | completar 3 versículos de 1 Coríntios 13 |
+| 9 | Cayo, o padrinho mais top (arauto do castelo) | padrinho | pegar 10 ingredientes de bolo em 40 s |
 
-Pela vila também passeiam o Theo, o Snow (cachorro) e a Paçoca (gata): toque neles para ver o que dizem. A ordem da lista `NPCS` é a ordem dos capítulos. Theo, Snow e o Pastor Lucas já têm desenho feito no Google Flow a partir de fotos; os outros ainda usam os desenhos antigos dos moradores até chegarem as fotos. Se a personagem não consegue ir reto até alguém (uma construção no meio), ela passa antes por pontos da estrada de pedras (`ESTRADA`).
+No final, depois da carta (9 pedaços) e dos vales, sobem os créditos "O cortejo desta aventura de uma vida", com quem fez o quê no casamento (lista `CREDITOS`).
+
+Pela vila também passeiam o Theo, o Snow (cachorro) e a Paçoca (gata): toque neles para ver o que dizem. A ordem da lista `NPCS` é a ordem dos capítulos. Já têm desenho feito no Google Flow a partir de fotos: Theo, Snow, Pastor Lucas, Seu Diego, Dona Fran, Radmila, Pastora Luzia e Cayo. Randerson, Henrique e Rangel e Ciane ainda usam desenhos antigos dos moradores até chegarem as fotos. Se a personagem não consegue ir reto até alguém (uma construção no meio), ela passa antes por pontos da estrada de pedras (`ESTRADA`).
 
 O progresso fica salvo no navegador dela. Artes: Google Flow (mapa, personagens, retratos e a cena final). Som: `public/sons/fanfarra.mp3` ("Success Fanfare Trumpets", freesound_community no Pixabay).
 

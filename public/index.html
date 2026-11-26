@@ -415,19 +415,13 @@
   .creditos dd { margin:2px 0 0; font:600 17px/1.3 Alegreya, Georgia, serif; color:var(--ink); }
   .creditos dt, .creditos dd { animation:in .6s ease both; }
   .creditos-fim { margin:16px 0 0; font-style:italic; color:var(--ink2); }
-  .answers.cortejo button { flex-direction:column; align-items:flex-start; gap:2px; }
-  .answers.cortejo button::before { display:none; }
-  .answers.cortejo small { font-weight:600; font-size:13px; opacity:.7; }
-  .answers.cortejo button.dica { border-color:var(--gold); box-shadow:0 0 0 3px var(--gold), 0 0 16px #ffd36e; }
-  .cortejo-feito { text-align:left; margin:0 0 12px; padding-left:24px; font-weight:700; color:var(--emerald); }
-  .cortejo-feito li { animation:pop .3s ease; }
-  /* nome e cargo dos moradores; aceno quando ela chega perto */
+  /* nome dos moradores; aceno quando ela chega perto */
   .mundo .npc small { display:flex; flex-direction:column; align-items:center; line-height:1.05; border-radius:9px; padding:2px 8px 3px; }
   .mundo .npc small em { font-style:normal; font-weight:600; font-size:.78em; color:var(--gold2); letter-spacing:.03em; }
   .mundo .npc.perto small em { color:#5a3a10; }
   .mundo .npc.perto img { animation:oi .8s ease-in-out infinite; }
   @keyframes oi { 0%, 100% { transform:none; } 30% { transform:translateY(-7%); } 55% { transform:translateY(0) scale(1.04, .96); } }
-  .fala-cargo { font:700 13px 'Alegreya Sans', sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--ink2); opacity:.85; }
+
 
   /* menino, cachorro e gato passeando; borboletas no jardim */
   .bicho { position:absolute; translate:-50% -100%; background:none; border:0; padding:0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
@@ -554,7 +548,7 @@
 <div class="controles"><div class="stick" id="stick" aria-hidden="true"><i></i></div><button class="acao" id="acao" hidden></button></div>
 <p class="missao" id="missao" role="status" hidden></p>
 <div class="bussola" id="bussola" hidden aria-hidden="true"><i></i><span>!</span></div>
-<div class="lado" id="lado"><button id="bt-diario" aria-label="Diário: conquistas e trilha do casamento">📖</button><div class="minimapa" id="minimapa" role="img" aria-label="Minimapa da vila"></div></div>
+<div class="lado" id="lado"><button id="bt-diario" aria-label="Diário: conquistas e canções da família">📖</button><div class="minimapa" id="minimapa" role="img" aria-label="Minimapa da vila"></div></div>
 <button class="emo-bt" id="emo-bt" aria-label="Mandar um coração (tecla H)">❤️</button>
 <div class="yt" id="yt" hidden></div>
 <div class="canal" id="canal" aria-live="polite" aria-label="Canal da vila"></div>
@@ -570,135 +564,126 @@ const PROLOGO = {
   titulo: 'A Aventura da Aniversariante',
   texto: `<p>Feliz aniversário, ${ELA}! Mas... cadê o seu escudeiro?</p>
     <p>Ao lado da cama, um bilhete selado:</p>
-    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, quem caminhou com a gente até o altar no dia 01/08 está espalhado pela vila, e cada um guarda um pedaço da minha carta. Junte os nove e suba até o castelo: o seu presente está te esperando lá.<br>- Lucas Junior”</p>`,
+    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, a nossa família está espalhada pela vila, e cada um guarda um pedaço da minha carta. Junte os nove e suba até o castelo: o seu presente está te esperando lá.<br>- Lucas Junior”</p>`,
   botao: 'Partir em busca do escudeiro',
 };
 // a carta que ela monta, um pedaço por morador (a ordem é a ordem dos capítulos)
 const CARTA = [
   `${ELA}, minha aventureira preferida: nada acontece por acaso.`,
   'Deus colocou você no meu caminho, e cada dia ao seu lado é uma aventura que eu escolheria de novo, mil vezes.',
-  'E olha quanta gente te ama: cada pessoa desta vila caminhou com a gente até o altar, e continua caminhando.',
+  'E olha quanta gente te ama: cada pessoa desta vila caminha com a gente, todos os dias.',
   'Você deixa tudo mais bonito, como um jardim depois da chuva.',
   'Agradeço a Ele por mais um ano da sua vida e por me deixar caminhar com você.',
-  'E cada criança daquele cortejo me lembra que o melhor da vida é ser família.',
+  'E as crianças desta vila me lembram que o melhor da vida é ser família.',
   'Você é a minha alegria, a minha parceira e o meu lar. Te amo mil milhões!',
   'O amor é paciente, o amor é bondoso, e é assim que eu quero te amar todos os dias.',
   `Feliz aniversário! Agora suba até o castelo: o seu prêmio está te esperando.<br>Até o infinito e amém! Seu escudeiro, ${ELE}.`,
 ];
-// um capítulo por pessoa da família, na ordem do caminho (de baixo do mapa até o castelo), como no casamento
+// um capítulo por morador, na ordem do caminho (de baixo do mapa até o castelo); cada um tem o seu ofício na vila
 const CAPITULOS = [
-  { icone: 'escudo', jogo: 'charadas', titulo: 'O Quiz do Pai da Noiva',
-    fala: `Minha filha! No dia 01/08 eu e a sua mãe te levamos até o altar. Hoje o ${ELE} me pediu para te levar só até o primeiro pedaço da carta. Mas antes, três perguntas do seu pai sobre aquele dia!` },
+  { icone: 'escudo', jogo: 'charadas', titulo: 'O Guia da Vila',
+    fala: `Minha filha! Aqui na vila eu sou o guia: mostro o caminho para quem chega. O ${ELE} me pediu para te levar até o primeiro pedaço da carta. Mas antes, umas perguntinhas do seu pai sobre a nossa família!` },
   { icone: 'dia', jogo: 'relogio', titulo: 'A Hora Certa',
-    fala: `Filha, lembra? Convite às 16h, cerimônia às 16h30, e você entrou com a gente ao som de A Thousand Years. Tudo na hora certa, porque nada acontece por acaso. Pare o ponteiro na faixa dourada três vezes e o pedaço da carta é seu.` },
-  { icone: 'poeta', jogo: 'palavras', titulo: 'As Palavras do Padrinho',
-    fala: `E aí, irmã! Lembra que os padrinhos entraram ao som de Amigo, Estou Aqui, do Toy Story? Pois é: estou aqui de novo. O ${ELE} embaralhou as palavras do casamento. Desembaralhe as três e o pedaço é seu.` },
-  { icone: 'flor', jogo: 'quebracabeca', titulo: 'O Quadro da Madrinha',
-    fala: `Irmã! Madrinha que é madrinha guarda tudo, e eu guardei este quadro de vocês dois no jardim. Só que o Theo brincou com ele e as peças se misturaram! Monte de novo e eu te entrego o pedaço da carta.` },
-  { icone: 'aliancas', jogo: 'memoria', titulo: 'Os Pares do Casamento',
-    fala: `Lá vem a noiva! E não é o Flamengo, hein? 😄 No casamento eu levei a placa e, junto com o Theo, as alianças. Aliança anda sempre em par, e o resto do casamento também: ache todos os pares e o pedaço da carta é seu.` },
-  { icone: 'convite', jogo: 'cortejo', titulo: 'A Ordem do Cortejo',
-    fala: `Oi, ${ELA}! Aqui são o Rangel e a Ciane, os pais do Henrique e da Bel. Nossos dois entraram no cortejo: a Bel como demoiselle e o Henrique com a placa. Ajuda a gente a lembrar a ordem das entradas do casamento?` },
-  { icone: 'festa', jogo: 'sequencia', titulo: 'A Canção da Pastora',
-    fala: `Graça e Paz, filha! No casamento eu celebrei junto com o Pastor Lucas e cantei Bondade de Deus com a banda. Agora é a sua vez de fazer música: observe a melodia das gemas e toque na mesma ordem.` },
+    fala: `Filha! Quem cuida do relógio da torre sou eu, e hoje tudo tem que acontecer na hora certa, porque nada acontece por acaso. Pare o ponteiro na faixa dourada três vezes e o pedaço da carta é seu.` },
+  { icone: 'poeta', jogo: 'palavras', titulo: 'As Palavras do Cowboy',
+    fala: `E aí, irmã! O cowboy contador de histórias da vila está aqui, e amigo é pra isso. O ${ELE} embaralhou as palavras preferidas de vocês dois. Desembaralhe as três e o pedaço é seu.` },
+  { icone: 'flor', jogo: 'quebracabeca', titulo: 'O Quadro da Pintora',
+    fala: `Irmã! Pintei um quadro de vocês dois no jardim, mas o Theo brincou com ele e as peças se misturaram! Monte de novo e eu te entrego o pedaço da carta.` },
+  { icone: 'convite', jogo: 'memoria', titulo: 'Os Pares do Mensageiro',
+    fala: `Oi, tia! Eu sou o mensageiro da vila: levo os recados de todo mundo. Hoje os recados vieram em pares. Ache todos os pares e o pedaço da carta é seu.` },
+  { icone: 'presente', jogo: 'petalas', titulo: 'A Chuva de Pétalas',
+    fala: `Oi, ${ELA}! Aqui são o Rangel e a Ciane, os jardineiros da vila. As flores do jardim estão soltando pétalas para o seu aniversário! Pegue as pétalas e os corações com a cesta, fuja das abelhas, e o pedaço é seu.` },
+  { icone: 'festa', jogo: 'sequencia', titulo: 'A Canção da Luzia',
+    fala: `Graça e Paz, filha! Aqui na vila eu sou a cantora, e Deus é fiel em todo tempo. Agora é a sua vez de fazer música: observe a melodia das gemas e toque na mesma ordem.` },
   { icone: 'biblia', jogo: 'versiculos', titulo: 'O Amor de 1 Coríntios 13',
-    fala: `Graça e Paz, ${ELA}! A Pastora Luzia e eu celebramos o casamento de vocês, e o amor de 1 Coríntios 13 é o fundamento dessa aliança. O ${ELE} deixou o penúltimo pedaço comigo: complete os versículos.` },
-  { icone: 'comida', jogo: 'bolo', titulo: 'O Banquete do Padrinho Mais Top',
-    fala: `Chegou a aniversariante! Aqui é o Cayo, o padrinho mais top do casamento e arauto oficial do castelo. Antes de eu anunciar a sua chegada, o bolo da festa precisa ficar pronto: pegue 10 ingredientes e deixe a cebola, a pimenta e o alho de fora.` },
+    fala: `Graça e Paz, ${ELA}! Eu sou o conselheiro da vila e ando sempre com a Bíblia. Meu filho deixou o penúltimo pedaço comigo: complete os versículos sobre o amor.` },
+  { icone: 'comida', jogo: 'bolo', titulo: 'O Banquete do Arauto',
+    fala: `Chegou a aniversariante! Aqui é o Cayo, o arauto oficial do castelo. Antes de eu anunciar a sua chegada, o bolo da festa precisa ficar pronto: pegue 10 ingredientes e deixe a cebola, a pimenta e o alho de fora.` },
 ];
-// Randerson (padrinho): palavras do casamento embaralhadas (dica e resposta)
+// Randerson: as palavras preferidas do casal, embaralhadas (dica e resposta)
 const PALAVRAS = [
   { dica: 'Nada acontece por...', p: 'ACASO' },
   { dica: 'Te amo mil...', p: 'MILHÕES' },
   { dica: 'Até o ... e amém!', p: 'INFINITO' },
 ];
-// Pastor Lucas: versículos de 1 Coríntios 13 (NVI)
+// Lucas: versículos de 1 Coríntios 13 (NVI)
 const VERSICULOS = [
   { p: '“O amor é paciente, o amor é...” (1 Coríntios 13:4)', o: ['bondoso', 'apressado', 'orgulhoso'], c: 0 },
   { p: '“Tudo sofre, tudo crê, tudo espera, tudo...” (1 Coríntios 13:7)', o: ['suporta', 'esquece', 'reclama'], c: 0 },
   { p: '“Assim, permanecem agora estes três: a fé, a esperança e o amor. O maior deles, porém, é...” (1 Coríntios 13:13)', o: ['o amor', 'a fé', 'a esperança'], c: 0 },
 ];
-// Seu Diego (pai): quiz do casamento
+// Diego: perguntas sobre a família
 const CHARADAS = [
-  { p: 'No casamento, qual música tocou quando você entrou comigo e com a sua mãe?', o: ['A Thousand Years', 'From This Moment On', 'Bondade de Deus'], c: 0 },
-  { p: 'Quem levou as alianças até o altar?', o: ['O Theo e o Henrique', 'O Cayo e o Randerson', 'A Manu e a Isabela'], c: 0 },
-  { p: 'E qual música tocou na saída de vocês, já casados?', o: ['A Bênção', 'Amigo, Estou Aqui', 'Move Your Heart'], c: 0 },
-  { p: 'Pra fechar: complete a frase do casamento, “Te amo...”', o: ['mil milhões', 'até amanhã', 'só um pouquinho'], c: 0 },
+  { p: 'Como se chama o cachorro que vive aqui na vila?', o: ['Snow', 'Paçoca', 'Bolinha'], c: 0 },
+  { p: 'Quem é a mamãe do Theo?', o: ['A Radmila', 'A Ciane', 'A Fran'], c: 0 },
+  { p: 'Quem são os pais do Henrique e da Bel?', o: ['O Rangel e a Ciane', 'O Randerson e a Radmila', 'O Lucas e a Luzia'], c: 0 },
+  { p: 'Pra fechar: complete a frase de vocês dois, “Te amo...”', o: ['mil milhões', 'até amanhã', 'só um pouquinho'], c: 0 },
 ];
-// Rangel e Ciane: a ordem das entradas do cortejo (roteiro da cerimônia de 01/08)
-const CORTEJO = [
-  { quem: 'Plaquinha e Bíblia (Manu e Isabela)', musica: 'Eu Te Vejo Em Tudo' },
-  { quem: 'Pastores e noivo', musica: 'Move Your Heart' },
-  { quem: 'Florista (Rebeca)', musica: "You'll Be In My Heart" },
-  { quem: 'Padrinhos', musica: 'Amigo, Estou Aqui' },
-  { quem: 'Demoiselles', musica: 'Nesta Noite o Amor Chegou' },
-  { quem: 'Placa “Lá vem a noiva” (Henrique)', musica: 'From This Moment On' },
-  { quem: 'A noiva com os pais', musica: 'A Thousand Years' },
-];
-// Henrique: jogo da memória com coisas do casamento (arquivo em img/ e nome lido pelo leitor de tela)
-const PARES = [['aliancas', 'alianças'], ['bolo-casamento', 'bolo de casamento'], ['gravata', 'gravata-borboleta'], ['veu', 'véu'], ['sino', 'sino'], ['convite', 'convite']];
-// créditos no final, como o cortejo
+// Henrique: jogo da memória com coisas da vila (arquivo em img/ e nome lido pelo leitor de tela)
+const PARES = [['presente', 'presente'], ['festa', 'festa'], ['flor', 'flor'], ['bolo-casamento', 'bolo'], ['sino', 'sino'], ['escudo', 'escudo']];
+// créditos no final: quem faz o quê na vila
 const CREDITOS = [
-  ['Celebrantes', 'Pastor Lucas e Pastora Luzia'],
-  ['Pais da noiva', 'Seu Diego e Dona Fran'],
-  ['Padrinhos e madrinha', 'Cayo (o padrinho mais top), Randerson e Radmila'],
-  ['Plaquinha e Bíblia', 'Manu e Isabela'],
-  ['Florista', 'Rebeca'],
-  ['Demoiselles', 'Anna Isabel, Isabella, Gabriela e Sthefany'],
-  ['Placa “Lá vem a noiva”', 'Henrique'],
-  ['Alianças', 'Theo e Henrique'],
-  ['Pais do Henrique e da Bel', 'Rangel e Ciane'],
-  ['Mascote da vila', 'Snow'],
+  ['O guia da vila', 'Diego'],
+  ['A guardiã do relógio', 'Fran'],
+  ['O cowboy contador de histórias', 'Randerson'],
+  ['A pintora', 'Radmila'],
+  ['O mensageiro', 'Henrique'],
+  ['Os jardineiros', 'Rangel e Ciane'],
+  ['A cantora', 'Luzia'],
+  ['O conselheiro', 'Lucas'],
+  ['O arauto do castelo', 'Cayo'],
+  ['Pequenos aventureiros', 'Theo e Bel'],
+  ['Mascotes da vila', 'Snow e Paçoca'],
 ];
 const FINAL = {
   kicker: 'Você me encontrou!',
   titulo: `Feliz aniversário, ${ELA}!`,
-  premio: 'Como no dia 01/08, você atravessou o caminho e me encontrou no fim dele. O prêmio desta aventura... sou eu! Te amo mil milhões. E com ele vêm estes vales:',
+  premio: 'Você atravessou a vila inteira e me encontrou no fim do caminho. O prêmio desta aventura... sou eu! Te amo mil milhões. E com ele vêm estes vales:',
   vales: ['Um jantar com todos que amamos, a família reunida', 'Um dia inteiro juntinhos na segunda, dia 30: nós dois vendo filmes até a hora de sair com todos que amamos', 'Beijinhos e abraços ilimitados, sem prazo de validade'],
   despedida: 'Até o infinito e amém!',
 };
-// A Trilha do Casamento: uma nota musical escondida pela vila para cada música da cerimônia (só o nome e o sentido, sem letra)
+// As canções da família: uma nota musical escondida pela vila para cada canção (só o nome e o sentido, sem letra)
 const TRILHA = [
-  { m: 'Eu Te Vejo Em Tudo', q: 'Entrada da plaquinha e da Bíblia (Manu e Isabela)', s: 'Jesus como convidado de honra: a Palavra conduz a celebração e é o fundamento dessa história.' },
-  { m: 'Move Your Heart', q: 'Entrada dos pastores e do noivo', s: 'Antes da aliança com a noiva, uma vida entregue a Deus: sonhos, planos e futuro diante d’Ele.' },
-  { m: "You'll Be In My Heart", q: 'Entrada da florista (Rebeca)', s: 'Pureza, alegria e ternura antes da aliança ser celebrada.' },
-  { m: 'Amigo, Estou Aqui', q: 'Entrada dos padrinhos', s: 'As amizades verdadeiras que caminham junto com o casal, para todos os momentos.' },
-  { m: 'Nesta Noite o Amor Chegou', q: 'Entrada das demoiselles (Anna Isabel, Isabella, Gabriela e Sthefany)', s: 'Alegria e celebração preparando a chegada da noiva.' },
-  { m: 'From This Moment On', q: 'Placa “Lá vem a noiva” (Henrique)', s: 'O anúncio de uma nova história começando, lado a lado a partir daquele dia.' },
-  { m: 'A Thousand Years', q: 'Entrada da noiva com os pais', s: 'A promessa chegando ao altar: um amor que atravessa o tempo.' },
-  { m: 'Bondade de Deus', q: 'Adoração (Pastora Luzia e a banda)', s: 'Gratidão: Deus foi fiel em cada etapa e é o fundamento da nova família.' },
-  { m: 'Touch Of Heaven', q: 'Os votos', s: 'Duas vidas fazendo um compromisso diante do Senhor, querendo permanecer no amor d’Ele.' },
-  { m: 'Take All of Me', q: 'Entrada das alianças (Theo e Henrique)', s: 'Muito mais que um símbolo: entrega completa e promessa de amor.' },
-  { m: 'Jesus Meu Primeiro Amor', q: 'Santa Ceia', s: 'O primeiro ato como marido e mulher: Cristo no centro da nova família.' },
-  { m: 'Grace to Grace', q: 'As assinaturas', s: 'Uma aliança sustentada, todos os dias, pela graça de Deus.' },
-  { m: 'Touch The Sky', q: 'O beijo', s: 'A celebração da união, entregando planos e sonhos ao Senhor.' },
-  { m: 'Relentless', q: 'Fotos no altar', s: 'O registro de um amor que não desiste e permanece.' },
-  { m: 'Only Wanna Sing', q: 'Saída do cortejo', s: 'Alegria e gratidão pela nova história, para honrar a Deus.' },
-  { m: 'A Bênção', q: 'Saída dos noivos', s: 'Uma família debaixo da bênção de Deus, por todas as gerações.' },
+  { m: 'Eu Te Vejo Em Tudo', s: 'Deus presente em cada detalhe da nossa história.' },
+  { m: 'Move Your Heart', s: 'Uma vida entregue a Deus: sonhos, planos e futuro diante d’Ele.' },
+  { m: "You'll Be In My Heart", s: 'Quem a gente ama fica no coração, hoje e sempre.' },
+  { m: 'Amigo, Estou Aqui', s: 'Amizade de verdade, para todos os momentos.' },
+  { m: 'Nesta Noite o Amor Chegou', s: 'Alegria, harmonia e paz quando o amor chega.' },
+  { m: 'From This Moment On', s: 'Lado a lado, a partir de cada novo dia.' },
+  { m: 'A Thousand Years', s: 'Um amor que atravessa o tempo.' },
+  { m: 'Bondade de Deus', s: 'Gratidão: Deus é fiel em todo tempo.' },
+  { m: 'Touch Of Heaven', s: 'O desejo de permanecer no amor de Deus.' },
+  { m: 'Take All of Me', s: 'Entrega completa, com toda a esperança n’Ele.' },
+  { m: 'Jesus Meu Primeiro Amor', s: 'Cristo no centro da família.' },
+  { m: 'Grace to Grace', s: 'Cada dia sustentado pela graça de Deus.' },
+  { m: 'Touch The Sky', s: 'Planos e sonhos entregues ao Senhor.' },
+  { m: 'Relentless', s: 'Um amor que não desiste e permanece.' },
+  { m: 'Only Wanna Sing', s: 'Cantar com alegria para honrar a Deus.' },
+  { m: 'A Bênção', s: 'Uma família debaixo da bênção de Deus, por todas as gerações.' },
 ];
 // frases que cada um solta pela vila (aparecem em balões e no canal da vila)
 const FRASES = {
-  'Seu Diego': ['Minha filha cresceu rápido demais... 🥹', 'Entrei com ela ao som de A Thousand Years. Segurei o choro! (não segurei)', 'Feliz aniversário, minha princesa!', 'Lucas, cuida bem dela, hein! 😄', 'Convite às 16h? Cheguei às 15h30.', 'Quem quer foto com o pai da noiva?'],
-  'Dona Fran': ['Filha, já comeu alguma coisa hoje?', '16h em ponto, tudo pronto! ⏰', 'Chorei no primeiro acorde de A Thousand Years.', 'Que orgulho da minha menina!', 'Hoje é dia de festa e de bolo! 🎂'],
-  'Randerson': ['Amigo, estou aqui! 🤠', 'Padrinho Toy Story com muito orgulho.', 'Nada acontece por acaso, irmã!', 'Até o infinito... e amém! 🚀', 'Alguém viu o meu chapéu de cowboy?'],
-  'Radmila': ['Theo, não corre! 🏃', 'Madrinha guarda tudo, até o convite!', 'Irmã, você estava linda no altar!', 'Esse quadro do jardim ficou demais. 🖼️', 'Bora tirar uma selfie?'],
-  'Henrique': ['Lá vem a noiva! 🪧', 'A música do Flamengo foi só uma brincadeira de 5 segundos! ⚽', 'Eu e o Theo cuidamos das alianças! 💍', 'Quem topa um jogo da memória?'],
-  'Rangel e Ciane': ['A Bel e o Henrique arrasaram no cortejo!', 'Bel, cuidado com o vestido!', 'Que dia lindo pra um aniversário! ☀️', 'Já guardamos lugar na pista de dança! 💃🕺'],
-  'Pastora Luzia': ['Graça e Paz! 🙏', 'Deus é fiel em todo tempo!', 'Cantei Bondade de Deus com o coração cheio.', 'O Senhor abençoe esse novo ano da sua vida, filha!'],
-  'Pastor Lucas': ['Graça e Paz! 🙏', 'O amor é paciente, o amor é bondoso!', 'Celebrar o casamento do meu filho foi uma honra.', 'Feliz aniversário, filha! Deus te abençoe.'],
-  'Cayo': ['Padrinho mais top, presente! 😎', 'Arauto oficial do castelo, às ordens!', 'O bolo tá quase pronto... eu acho. 🎂', 'Quem vai abrir a pista comigo? 🕺'],
-  'Theo': ['Tia Vitória! 🎈', 'Eu levei as alianças! 💍', 'Hihihi! 😄', 'Vamos brincar de esconder?', 'Cadê o Snow? 🐶'],
+  'Diego': ['Minha filha cresceu rápido demais... 🥹', 'Feliz aniversário, minha princesa!', 'Lucas, cuida bem dela, hein! 😄', 'Chegou agora na vila? Eu mostro o caminho!', 'Quem quer foto com o pai da aniversariante?'],
+  'Fran': ['Filha, já comeu alguma coisa hoje?', 'O relógio da torre está certinho! ⏰', 'Que orgulho da minha menina!', 'Hoje é dia de festa e de bolo! 🎂'],
+  'Randerson': ['Amigo, estou aqui! 🤠', 'Quer ouvir uma história do velho oeste?', 'Nada acontece por acaso, irmã!', 'Até o infinito... e amém! 🚀', 'Alguém viu o meu chapéu de cowboy?'],
+  'Radmila': ['Theo, não corre! 🏃', 'Estou pintando a vila inteira! 🎨', 'Esse quadro do jardim ficou demais. 🖼️', 'Bora tirar uma selfie?'],
+  'Henrique': ['Recado novo chegando! 📜', 'Ninguém entrega recado mais rápido que eu!', 'Eu e o Theo somos uma dupla! 👊', 'Quem topa um jogo da memória?'],
+  'Rangel e Ciane': ['As flores estão lindas hoje! 🌷', 'Bel, cuidado com o vestido!', 'Que dia lindo pra um aniversário! ☀️', 'Já guardamos lugar na pista de dança! 💃🕺'],
+  'Luzia': ['Graça e Paz! 🙏', 'Deus é fiel em todo tempo!', 'Vamos cantar juntos? 🎶', 'O Senhor abençoe esse novo ano da sua vida, filha!'],
+  'Lucas': ['Graça e Paz! 🙏', 'O amor é paciente, o amor é bondoso!', 'Precisa de um conselho? É só chegar.', 'Feliz aniversário, filha! Deus te abençoe.'],
+  'Cayo': ['Arauto oficial do castelo, às ordens! 😎', 'O bolo tá quase pronto... eu acho. 🎂', 'Quem vai abrir a pista comigo? 🕺', 'Atenção, vila: hoje é dia de festa!'],
+  'Theo': ['Tia Vitória! 🎈', 'Hihihi! 😄', 'Vamos brincar de esconder?', 'Cadê o Snow? 🐶', 'Eu sou o mais rápido da vila!'],
   'Snow': ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*traz a bolinha* 🎾'],
-  'Bel': ['Eu fui demoiselle! 💃', 'Feliz aniversário, Vitória! 🎉', 'Vamos jogar pétalas? 🌸', 'O Henrique é meu irmão!'],
+  'Bel': ['Feliz aniversário, Vitória! 🎉', 'Vamos jogar pétalas? 🌸', 'O Henrique é meu irmão!', 'Olha o meu vestido! 💃'],
   'Paçoca': ['Miau 💛', 'Purr...', '*se espreguiça*', '*ignora todo mundo com classe*'],
 };
-const DICAS = ['💡 Há 16 notas musicais escondidas pela vila: cada uma é uma música do casamento.', '💡 Toque no Theo para brincar de esconde-esconde.', '💡 Toque no Snow para jogar a bolinha.', '💡 A festa está rolando na tenda: tem pista de dança!', '💡 Toque na Bel para a chuva de pétalas.', '💡 O botão ❤️ manda um coração pra quem estiver perto.', '💡 O minimapa mostra a próxima missão em dourado.'];
+const DICAS = ['💡 Há 16 notas musicais escondidas pela vila: cada uma é uma canção da família.', '💡 Toque no Theo para brincar de esconde-esconde.', '💡 Toque no Snow para jogar a bolinha.', '💡 A festa está rolando na tenda: tem pista de dança!', '💡 Toque na Bel para a chuva de pétalas.', '💡 O botão ❤️ manda um coração pra quem estiver perto.', '💡 O minimapa mostra a próxima missão em dourado.'];
 // conquistas (aparecem no diário 📖)
 const CONQUISTAS = [
   { id: 'passos', ic: '👣', t: 'Primeiros passos', d: 'Entrou na vila' },
   { id: 'carta', ic: '💌', t: 'Carta completa', d: 'Juntou os 9 pedaços' },
   { id: 'nota1', ic: '🎵', t: 'Primeira canção', d: 'Achou uma nota musical' },
-  { id: 'notas', ic: '🎼', t: 'Trilha completa', d: 'Achou as 16 notas do casamento' },
+  { id: 'notas', ic: '🎼', t: 'Todas as canções', d: 'Achou as 16 notas da vila' },
   { id: 'theo', ic: '🙈', t: 'Achei o Theo!', d: 'Venceu o esconde-esconde' },
   { id: 'snow', ic: '🎾', t: 'Melhor amiga do Snow', d: 'Jogou a bolinha 3 vezes' },
   { id: 'pista', ic: '💃', t: 'Rainha da pista', d: 'Mandou muito bem na pista de dança' },
@@ -706,18 +691,18 @@ const CONQUISTAS = [
   { id: 'abracos', ic: '🤗', t: 'Abraço coletivo', d: 'Mandou 10 corações para a família' },
   { id: 'todos', ic: '👨‍👩‍👧‍👦', t: 'A família toda', d: 'Conversou com todos da vila' },
 ];
-// a festa (recepção de 01/08): na pista, a batida é da vila; os nomes são as músicas daquele dia
-const FESTA = ["I'm a Believer (entrada dos noivos)", "Don't Stop Believin' (abertura da pista)", "Summer Of '69", 'Vejo Enfim a Luz Brilhar (pedido da noiva)', 'Sentimentos São (pedido da noiva)', 'Heaven (a última da noite)'];
-// a música de cada personagem: toca no player do YouTube quando ela fala com ele (links do roteiro do casamento)
+// a festa da vila: na pista, a batida é da vila; os nomes são músicas que a família ama
+const FESTA = ["I'm a Believer", "Don't Stop Believin'", "Summer Of '69", 'Vejo Enfim a Luz Brilhar', 'Sentimentos São', 'Heaven'];
+// a música de cada personagem: toca no player do YouTube quando ela fala com ele
 const MUSICAS = {
-  'Seu Diego': ['A Thousand Years', 'rtOvBOTyX00'],
-  'Dona Fran': ["You'll Be In My Heart", 'AiO8jikNfG4'],
+  'Diego': ['A Thousand Years', 'rtOvBOTyX00'],
+  'Fran': ["You'll Be In My Heart", 'AiO8jikNfG4'],
   'Randerson': ['Amigo, Estou Aqui', 'oat0l_Dau2Y'],
   'Radmila': ['Nesta Noite o Amor Chegou', 'CHIVt2YD9aM'],
   'Henrique': ['From This Moment On', 'a-Lp2uC_1lg'],
   'Rangel e Ciane': ['Take All of Me', 'W-wOiO7UEO8'],
-  'Pastora Luzia': ['Bondade de Deus', 'coKTcmR0hgQ'],
-  'Pastor Lucas': ['Move Your Heart', 'eBR3Lmgcu6Y'],
+  'Luzia': ['Bondade de Deus', 'coKTcmR0hgQ'],
+  'Lucas': ['Move Your Heart', 'eBR3Lmgcu6Y'],
   'Cayo': ["I'm a Believer", 'xCP7bCJxxm8'],
   final: ['A Bênção', 'v8gaG2ed01I'],
 };
@@ -818,7 +803,7 @@ function missao() {
   if (cap < 0) return el.hidden = true;
   el.hidden = false;
   el.innerHTML = cap < CAPITULOS.length
-    ? `📜 <b>Capítulo ${cap + 1}/${CAPITULOS.length}</b> · Fale com ${esc(NPCS[cap].nome)} <small>(${esc(NPCS[cap].cargo)})</small><br>🎵 Notas: ${extra.notas.length}/${TRILHA.length}`
+    ? `📜 <b>Capítulo ${cap + 1}/${CAPITULOS.length}</b> · Fale com ${esc(NPCS[cap].nome)}<br>🎵 Notas: ${extra.notas.length}/${TRILHA.length}`
     : `🏰 <b>A carta está completa!</b> Suba até o castelo.<br>🎵 Notas: ${extra.notas.length}/${TRILHA.length}`;
 }
 // ---- canal da vila (mensagens no canto, estilo MMO) ----
@@ -847,22 +832,22 @@ function conversou(nome) {
 // ================= O MUNDO: mapa maior que a tela, câmera, controles e colisão =================
 // moradores na ordem dos capítulos (NPCS[i] dá o capítulo i); a = artigo ("falar com o/a ...")
 const NPCS = [
-  { nome: 'Seu Diego', cargo: 'Pai da noiva', a: 'o', img: 'npc-diego', x: 39, y: 80.5 },
-  { nome: 'Dona Fran', cargo: 'Mãe da noiva', a: 'a', img: 'npc-fran', x: 61, y: 76.5 },
-  { nome: 'Randerson', cargo: 'Irmão e padrinho', a: 'o', img: 'npc-randerson', x: 62, y: 60 },
-  { nome: 'Radmila', cargo: 'Irmã e madrinha', a: 'a', img: 'npc-radmila', x: 24, y: 57 },
-  { nome: 'Henrique', cargo: 'Pajem da placa', a: 'o', img: 'npc-henrique', x: 43, y: 47.5 },
-  { nome: 'Rangel e Ciane', cargo: 'Pais do Henrique e da Bel', a: '', img: 'npc-rangel-ciane', x: 65, y: 44.5 },
-  { nome: 'Pastora Luzia', cargo: 'Pastora e cantora', a: 'a', img: 'npc-luzia', x: 75, y: 22 },
-  { nome: 'Pastor Lucas', cargo: 'Pastor metodista', a: 'o', img: 'npc-pastor', x: 58, y: 21.5 },
-  { nome: 'Cayo', cargo: 'O padrinho mais top', a: 'o', img: 'npc-cayo', x: 39, y: 20.5 },
+  { nome: 'Diego', a: 'o', img: 'npc-diego', x: 39, y: 80.5 },
+  { nome: 'Fran', a: 'a', img: 'npc-fran', x: 61, y: 76.5 },
+  { nome: 'Randerson', a: 'o', img: 'npc-randerson', x: 62, y: 60 },
+  { nome: 'Radmila', a: 'a', img: 'npc-radmila', x: 24, y: 57 },
+  { nome: 'Henrique', a: 'o', img: 'npc-henrique', x: 43, y: 47.5 },
+  { nome: 'Rangel e Ciane', a: '', img: 'npc-rangel-ciane', x: 65, y: 44.5 },
+  { nome: 'Luzia', a: 'a', img: 'npc-luzia', x: 75, y: 22 },
+  { nome: 'Lucas', a: 'o', img: 'npc-pastor', x: 58, y: 21.5 },
+  { nome: 'Cayo', a: 'o', img: 'npc-cayo', x: 39, y: 20.5 },
 ];
 const com = n => (n.a ? `${n.a} ${n.nome}` : n.nome);
 // quem anda sozinho pela vila (h = altura em % da altura do mapa; casa = onde passeia)
 const BICHOS = [
-  { img: 'amb-theo', nome: 'Theo', cargo: 'Pajem das alianças', h: 5.6, casa: { x: 32, y: 53 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Eu levei as alianças! 💍', 'Hihihi! 😄', 'Vamos brincar?'] },
+  { img: 'amb-theo', nome: 'Theo', h: 5.6, casa: { x: 32, y: 53 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Hihihi! 😄', 'Vamos brincar?'] },
   { img: 'amb-snow', nome: 'Snow', h: 5.4, casa: { x: 50, y: 88 }, raio: 14, vel: .13, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*pede carinho*'] },
-  { img: 'amb-bel', nome: 'Bel', cargo: 'Demoiselle', h: 7.4, casa: { x: 58, y: 48 }, raio: 6, vel: .08, diz: ['Eu fui demoiselle! 💃', 'Feliz aniversário, Vitória! 🎉', 'Nesta noite o amor chegou! 🎶', 'O Henrique é meu irmão!'] },
+  { img: 'amb-bel', nome: 'Bel', h: 7.4, casa: { x: 58, y: 48 }, raio: 6, vel: .08, diz: ['Feliz aniversário, Vitória! 🎉', 'Vamos jogar pétalas? 🌸', 'O Henrique é meu irmão!'] },
   { img: 'amb-gato', nome: 'Paçoca', h: 4.2, casa: { x: 47, y: 31 }, raio: 9, vel: .06, diz: ['Miau 💛', 'Purr...', '*se espreguiça*'] },
 ];
 const PORTAO = { x: 50.5, y: 17 }, INICIO = { x: 50, y: 89.5 };
@@ -889,7 +874,7 @@ function medir() {
 }
 function montarMundo() {
   mundoEl.insertAdjacentHTML('beforeend', NPCS.map((n, i) => `<button class="npc" data-i="${i}" style="left:${n.x}%;top:${n.y}%;z-index:${Math.round(n.y * 10)};animation-delay:${-i * .7}s">
-      <span class="balao" aria-hidden="true"></span><img src="img/${n.img}.webp" alt=""><small><b>${n.nome}</b><em>${n.cargo}</em></small></button>`).join('')
+      <span class="balao" aria-hidden="true"></span><img src="img/${n.img}.webp" alt=""><small><b>${n.nome}</b></small></button>`).join('')
     + `<button class="portao" style="left:${PORTAO.x}%;top:${PORTAO.y}%"><span class="balao" aria-hidden="true"></span></button>`
     + `<div class="heroi" id="heroi"><span class="sombra"></span><img src="img/heroi-vitoria.webp" alt="${ELA}, a aventureira"></div>`
     + Array.from({ length: reduz ? 0 : 18 }, () => `<i class="brilho" style="left:${10 + Math.random() * 80}%;top:${14 + Math.random() * 80}%;animation-delay:${-Math.random() * 8}s;animation-duration:${6 + Math.random() * 6}s"></i>`).join('')
@@ -986,7 +971,7 @@ function pegarNota(i) {
   const el = mundoEl.querySelector(`.nota[data-n="${i}"]`); el?.classList.add('pegou'); setTimeout(() => el?.remove(), 700);
   plim();
   const t = TRILHA[i], n = extra.notas.length;
-  aviso(`🎵 ${t.m} · ${t.q} (${n}/${TRILHA.length})`);
+  aviso(`🎵 ${t.m} (${n}/${TRILHA.length})`);
   canal(`🎵 <b>${ELA}</b> achou <b>${esc(t.m)}</b>: ${esc(t.s)}`, 'sis');
   conquistar('nota1');
   if (n >= TRILHA.length) { conquistar('notas'); fanfarra(); confete(); }
@@ -1066,7 +1051,7 @@ function tocarBicho(b) {
     if (k === 0) esconde.comecar(b);
   });
   if (b.nome === 'Bel') return irAte(b, async () => {
-    const k = await falar(b, 'Tia! Na entrada das demoiselles foi tudo tão lindo... Vamos fazer uma chuva de pétalas? Pegue as pétalas e os corações, e fuja das abelhas! 🌸', [['Vamos!', 'primary'], ['Depois', 'ghost']]);
+    const k = await falar(b, 'Tia! Vamos fazer uma chuva de pétalas? Pegue as pétalas e os corações, e fuja das abelhas! 🌸', [['Vamos!', 'primary'], ['Depois', 'ghost']]);
     if (k === 0) JOGOS.petalas(() => { conquistar('petalas'); fecharPainel(); balaozinho(b, 'Que lindo, tia! 🌸'); });
   });
   balaozinho(b);
@@ -1119,17 +1104,17 @@ function abrirLugar(l) {
   if (pausado()) return;
   if (l.id === 'festa') {
     const n = NPCS.findIndex(x => x.nome === 'Cayo');
-    falar(n, `A festa da recepção continua aqui na tenda! Lembra? Vocês entraram com I'm a Believer e a pista abriu com Don't Stop Believin'. Bora dançar? Toque nas faixas quando as notas passarem na linha dourada! 🕺`, [['Bora dançar!', 'primary'], ['Depois', 'ghost']])
+    falar(n, `A festa da vila não para aqui na tenda! Bora dançar? Toque nas faixas quando as notas passarem na linha dourada! 🕺`, [['Bora dançar!', 'primary'], ['Depois', 'ghost']])
       .then(k => { if (k === 0) JOGOS.danca(nota => { if (nota >= 70) conquistar('pista'); }); });
   }
 }
-// diário: conquistas e a trilha do casamento
+// diário: conquistas e as canções da família
 function diario() {
   view(`<p class="kicker">Diário da aventureira</p><h2>${ELA} · Nível ${lvl()}</h2><div class="diario">
     <h3>Conquistas (${extra.conq.length}/${CONQUISTAS.length})</h3>
     <div class="conqs">${CONQUISTAS.map(q => `<div class="${extra.conq.includes(q.id) ? '' : 'nao'}"><span>${q.ic}</span><div><b>${q.t}</b><br>${q.d}</div></div>`).join('')}</div>
-    <h3>A Trilha do Casamento (${extra.notas.length}/${TRILHA.length})</h3>
-    <ol class="trilha">${TRILHA.map((t, i) => extra.notas.includes(i) ? `<li><b>🎵 ${t.m}</b><small>${t.q}</small>${t.s}</li>` : `<li class="nao">🎵 ??? · ache a nota escondida pela vila</li>`).join('')}</ol>
+    <h3>As canções da família (${extra.notas.length}/${TRILHA.length})</h3>
+    <ol class="trilha">${TRILHA.map((t, i) => extra.notas.includes(i) ? `<li><b>🎵 ${t.m}</b><br>${t.s}</li>` : `<li class="nao">🎵 ??? · ache a nota escondida pela vila</li>`).join('')}</ol>
     </div><button class="primary" style="margin-top:16px">Voltar para a vila</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt=""></div>`);
   on('.primary', fecharPainel);
 }
@@ -1224,7 +1209,7 @@ function desenharMundo() {
   mundoEl.querySelectorAll('.npc').forEach((b, i) => {
     const estado = i < cap ? 'feito' : i === cap ? 'agora' : 'depois';
     b.classList.remove('feito', 'agora', 'depois'); b.classList.add(estado);
-    b.setAttribute('aria-label', `${NPCS[i].nome}, ${NPCS[i].cargo}: ${estado === 'feito' ? 'pedaço da carta entregue' : estado === 'agora' ? 'tem um desafio para você' : 'ainda não é a vez'}`);
+    b.setAttribute('aria-label', `${NPCS[i].nome}: ${estado === 'feito' ? 'pedaço da carta entregue' : estado === 'agora' ? 'tem um desafio para você' : 'ainda não é a vez'}`);
   });
   const p = mundoEl.querySelector('.portao'), aberto = cap >= CAPITULOS.length;
   p.classList.toggle('aberto', aberto);
@@ -1239,9 +1224,9 @@ function aviso(txt) {
 // ================= FALAS (caixa de diálogo de RPG, letra por letra) =================
 let digitando = null;
 function falar(i, texto, botoes) {
-  const n = typeof i === 'number' ? NPCS[i] : i, cargo = n.cargo || '';  // morador (índice) ou quem passeia (objeto)
-  falaEl.innerHTML = `<div class="fala-caixa" role="dialog" aria-modal="true" aria-label="${n.nome}${cargo ? `, ${cargo}` : ''}">
-      <img class="fala-rosto" src="img/${n.img}.webp" alt=""><div class="fala-corpo"><b class="fala-nome">${n.nome}</b> <span class="fala-cargo">${cargo}</span>
+  const n = typeof i === 'number' ? NPCS[i] : i;  // morador (índice) ou quem passeia (objeto)
+  falaEl.innerHTML = `<div class="fala-caixa" role="dialog" aria-modal="true" aria-label="${n.nome}">
+      <img class="fala-rosto" src="img/${n.img}.webp" alt=""><div class="fala-corpo"><b class="fala-nome">${n.nome}</b>
       <p class="fala-texto" aria-live="polite"></p><div class="fala-botoes">${botoes.map(([t, cls], k) => `<button class="${cls || ''}" data-k="${k}">${t}</button>`).join('')}</div></div></div>`;
   falaEl.hidden = false;
   const p = falaEl.querySelector('.fala-texto'), bts = falaEl.querySelector('.fala-botoes');
@@ -1295,7 +1280,7 @@ async function falarCom(i) {
   const n = NPCS[i];
   conversou(n.nome); tocarMusica(n.nome);
   if (i < cap) return falar(i, `${n.a === 'a' ? 'Obrigada' : 'Obrigado'}, ${ELA}! O pedaço ${i + 1} já está com você. Corre, que o ${ELE} está esperando!`, [['Até mais!', 'primary']]);
-  if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${com(NPCS[cap])} (${NPCS[cap].cargo}).`, [['Entendi', 'primary']]);
+  if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${com(NPCS[cap])}.`, [['Entendi', 'primary']]);
   const c = CAPITULOS[cap];
   const k = await falar(i, c.fala, [['Aceitar o desafio', 'primary'], ['Agora não', 'ghost']]);
   if (k !== 0) return;
@@ -1318,7 +1303,7 @@ function capituloCompleto() {
     <p class="pedaco">“${CARTA[i]}”</p><div class="xp">+100 XP</div>${lvl() > antes ? `<div class="xp">⬆ Nível ${lvl()}!</div>` : ''}
     <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Guardar na mochila'}</button>`, iconeCap(i), true);
   canal(`📜 <b>${esc(NPCS[i].nome)}</b> entregou o pedaço ${i + 1} da carta para <b>${ELA}</b>!`, 'sis');
-  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${NPCS[cap].nome} (${NPCS[cap].cargo}).`);
+  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${com(NPCS[cap])}.`);
     if (ultimo) { conquistar('carta'); canal('<b>[Vila] Cayo:</b> O PORTÃO ABRIU! Todo mundo pro castelo! 🏰'); } };
   on('.primary', voltar); aoFechar = voltar;
 }
@@ -1383,7 +1368,7 @@ const JOGOS = {
     app.querySelector('#parar').onclick = parar;
     app.querySelector('.relogio').onclick = parar;
   },
-  // Poeta: desembaralhar as palavras do casamento (toque nas letras na ordem; Apagar desfaz)
+  // Randerson: desembaralhar as palavras do casal (toque nas letras na ordem; Apagar desfaz)
   palavras(fim, k = 0) {
     const { dica, p } = PALAVRAS[k], certa = [...p];
     let letras; do letras = embaralhar(certa); while (letras.join('') === p);
@@ -1426,7 +1411,7 @@ const JOGOS = {
       if (ok(ordem)) { tela.classList.add('pronto'); app.querySelector('#msg').textContent = 'Que quadro lindo! Vocês dois no jardim.'; depois(1600, fim); }
     });
   },
-  // Pastor: completar versículos de 1 Coríntios 13 (mesmo formato das charadas)
+  // Lucas: completar versículos de 1 Coríntios 13 (mesmo formato das charadas)
   versiculos(fim) { JOGOS.charadas(fim, 0, VERSICULOS, 'Versículo'); },
   // 3. Bolo: toque nos ingredientes de bolo que aparecem; cebola, pimenta e alho tiram ponto
   bolo(fim) {
@@ -1462,27 +1447,6 @@ const JOGOS = {
     }, 1000));
   },
   // 4. Memória: 6 pares com os ícones da aventura
-  // Rangel e Ciane: tocar nas entradas do cortejo na ordem certa; depois de 2 erros a próxima brilha
-  cortejo(fim) {
-    let ordem; do ordem = embaralhar(CORTEJO.map((_, i) => i)); while (ordem.every((v, i) => v === i));
-    let prox = 0, erros = 0;
-    view(`<p class="kicker">Entradas: <span id="pts">0</span>/${CORTEJO.length}</p><h2>Quem entrou primeiro?</h2>
-      <ol class="cortejo-feito" aria-label="Cortejo até agora"></ol>
-      <div class="answers cortejo">${ordem.map(i => `<button data-v="${i}">${CORTEJO[i].quem}<small>${CORTEJO[i].musica}</small></button>`).join('')}</div>
-      <p class="note" id="msg" role="status">Toque nas entradas na ordem em que aconteceram.</p>`, topoJogo());
-    const lista = app.querySelector('.cortejo-feito'), msg = app.querySelector('#msg');
-    on('.cortejo button', (v, b) => {
-      if (+v === prox) {
-        b.remove(); lista.insertAdjacentHTML('beforeend', `<li>${CORTEJO[prox].quem}</li>`);
-        prox++; erros = 0; app.querySelector('#pts').textContent = prox; msg.textContent = '';
-        if (prox === CORTEJO.length) { msg.textContent = 'Lá vem a noiva! Cortejo perfeito.'; depois(1000, fim); }
-        return;
-      }
-      b.classList.add('errado'); depois(400, () => b.classList.remove('errado'));
-      if (++erros >= 2) { app.querySelector(`.cortejo button[data-v="${prox}"]`)?.classList.add('dica'); msg.textContent = 'Dica: a entrada que brilha vem agora.'; }
-      else msg.textContent = 'Quase! Essa entrou depois.';
-    });
-  },
   memoria(fim) {
     const ICONES = PARES.map(p => p[0]), NOME = Object.fromEntries(PARES);
     const cartas = embaralhar([...ICONES, ...ICONES]);
@@ -1635,7 +1599,7 @@ function final() {
         <p class="premio">${FINAL.premio}</p>
         <ul class="vales">${FINAL.vales.map(v => `<li><span aria-hidden="true">🎟️</span> ${v}</li>`).join('')}</ul>
         <p class="despedida">${FINAL.despedida}</p>
-        <div class="creditos"><h3>O cortejo desta aventura de uma vida</h3><dl>${CREDITOS.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl><p class="creditos-fim">01/08/2026 · nada acontece por acaso</p></div>
+        <div class="creditos"><h3>Os moradores desta aventura</h3><dl>${CREDITOS.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl><p class="creditos-fim">nada acontece por acaso</p></div>
         <div class="actions"><button class="primary" id="vila-de-novo">Voltar à vila</button><button class="ghost" id="recomecar">Jogar a aventura de novo</button></div>
       </div>
       ${reduz ? '' : Array.from({ length: 16 }, () => `<i class="coracao" style="left:${Math.random() * 100}%;animation-delay:${Math.random() * 6}s;animation-duration:${5 + Math.random() * 4}s">${Math.random() < .5 ? '❤️' : '💛'}</i>`).join('')}`;

@@ -479,8 +479,6 @@
   @keyframes emote { from { transform:translateY(0) scale(.5); opacity:0; } 20% { transform:translateY(-10px) scale(1.2); opacity:1; } to { transform:translateY(-70px) scale(1); opacity:0; } }
   .bolinha { position:absolute; translate:-50% -50%; z-index:1650; pointer-events:none; font-size:max(16px, 2cqh); transition:left .7s cubic-bezier(.3,.6,.4,1), top .7s cubic-bezier(.3,-.6,.6,1); }
   .bicho.sumiu { visibility:hidden; }
-  .mundo.cena .npc { transition:left 2.4s ease-in-out, top 2.4s ease-in-out; pointer-events:none; }
-  .mundo.cena .npc small, .mundo.cena .npc .balao { display:none; }
 
   /* ===== interface de MMO: missão, bússola, minimapa, canal da vila, diário ===== */
   .missao { position:fixed; z-index:99; left:10px; top:calc(max(10px, env(safe-area-inset-top)) + 58px); max-width:min(60vw, 330px); padding:6px 12px; border-radius:12px; pointer-events:none;
@@ -516,15 +514,12 @@
     background:linear-gradient(#3a2210, #1d1006); border:2px solid var(--gold); box-shadow:0 0 24px #ffd36e88; color:var(--parch); font:700 14px 'Alegreya Sans', sans-serif; animation:conq 3.6s ease forwards; }
   .conquista span { font-size:28px; } .conquista small { display:block; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--gold2); }
   @keyframes conq { 0% { opacity:0; transform:translateY(-30px); } 10%, 85% { opacity:1; transform:none; } 100% { opacity:0; transform:translateY(-20px); } }
-  .cena-legenda { position:fixed; z-index:420; left:50%; bottom:calc(max(14px, env(safe-area-inset-bottom)) + 62px); translate:-50% 0; width:min(92vw, 520px); text-align:center; padding:12px 16px; border-radius:14px; pointer-events:none;
-    background:#0b0f24d9; border:2px solid var(--gold3); color:var(--parch); animation:pop .4s ease; }
-  .cena-legenda small { display:block; font:800 12px 'Alegreya Sans', sans-serif; letter-spacing:.18em; text-transform:uppercase; color:var(--gold2); }
-  .cena-legenda b { display:block; margin:4px 0; font:700 clamp(19px, 5vw, 26px) 'Cinzel Decorative', Georgia, serif; color:#ffe3a1; }
-  .cena-legenda p { margin:0; font:italic 500 15px/1.35 Alegreya, Georgia, serif; }
-  .pular { position:fixed; z-index:430; right:14px; bottom:calc(max(14px, env(safe-area-inset-bottom)) + 10px); padding:10px 16px; border-radius:12px; font:800 14px 'Alegreya Sans', sans-serif; cursor:pointer;
-    color:#2a1a06; background:linear-gradient(#ffe79a, var(--gold)); border:2px solid #fff4da; }
-  body.em-cena .controles, body.em-cena .emo-bt, body.em-cena .lado, body.em-cena .missao, body.em-cena .bussola, body.em-cena .canal { visibility:hidden; }
 
+  .yt { position:fixed; z-index:6100; right:10px; top:calc(max(10px, env(safe-area-inset-top)) + 252px); width:200px; border-radius:12px; overflow:hidden; background:#000; border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; }
+  .yt[hidden] { display:none; }
+  .yt p { margin:0; display:flex; align-items:center; justify-content:space-between; gap:6px; padding:4px 4px 4px 10px; font:700 12px 'Alegreya Sans', sans-serif; color:var(--gold2); background:#2a180b; }
+  .yt p button { width:30px; height:30px; border:0; border-radius:50%; background:#ffffff22; color:#fff; cursor:pointer; }
+  .yt iframe { display:block; width:200px; height:200px; border:0; }
   /* diário */
   .diario h3 { margin:18px 0 8px; font:700 18px Alegreya, Georgia, serif; color:var(--wood); }
   .conqs { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:8px; text-align:left; }
@@ -561,6 +556,7 @@
 <div class="bussola" id="bussola" hidden aria-hidden="true"><i></i><span>!</span></div>
 <div class="lado" id="lado"><button id="bt-diario" aria-label="Diário: conquistas e trilha do casamento">📖</button><div class="minimapa" id="minimapa" role="img" aria-label="Minimapa da vila"></div></div>
 <button class="emo-bt" id="emo-bt" aria-label="Mandar um coração (tecla H)">❤️</button>
+<div class="yt" id="yt" hidden></div>
 <div class="canal" id="canal" aria-live="polite" aria-label="Canal da vila"></div>
 <p class="aviso" id="aviso" role="status" hidden></p>
 <div class="fala" id="fala" hidden></div>
@@ -712,6 +708,19 @@ const CONQUISTAS = [
 ];
 // a festa (recepção de 01/08): na pista, a batida é da vila; os nomes são as músicas daquele dia
 const FESTA = ["I'm a Believer (entrada dos noivos)", "Don't Stop Believin' (abertura da pista)", "Summer Of '69", 'Vejo Enfim a Luz Brilhar (pedido da noiva)', 'Sentimentos São (pedido da noiva)', 'Heaven (a última da noite)'];
+// a música de cada personagem: toca no player do YouTube quando ela fala com ele (links do roteiro do casamento)
+const MUSICAS = {
+  'Seu Diego': ['A Thousand Years', 'rtOvBOTyX00'],
+  'Dona Fran': ["You'll Be In My Heart", 'AiO8jikNfG4'],
+  'Randerson': ['Amigo, Estou Aqui', 'oat0l_Dau2Y'],
+  'Radmila': ['Nesta Noite o Amor Chegou', 'CHIVt2YD9aM'],
+  'Henrique': ['From This Moment On', 'a-Lp2uC_1lg'],
+  'Rangel e Ciane': ['Take All of Me', 'W-wOiO7UEO8'],
+  'Pastora Luzia': ['Bondade de Deus', 'coKTcmR0hgQ'],
+  'Pastor Lucas': ['Move Your Heart', 'eBR3Lmgcu6Y'],
+  'Cayo': ["I'm a Believer", 'xCP7bCJxxm8'],
+  final: ['A Bênção', 'v8gaG2ed01I'],
+};
 // ===============================================================================================
 
 const app = document.getElementById('app'), painel = document.getElementById('painel');
@@ -734,6 +743,14 @@ const carregar = () => { try { return JSON.parse(localStorage.getItem(CHAVE)); }
 // ---- fanfarra e confete ----
 let mudo = (() => { try { return localStorage.getItem('aventura-mudo') === '1'; } catch { return false; } })();
 const FANFARRA = new Audio('sons/fanfarra.mp3'); FANFARRA.preload = 'auto'; FANFARRA.volume = .6;
+function tocarMusica(nome) {
+  const m = MUSICAS[nome], el = document.getElementById('yt');
+  if (!m || mudo || el.dataset.id === m[1]) return;
+  el.dataset.id = m[1]; el.hidden = false;
+  el.innerHTML = `<p>🎵 ${esc(m[0])}<button aria-label="Parar a música">✕</button></p><iframe src="https://www.youtube-nocookie.com/embed/${m[1]}?autoplay=1&playsinline=1&rel=0" title="${esc(m[0])}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  el.querySelector('button').onclick = pararMusica;
+}
+function pararMusica() { const el = document.getElementById('yt'); el.hidden = true; el.innerHTML = ''; delete el.dataset.id; }
 function fanfarra() { if (mudo) return; FANFARRA.currentTime = 0; FANFARRA.play().catch(() => {}); }
 // ---- sons sintetizados (melodia original da vila, batida da pista, plim das notas) ----
 let ac = null;
@@ -765,7 +782,7 @@ function musica(ligar) {
   let k = 0;
   musicaT = setInterval(() => {
     const a = som(); if (!a) return;
-    if (!painel.hidden || !document.getElementById('final').hidden) return;  // os joguinhos e o final têm o próprio som
+    if (!painel.hidden || !document.getElementById('final').hidden || !document.getElementById('yt').hidden) return;  // os joguinhos e o final têm o próprio som
     const n = MELODIA[k % MELODIA.length]; tom(ESCALA(n), a.currentTime, 1.1, 'sine', .035);
     if (k % 4 === 0) tom(ESCALA(n - 12), a.currentTime, 1.8, 'triangle', .025);
     k++;
@@ -791,7 +808,7 @@ function hud(brilho) {
       <div><b>${ELA}</b> <span class="lv">Nv ${lvl()}</span><div class="bar" role="progressbar" aria-label="Experiência" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${xp % 100}"><i style="width:${xp % 100}%"></i></div></div></div>
     <ol class="pedacos" aria-label="Pedaços da carta: ${Math.max(0, cap)} de ${CAPITULOS.length}">${CAPITULOS.map((c, i) => `<li class="${i < cap ? 'tem' : ''}" data-i="${i}"><img src="img/${c.icone}.webp" alt=""></li>`).join('')}</ol>
     <button class="mudo" aria-label="${mudo ? 'Ligar os sons' : 'Desligar os sons'}" aria-pressed="${mudo}">${mudo ? '🔇' : '🔊'}</button>`;
-  topoEl.querySelector('.mudo').onclick = () => { mudo = !mudo; try { localStorage.setItem('aventura-mudo', mudo ? '1' : '0'); } catch {} hud(); musica(!mudo); };
+  topoEl.querySelector('.mudo').onclick = () => { mudo = !mudo; try { localStorage.setItem('aventura-mudo', mudo ? '1' : '0'); } catch {} hud(); musica(!mudo); if (mudo) pararMusica(); };
   missao();
 }
 // ---- missão atual (canto da tela) ----
@@ -862,8 +879,7 @@ const livre = (x, y) => !BLOQUEIOS.some(([a, b, c, d]) => x > a && x < c && y > 
 const heroi = { x: INICIO.x, y: INICIO.y, esq: false };
 let W = 0, H = 0, camX = 0, camY = 0, alvo = null, aoChegar = null, perto = null;
 const joy = { x: 0, y: 0 }, teclas = new Set();
-let cena = false;  // durante a cena do cortejo ninguém mexe
-const pausado = () => cena || !painel.hidden || !falaEl.hidden || !document.getElementById('final').hidden;
+const pausado = () => !painel.hidden || !falaEl.hidden || !document.getElementById('final').hidden;
 
 function medir() {
   const vw = jogoEl.clientWidth, vh = jogoEl.clientHeight;
@@ -924,7 +940,7 @@ function marcarAlvo(p) {
 let ultimo = 0, ultimaPoeira = 0, travado = 0;
 function passo(t) {
   const dt = Math.min(.05, (t - (ultimo || t)) / 1000); ultimo = t;
-  let vx = cena ? 0 : joy.x + (teclas.has('d') - teclas.has('a')), vy = cena ? 0 : joy.y + (teclas.has('s') - teclas.has('w'));
+  let vx = joy.x + (teclas.has('d') - teclas.has('a')), vy = joy.y + (teclas.has('s') - teclas.has('w'));
   const manual = Math.hypot(vx, vy) > .15;
   if (manual) { alvo = null; aoChegar = null; }
   else if (alvo) {
@@ -933,9 +949,9 @@ function passo(t) {
   }
   const mov = Math.hypot(vx, vy);
   const el = document.getElementById('heroi');
-  if (mov > .15 && (!pausado() || cena)) {
+  if (mov > .15 && !pausado()) {
     if (mov > 1) { vx /= mov; vy /= mov; }
-    const vel = W * (cena ? .12 : .3) * dt;  // ~30% da largura do mapa por segundo (na cena, passo de cortejo)
+    const vel = W * .3 * dt;  // ~30% da largura do mapa por segundo
     const nx = heroi.x + vx * vel / W * 100, ny = heroi.y + vy * vel / H * 100;
     const antes = [heroi.x, heroi.y];
     if (livre(nx, ny)) { heroi.x = nx; heroi.y = ny; }
@@ -949,7 +965,7 @@ function passo(t) {
   } else el.classList.remove('andando');
   el.classList.toggle('esquerda', heroi.esq);
   el.style.left = `${heroi.x}%`; el.style.top = `${heroi.y}%`; el.style.zIndex = Math.round(heroi.y * 10) + 1;
-  if (!cena) passear(dt);
+  passear(dt);
   camera(false);
   vizinho();
   vidaDaVila(t);
@@ -1149,8 +1165,7 @@ function poeira() {
 }
 function camera(direto) {
   const vw = jogoEl.clientWidth, vh = jogoEl.clientHeight;
-  // na cena do cortejo a câmera fica no corredor do castelo; fora dela, segue a aventureira
-  const hx = (cena ? 50.5 : heroi.x) * W / 100, hy = (cena ? Math.min(heroi.y, 34) : heroi.y) * H / 100 - vh * .06;
+  const hx = heroi.x * W / 100, hy = heroi.y * H / 100 - vh * .06;
   const tx = W <= vw ? (vw - W) / 2 : -Math.min(W - vw, Math.max(0, hx - vw / 2));
   const ty = H <= vh ? (vh - H) / 2 : -Math.min(H - vh, Math.max(0, hy - vh / 2));
   const k = direto || reduz ? 1 : .14;
@@ -1278,7 +1293,7 @@ function start() {
 async function falarCom(i) {
   if (pausado() || cap < 0) return;
   const n = NPCS[i];
-  conversou(n.nome);
+  conversou(n.nome); tocarMusica(n.nome);
   if (i < cap) return falar(i, `${n.a === 'a' ? 'Obrigada' : 'Obrigado'}, ${ELA}! O pedaço ${i + 1} já está com você. Corre, que o ${ELE} está esperando!`, [['Até mais!', 'primary']]);
   if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${com(NPCS[cap])} (${NPCS[cap].cargo}).`, [['Entendi', 'primary']]);
   const c = CAPITULOS[cap];
@@ -1319,57 +1334,8 @@ function voar(i) {
 function irAoPortao() {
   if (pausado()) return;
   if (cap < CAPITULOS.length) return aviso(`O portão está trancado. Faltam ${CAPITULOS.length - Math.max(cap, 0)} pedaços da carta.`);
-  cortejo().then(final);
+  final();
 }
-// ================= CENA: o cortejo até o castelo, como as entradas do casamento =================
-function cortejo() {
-  if (reduz) return Promise.resolve();
-  const elNpc = nome => mundoEl.querySelector(`.npc[data-i="${NPCS.findIndex(n => n.nome === nome)}"]`);
-  const bicho = nome => BICHOS.find(b => b.nome === nome);
-  const mover = (nome, x, y) => { const el = elNpc(nome); if (el) { el.style.left = `${x}%`; el.style.top = `${y}%`; el.style.zIndex = Math.round(y * 10); } };
-  const andarBicho = (nome, x, y) => { const b = bicho(nome); if (!b) return; b.el.style.transition = 'left 2.4s ease-in-out, top 2.4s ease-in-out'; Object.assign(b, { x, y, alvo: null });
-    b.el.style.left = `${x}%`; b.el.style.top = `${y}%`; b.el.style.zIndex = Math.round(y * 10); b.el.classList.add('andando'); setTimeout(() => b.el.classList.remove('andando'), 2400); };
-  if (esconde.ativo) esconde.fim(false);
-  const PASSOS = [
-    { q: 'O cortejo da aniversariante', m: 'Todos de volta ao caminho', s: 'A família toda se reuniu de novo, como no dia 01/08.', f() {} },
-    { q: 'Entrada dos pastores', m: 'Move Your Heart', s: 'O Pastor Lucas e a Pastora Luzia, que celebraram aquele dia, vão na frente.', f() { mover('Pastor Lucas', 44.5, 21); mover('Pastora Luzia', 56.5, 21); } },
-    { q: 'Entrada dos padrinhos', m: 'Amigo, Estou Aqui', s: 'Cayo, Randerson e Radmila: amizade para todos os momentos.', f() { mover('Cayo', 39.5, 25); mover('Randerson', 39.5, 29.5); mover('Radmila', 40, 34); } },
-    { q: 'As crianças do cortejo', m: 'Nesta Noite o Amor Chegou · Take All of Me', s: 'A Bel de demoiselle, o Theo e o Henrique com as alianças.', f() { mover('Henrique', 61, 25); andarBicho('Bel', 61.5, 29.5); andarBicho('Theo', 61, 33.5); } },
-    { q: 'Lá vem a noiva!', m: 'From This Moment On', s: 'A placa do Henrique anuncia... e dessa vez não tocou o Flamengo! 😄', f() { balaoNpc(elNpc('Henrique'), 'Lá vem a noiva! 🪧'); mover('Rangel e Ciane', 62, 39); andarBicho('Snow', 43, 43); andarBicho('Paçoca', 58, 44); } },
-    { q: 'A aniversariante com os pais', m: 'A Thousand Years', s: 'Seu Diego e Dona Fran levam a filha até a porta do castelo, como levaram até o altar.', dur: 5200,
-      f() { mover('Seu Diego', 46, 27); mover('Dona Fran', 55, 27); alvo = { x: 50.5, y: 26.5 }; aoChegar = null; } },
-    { q: 'O escudeiro está lá dentro', m: 'Nada acontece por acaso', s: 'O portão se abre devagar...', dur: 2600, f() { alvo = { x: 50.5, y: 21.5 }; aoChegar = null; balaoNpc(elNpc('Seu Diego'), 'Vai, filha! ❤️'); } },
-  ];
-  return new Promise(res => {
-    cena = true; fecharFala(); document.body.classList.add('em-cena'); mundoEl.classList.add('cena');
-    // todo mundo começa perto da entrada do caminho
-    Object.assign(heroi, { x: 50.5, y: 44, esq: false }); alvo = null; aoChegar = null; camera(true);
-    mover('Seu Diego', 46, 44.5); mover('Dona Fran', 55, 44.5);
-    const leg = document.createElement('div'); leg.className = 'cena-legenda'; leg.setAttribute('role', 'status');
-    const pular = document.createElement('button'); pular.className = 'pular'; pular.textContent = 'Pular cena ⏭';
-    document.body.append(leg, pular);
-    let k = 0, t = null, acabou = false;
-    const fim = () => {
-      if (acabou) return; acabou = true; clearTimeout(t); leg.remove(); pular.remove();
-      mundoEl.classList.remove('cena'); cena = false; document.body.classList.remove('em-cena');
-      NPCS.forEach((n, i) => { const el = mundoEl.querySelector(`.npc[data-i="${i}"]`); el.style.left = `${n.x}%`; el.style.top = `${n.y}%`; el.style.zIndex = Math.round(n.y * 10); });
-      BICHOS.forEach(b => { b.el.style.transition = ''; b.espera = 3; });
-      Object.assign(heroi, { x: 50.5, y: 24 }); alvo = null;
-      res();
-    };
-    pular.onclick = fim;
-    const proximo = () => {
-      if (acabou) return;
-      if (k >= PASSOS.length) return fim();
-      const p = PASSOS[k++];
-      leg.innerHTML = `<small>${p.q}</small><b>${p.m}</b><p>${p.s}</p>`; leg.style.animation = 'none'; void leg.offsetWidth; leg.style.animation = '';
-      p.f(); const a = som(); if (a) tom(ESCALA(MELODIA[k % MELODIA.length]), a.currentTime, 1.4, 'sine', .06);
-      t = setTimeout(proximo, p.dur || 2800);
-    };
-    proximo();
-  });
-}
-
 // ================= MINIJOGOS =================
 let timers = [], quadro = null, limpar = [];
 function pararJogo() { timers.forEach(clearTimeout); timers.forEach(clearInterval); timers = []; cancelAnimationFrame(quadro); limpar.forEach(f => f()); limpar = []; }
@@ -1571,6 +1537,7 @@ const JOGOS = {
     PADRAO.slice(16).forEach((f, b) => { if (b % 3 === 1) notas.push({ f: (f + 2) % 4, t: LEAD + (16 + b + .5) * BATIDA }); });
     notas.sort((a, b) => a.t - b.t);
     const CORES = ['#ff5fa2', '#7fd3ff', '#8ff0b4', '#ffe08a'], TECLAS = [['d', 'arrowleft'], ['f', 'arrowdown'], ['j', 'arrowup'], ['k', 'arrowright']];
+    pararMusica();
     const faixa = FESTA[Math.random() * FESTA.length | 0];
     view(`<p class="kicker">🎶 Tocando na festa: ${esc(faixa)}</p><h2>Pista de dança!</h2>
       <div class="pista"><i class="luz"></i>${[0, 1, 2, 3].map(f => `<div class="faixa-n" data-f="${f}"><button class="bt-d" data-f="${f}" style="background:${CORES[f]}66" aria-label="Faixa ${f + 1}">${['D', 'F', 'J', 'K'][f]}</button></div>`).join('')}<i class="linha"></i><div class="juizo" aria-live="polite"></div></div>
@@ -1673,7 +1640,7 @@ function final() {
       </div>
       ${reduz ? '' : Array.from({ length: 16 }, () => `<i class="coracao" style="left:${Math.random() * 100}%;animation-delay:${Math.random() * 6}s;animation-duration:${5 + Math.random() * 4}s">${Math.random() < .5 ? '❤️' : '💛'}</i>`).join('')}`;
     f.hidden = false; f.scrollTop = 0;
-    fanfarra(); confete(); setTimeout(confete, 2200);
+    fanfarra(); confete(); setTimeout(confete, 2200); pararMusica(); setTimeout(() => tocarMusica('final'), 4000);
     f.querySelector('#vila-de-novo').onclick = () => { f.hidden = true; };
     f.querySelector('#recomecar').onclick = () => { try { localStorage.removeItem(CHAVE); } catch {} f.hidden = true; cap = -1; xp = 0; extra = novoExtra(); Object.assign(heroi, INICIO); start(); };
     f.querySelector('#vila-de-novo').focus({ preventScroll: true });

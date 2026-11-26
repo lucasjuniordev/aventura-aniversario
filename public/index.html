@@ -128,7 +128,7 @@
   .ghost, .answers .ghost { min-height:44px; background:none; border:0; box-shadow:none; color:var(--ink2); font-weight:700; font-size:16px; padding:10px; text-decoration:underline; text-underline-offset:3px; }
   .answers .ghost { justify-content:center; }
   .answers .ghost::before { display:none; }
-  button:focus-visible, .btn:focus-visible, textarea:focus-visible { outline:3px solid #2c5bd8; outline-offset:3px; }
+  button:focus-visible, .btn:focus-visible, textarea:focus-visible { outline:3px solid var(--gold3); outline-offset:3px; }
 
   .xp { display:inline-block; font:800 15px 'Alegreya Sans', sans-serif; color:#3e2405; background:linear-gradient(180deg, #ffe79a, var(--gold));
     border:2px solid var(--gold3); border-radius:999px; padding:5px 14px; margin:0 4px 14px; box-shadow:0 3px 8px #0003; animation:pop .45s ease; }
@@ -237,7 +237,7 @@
   .portao .balao { top:-30%; }
   .portao.aberto { animation:portal 1.6s ease-in-out infinite alternate; }
   @keyframes portal { from { box-shadow:0 0 10px 2px #ffd36e88; } to { box-shadow:0 0 30px 10px #ffd36e; } }
-  .npc:focus-visible, .portao:focus-visible { outline:3px solid #2c5bd8; outline-offset:2px; border-radius:10px; }
+  .npc:focus-visible, .portao:focus-visible { outline:3px solid var(--gold); outline-offset:2px; border-radius:10px; }
   .heroi { position:absolute; height:11.5cqh; translate:-50% -100%; pointer-events:none; filter:drop-shadow(0 3px 2px #0007);
     transition-property:left, top; transition-timing-function:linear; }
   .heroi.esquerda { scale:-1 1; }
@@ -467,7 +467,7 @@ const PROLOGO = {
   titulo: 'A Aventura da Aniversariante',
   texto: `<p>Feliz aniversário, ${ELA}! Mas... cadê o seu escudeiro?</p>
     <p>Ao lado da cama, um bilhete selado:</p>
-    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, cada morador da vila guarda um pedaço da minha carta. Junte os oito e suba até o castelo: o seu presente está te esperando lá.<br>— L.”</p>`,
+    <p class="bilhete">“Minha aventureira, sumi de propósito. E, como nada acontece por acaso, cada morador da vila guarda um pedaço da minha carta. Junte os oito e suba até o castelo: o seu presente está te esperando lá.<br>— Lucas Junior”</p>`,
   botao: 'Partir em busca do escudeiro',
 };
 // a carta que ela monta, um pedaço por morador (a ordem é a ordem dos capítulos)
@@ -496,7 +496,7 @@ const CAPITULOS = [
   { icone: 'presente', jogo: 'memoria', titulo: 'Os Tesouros Embaralhados',
     fala: `Psiu! O ${ELE} disse que te ama mil milhões e pediu segredo. Embaralhei os meus tesouros: ache todos os pares e o pedaço da carta é seu.` },
   { icone: 'biblia', jogo: 'versiculos', titulo: 'O Amor de 1 Coríntios 13',
-    fala: `A paz, ${ELA}! O ${ELE} deixou um pedaço comigo e pediu que eu lembrasse você do amor de 1 Coríntios 13. Complete os versículos e ele é seu.` },
+    fala: `Graça e Paz, ${ELA}! O ${ELE} deixou um pedaço comigo e pediu que eu lembrasse você do amor de 1 Coríntios 13. Complete os versículos e ele é seu.` },
   { icone: 'festa', jogo: 'sequencia', titulo: 'A Fanfarra do Castelo',
     fala: 'Tu-tu-ruuu! Para abrir o portão do castelo, repita a sequência das gemas: observe e depois toque na mesma ordem. Até o infinito e amém!' },
 ];
@@ -521,7 +521,7 @@ const FINAL = {
   kicker: 'Você me encontrou!',
   titulo: `Feliz aniversário, ${ELA}!`,
   premio: 'O prêmio desta aventura... sou eu! Te amo mil milhões. E com ele vêm estes vales:',
-  vales: ['Um dia inteirinho só nosso', 'Um jantar a dois do jeito que você quiser', 'Abraços ilimitados, sem prazo de validade'],
+  vales: ['Um jantar com todos que amamos, a família reunida', 'Um dia inteiro juntinhos na segunda, dia 30: nós dois vendo filmes até a hora de sair com todos que amamos', 'Beijinhos e abraços ilimitados, sem prazo de validade'],
   despedida: 'Até o infinito e amém!',
 };
 // ===============================================================================================
@@ -576,14 +576,14 @@ const NPCS = [
   { nome: 'Lia', cargo: 'Jardineira', a: 'a', img: 'npc-jardineira', x: 24, y: 57 },
   { nome: 'Tia Rosa', cargo: 'Cozinheira', a: 'a', img: 'npc-cozinheira', x: 43, y: 47.5 },
   { nome: 'Tomé', cargo: 'Mercador', a: 'o', img: 'npc-mercador', x: 65, y: 44.5 },
-  { nome: 'Pastor Elias', cargo: 'Pastor', a: 'o', img: 'npc-pastor', x: 62, y: 21.5 },
+  { nome: 'Pastor Lucas', cargo: 'Pastor metodista', a: 'o', img: 'npc-pastor', x: 62, y: 21.5 },
   { nome: 'Gaspar', cargo: 'Arauto', a: 'o', img: 'npc-arauto', x: 39, y: 20.5 },
 ];
 const com = n => `${n.a} ${n.nome}`;
 // quem anda sozinho pela vila (h = altura em % da altura do mapa; casa = onde passeia)
 const BICHOS = [
-  { img: 'amb-menino', nome: 'Juca', h: 6.4, casa: { x: 50, y: 88 }, raio: 14, vel: .1, diz: [`Feliz aniversário, ${ELA}!`, 'Quer jogar bola?', 'O escudeiro passou correndo por aqui!'] },
-  { img: 'amb-cachorro', nome: 'Pipoca', h: 4.6, casa: { x: 30, y: 54 }, raio: 16, vel: .14, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*'] },
+  { img: 'amb-theo', nome: 'Theo', h: 5.6, casa: { x: 50, y: 88 }, raio: 14, vel: .09, diz: ['Feliz aniversário! 🎈', 'Hihihi! 😄', 'Vamos brincar?', 'Cadê o escudeiro? 🙈'] },
+  { img: 'amb-snow', nome: 'Snow', h: 5.4, casa: { x: 30, y: 54 }, raio: 16, vel: .13, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*pede carinho*'] },
   { img: 'amb-gato', nome: 'Paçoca', h: 4.2, casa: { x: 47, y: 31 }, raio: 9, vel: .06, diz: ['Miau 💛', 'Purr...', '*se espreguiça*'] },
 ];
 const PORTAO = { x: 50.5, y: 17 }, INICIO = { x: 50, y: 89.5 };
@@ -684,7 +684,7 @@ function passear(dt) {
     if (d <= v) { b.x = b.alvo.x; b.y = b.alvo.y; b.alvo = null; b.espera = 1.5 + Math.random() * 3.5; }
     else { b.x += dx / d * v / W * 100; b.y += dy / d * v / H * 100; if (Math.abs(dx) > 2) b.esq = dx < 0; }
     b.el.classList.toggle('andando', !!b.alvo); b.el.classList.toggle('esquerda', b.esq);
-    b.el.style.left = `${b.x}%`; b.el.style.top = `${b.y}%`; b.el.style.zIndex = Math.round(b.y * 10);
+    b.el.style.left = `${b.x}%`; b.el.style.top = `${b.y}%`; b.el.style.zIndex = b.falando ? 1600 : Math.round(b.y * 10);
   });
 }
 function balaozinho(b) {
@@ -692,7 +692,8 @@ function balaozinho(b) {
   const f = document.createElement('span'); f.className = 'fala-bicho'; f.setAttribute('role', 'status');
   f.textContent = `${b.nome}: ${b.diz[Math.random() * b.diz.length | 0]}`; b.el.append(f);
   b.el.classList.remove('feliz'); void b.el.offsetWidth; b.el.classList.add('feliz');
-  setTimeout(() => f.remove(), 2600);
+  b.falando = true; b.el.style.zIndex = 1600;  // balão por cima dos nomes dos moradores
+  clearTimeout(b.tFala); b.tFala = setTimeout(() => { f.remove(); b.falando = false; b.el.style.zIndex = Math.round(b.y * 10); }, 2600);
 }
 function poeira() {
   const p = document.createElement('i'); p.className = 'poeira'; p.style.left = `${heroi.x}%`; p.style.top = `${heroi.y}%`;

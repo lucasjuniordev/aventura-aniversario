@@ -18,10 +18,10 @@ Tudo o que aparece na história fica no topo do `<script>` de `public/index.html
 | 4 | Lia, a Jardineira | quebra-cabeça 3x3 com o quadro do casal no jardim (trocar peças) |
 | 5 | Tia Rosa, a Cozinheira | pegar 10 ingredientes de bolo em 40 s, sem cebola, pimenta ou alho |
 | 6 | Tomé, o Mercador | jogo da memória com 6 pares |
-| 7 | Pastor Elias | completar 3 versículos de 1 Coríntios 13 |
+| 7 | Pastor Lucas, pastor metodista ("Graça e Paz!") | completar 3 versículos de 1 Coríntios 13 |
 | 8 | Gaspar, o Arauto | repetir a sequência das gemas (3 rodadas) |
 
-Pela vila também passeiam o Juca (menino), o Pipoca (cachorro) e a Paçoca (gata): toque neles para ver o que dizem. A ordem dos moradores na lista `NPCS` é a ordem dos capítulos.
+Pela vila também passeiam o Theo, o Snow (cachorro) e a Paçoca (gata): toque neles para ver o que dizem. A ordem dos moradores na lista `NPCS` é a ordem dos capítulos. Theo, Snow e o Pastor Lucas são pessoas (e cachorro) de verdade, desenhados no Google Flow a partir de fotos.
 
 O progresso fica salvo no navegador dela. Artes: Google Flow (mapa, personagens, retratos e a cena final). Som: `public/sons/fanfarra.mp3` ("Success Fanfare Trumpets", freesound_community no Pixabay).
 

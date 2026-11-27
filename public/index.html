@@ -511,6 +511,9 @@
   .conquista span { font-size:28px; } .conquista small { display:block; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--gold2); }
   @keyframes conq { 0% { opacity:0; transform:translateY(-30px); } 10%, 85% { opacity:1; transform:none; } 100% { opacity:0; transform:translateY(-20px); } }
 
+  .epilogo { margin:18px 0 6px; padding:14px; border-radius:12px; background:#fff8e6; border:2px dashed #d9bf8a; }
+  .epilogo h3 { margin:0 0 6px; font:700 18px Alegreya, Georgia, serif; color:var(--wood); }
+  .epilogo p { margin:0; font:italic 500 16px/1.45 Alegreya, Georgia, serif; }
   .yt { position:fixed; z-index:6100; right:10px; top:calc(max(10px, env(safe-area-inset-top)) + 252px); width:200px; border-radius:12px; overflow:hidden; background:#000; border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; }
   .yt[hidden] { display:none; }
   .yt p { margin:0; display:flex; align-items:center; justify-content:space-between; gap:6px; padding:4px 4px 4px 10px; font:700 12px 'Alegreya Sans', sans-serif; color:var(--gold2); background:#2a180b; }
@@ -642,6 +645,7 @@ const FINAL = {
   premio: 'Você atravessou a vila inteira e me encontrou no fim do caminho. O prêmio desta aventura... sou eu! Te amo mil milhões. E com ele vêm estes vales:',
   vales: ['Um jantar com todos que amamos, a família reunida', 'Um dia inteiro juntinhos na segunda, dia 30: nós dois vendo filmes até a hora de sair com todos que amamos', 'Beijinhos e abraços ilimitados, sem prazo de validade'],
   despedida: 'Até o infinito e amém!',
+  epilogo: 'E assim a aventureira encontrou o seu escudeiro. De mãos dadas, os dois voltaram para a vila, onde a família inteira esperava com bolo, música e muitos abraços. Não era o fim da aventura: era só o começo de mais um ano lindo juntos.',
 };
 // As canções da família: uma nota musical escondida pela vila para cada canção (só o nome e o sentido, sem letra)
 const TRILHA = [
@@ -1210,8 +1214,21 @@ function diario() {
   on('.primary', fecharPainel);
 }
 // menino, cachorro e gato passeiam sozinhos: escolhem um ponto livre perto de casa, andam, param um pouco
+function chamarEscudeiro() {
+  if (BICHOS.some(b => b.segue)) return;
+  const b = { img: 'heroi-lucas', nome: 'Lucas Junior', h: 9, vel: .32, segue: true, casa: { ...heroi }, raio: 0, x: heroi.x - 4, y: heroi.y, alvo: null, espera: 0, esq: false,
+    diz: ['Te amo mil milhões! ❤️', 'Feliz aniversário, minha aventureira!', 'Até o infinito e amém! 🚀', 'Você me achou! 🥰'] };
+  mundoEl.insertAdjacentHTML('beforeend', `<button class="bicho" data-b="${BICHOS.length}" aria-label="${b.nome}"><span class="sombra"></span><img src="img/${b.img}.webp" alt="" style="height:${b.h}cqh"></button>`);
+  b.el = mundoEl.querySelector(`.bicho[data-b="${BICHOS.length}"]`); b.el.onclick = e => { e.stopPropagation(); balaozinho(b); };
+  FRASES[b.nome] = b.diz; BICHOS.push(b);
+}
 function passear(dt) {
   BICHOS.forEach(b => {
+    if (b.segue) {  // o escudeiro anda ao lado dela
+      const ax = heroi.x + (heroi.esq ? 4 : -4), ay = heroi.y + .3;
+      b.alvo = Math.hypot(ax - b.x, (ay - b.y) * .56) > 1.5 ? { x: ax, y: ay } : null;
+      if (!b.alvo) { b.el.classList.remove('andando'); b.el.classList.toggle('esquerda', heroi.esq); return; }
+    }
     if (!b.alvo) {
       if ((b.espera -= dt) > 0 || reduz) return;
       for (let k = 0; k < 12 && !b.alvo; k++) {
@@ -1361,8 +1378,10 @@ function start() {
   const s = carregar();
   extra = { ...novoExtra(), ...(s?.extra || {}) };
   hud(); desenharMundo(); desenharNotas();
+  if (extra.fim) chamarEscudeiro();
   if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; hud(); desenharMundo(); boasVindas();
     return aviso(cap >= CAPITULOS.length ? 'A carta está completa! Suba até o castelo.' : `Bem-vinda de volta! Fale com ${com(NPCS[cap])}.`); }
+  cenaAtual = 'quarto';
   view(`<p class="kicker">${PROLOGO.kicker}</p><h1>${PROLOGO.titulo}</h1>${PROLOGO.texto}
     <div class="dica-jogo"><b>Como jogar:</b> use o controle no canto da tela (ou as setas do teclado) para andar, ou toque no mapa. Chegou perto de alguém, toque em <b>Falar</b>. Quem tem um desafio pra você mostra um <b>!</b> dourado.</div>
     <button class="primary">${PROLOGO.botao}</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt="${ELA}"></div>`);
@@ -1748,13 +1767,15 @@ function final() {
         <p class="premio">${FINAL.premio}</p>
         <ul class="vales">${FINAL.vales.map(v => `<li><span aria-hidden="true">🎟️</span> ${v}</li>`).join('')}</ul>
         <p class="despedida">${FINAL.despedida}</p>
+        <div class="epilogo"><h3>Epílogo</h3><p>${FINAL.epilogo}</p></div>
         <div class="creditos"><h3>Os moradores desta aventura</h3><dl>${CREDITOS.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl><p class="creditos-fim">nada acontece por acaso</p></div>
         <div class="actions"><button class="primary" id="vila-de-novo">Voltar à vila</button><button class="ghost" id="recomecar">Jogar a aventura de novo</button></div>
       </div>
       ${reduz ? '' : Array.from({ length: 16 }, () => `<i class="coracao" style="left:${Math.random() * 100}%;animation-delay:${Math.random() * 6}s;animation-duration:${5 + Math.random() * 4}s">${Math.random() < .5 ? '❤️' : '💛'}</i>`).join('')}`;
     f.hidden = false; f.scrollTop = 0;
     fanfarra(); confete(); setTimeout(confete, 2200); pararMusica(); setTimeout(() => tocarMusica('final'), 4000);
-    f.querySelector('#vila-de-novo').onclick = () => { f.hidden = true; };
+    extra.fim = true; salvar();
+    f.querySelector('#vila-de-novo').onclick = () => { f.hidden = true; chamarEscudeiro(); canal(`💞 <b>${ELE}</b> agora passeia pela vila com <b>${ELA}</b>!`, 'conq'); };
     f.querySelector('#recomecar').onclick = () => { try { localStorage.removeItem(CHAVE); } catch {} f.hidden = true; cap = -1; xp = 0; extra = novoExtra(); Object.assign(heroi, INICIO); start(); };
     f.querySelector('#vila-de-novo').focus({ preventScroll: true });
   }, reduz ? 0 : 450);

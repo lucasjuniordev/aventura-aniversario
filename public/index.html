@@ -528,6 +528,12 @@
   .yt[hidden] { display:none; }
   .yt p { margin:0; display:flex; align-items:center; justify-content:space-between; gap:6px; padding:4px 4px 4px 10px; font:700 12px 'Alegreya Sans', sans-serif; color:var(--gold2); background:#2a180b; }
   .yt p button { width:30px; height:30px; border:0; border-radius:50%; background:#ffffff22; color:#fff; cursor:pointer; }
+  .campo { position:relative; height:220px; max-width:340px; margin:8px auto 10px; border-radius:12px; overflow:hidden; background:linear-gradient(#69b552, #3f8f37); box-shadow:inset 0 0 20px #0004; }
+  .campo .gol { position:absolute; left:10%; right:10%; top:10%; height:46%; border:5px solid #fff; border-bottom:0; background:repeating-linear-gradient(45deg, #ffffff30 0 3px, transparent 3px 11px); }
+  .campo .goleiro { position:absolute; top:26%; left:50%; translate:-50% 0; font-size:40px; font-style:normal; transition:left .35s ease; }
+  .campo .bola { position:absolute; bottom:8%; left:50%; translate:-50% 0; font-size:30px; font-style:normal; transition:left .4s ease, bottom .4s ease; }
+  .campo .juizo { position:absolute; left:0; right:0; top:62%; text-align:center; font:800 28px 'Alegreya Sans', sans-serif; color:#fff; text-shadow:0 2px 6px #000; }
+  .show-yt { display:block; width:200px; height:113px; margin:0 auto 6px; border:0; border-radius:8px; }
   .yt-msg { max-height:96px; overflow-y:auto; padding:6px 10px; font:500 11.5px/1.35 'Alegreya Sans', sans-serif; color:#fff4da; background:#2a180bee; }
   .yt iframe { display:block; width:200px; height:200px; border:0; }
   /* diário */
@@ -602,18 +608,25 @@ const CAPITULOS = [
     fala: `Irmã! Aqui no bosque eu ia pintar um quadro, mas com o Theo correndo pra todo lado, quem pinta a floresta é ele 😂. Responde umas perguntas sobre a nossa família (e sobre o pequeno furacão) e o pedaço é seu!` },
   { icone: 'presente', cena: 'jardim', jogo: 'forca', titulo: 'As Palavras do Jardim',
     fala: `Oi, ${ELA}! Aqui são o Rangel e a Ciane, os jardineiros. Plantamos umas palavras escondidas no jardim. Descubra as letras antes que as flores murchem, e o pedaço da carta é seu! 🌷` },
-  { icone: 'convite', cena: 'correio', jogo: 'memoria', titulo: 'Os Recados do Mensageiro',
-    fala: `Oi, tia! Eu sou o Henrique, o mensageiro mais rápido da estrada. Os recados de hoje chegaram em pares e misturaram tudo! Ache todos os pares e o pedaço da carta é seu. 📜` },
+  { icone: 'convite', cena: 'futebol', jogo: 'penaltis', titulo: 'Os Pênaltis do Henrique',
+    fala: `Tia! Aqui é o Henrique, camisa 10 do Palmeiras 💚 (eu sei, a família é toda Flamengo... menos eu e o meu pai 😅). Bate 5 pênaltis e faz 3 gols que o pedaço da carta é seu! ⚽` },
   { icone: 'dia', cena: 'torre', jogo: 'quebracabeca', titulo: 'O Quadro do Vale do Tempo',
     fala: `Tia! Eu sou a Isabella. Achei aqui no Vale do Tempo um quadro de você e do tio ${ELE}, mas o tempo embaralhou as peças! Monta de novo pra mim? 🖼️` },
   { icone: 'escudo', cena: 'portao', jogo: 'piadas', titulo: 'A Dupla da Risada',
     fala: `Filha! Aqui é a dupla da risada: Diego e Fran 😂. Antes do pedaço da carta, responde as nossas piadinhas. Valendo! Se rir, perde... mentira, pode rir à vontade.` },
   { icone: 'festa', cena: 'palco', jogo: 'sequencia', titulo: 'A Canção da Luzia',
     fala: `Graça e Paz, filha! Aqui na colina eu sou a cantora, e Deus é fiel em todo tempo. Agora é a sua vez de fazer música: observe a melodia das gemas e toque na mesma ordem.` },
+  { icone: 'festa', cena: 'festa', jogo: 'guitarra', titulo: 'O Show do Cayo',
+    fala: `Chegou a aniversariante! Aqui é o Cayo, o arauto do castelo e roqueiro da família 🎸. Antes de eu te anunciar lá no castelo, bora fazer um show? Escolhe a música e toca comigo!` },
   { icone: 'biblia', cena: 'biblioteca', jogo: 'versiculos', titulo: 'O Amor de 1 Coríntios 13',
-    fala: `Graça e Paz, ${ELA}! Aqui no Lago da Paz eu sou o conselheiro, sempre com a Bíblia na mão. Meu filho deixou o penúltimo pedaço comigo: complete os versículos sobre o amor.` },
-  { icone: 'comida', cena: 'cozinha', jogo: 'bolo', titulo: 'O Banquete do Arauto',
-    fala: `Chegou a aniversariante! Aqui é o Cayo, o arauto oficial do castelo. Antes de eu anunciar a sua chegada, o bolo da festa precisa ficar pronto: pegue 10 ingredientes e deixe a cebola, a pimenta e o alho de fora.` },
+    fala: `Graça e Paz, ${ELA}! Aqui no Lago da Paz eu sou o conselheiro, sempre com a Bíblia na mão. Meu filho deixou o último pedaço comigo: complete os versículos sobre o amor.` },
+
+];
+// Cayo: músicas do show (estilo Guitar Hero); a batida é aproximada pelo bpm de cada música
+const SHOW = [
+  { m: "I'm a Believer", v: 'xCP7bCJxxm8', bpm: 80, ini: 32 },
+  { m: 'Adventure Of A Lifetime', v: '-5IXuIvDWu0', bpm: 112, ini: 20 },
+  { m: "Don't Stop Believin'", v: 'VcjzHMhBtf0', bpm: 119, ini: 60 },
 ];
 // Rangel e Ciane: forca das flores (cada erro murcha uma flor)
 const FORCA = [
@@ -638,6 +651,24 @@ const PIADAS = [
   { p: 'Qual é o doce preferido do átomo?', o: ['Pé de molécula!', 'Brigadeiro', 'Bolo de pote'], c: 0 },
   { p: 'O que o tomate foi fazer no banco?', o: ['Tirar extrato!', 'Pagar a conta', 'Abrir um cofre'], c: 0 },
   { p: 'Por que a vaca foi para o espaço?', o: ['Para visitar a Via Láctea!', 'Porque pulou alto', 'Para comer estrelas'], c: 0 },
+  { p: 'Por que a plantinha não foi atendida no hospital?', o: ['Porque só tinha médico de plantão!', 'Porque estava murcha', 'Porque esqueceu a carteirinha'], c: 0 },
+  { p: 'O que o zero disse para o oito?', o: ['Que cinto bonito!', 'Você é demais!', 'Vamos somar?'], c: 0 },
+  { p: 'Qual é a cidade brasileira que não tem táxi?', o: ['Uberlândia!', 'Taxilândia', 'Pé-de-Ônibus'], c: 0 },
+  { p: 'Por que o elefante não pega fogo?', o: ['Porque ele já é cinza!', 'Porque é muito grande', 'Porque fica na sombra'], c: 0 },
+  { p: 'Qual é o animal que não vale mais nada?', o: ['O javali!', 'O gato pingado', 'A vaca magra'], c: 0 },
+  { p: 'O que é um pontinho verde no canto da sala?', o: ['Uma ervilha de castigo!', 'Um sapo tímido', 'Uma azeitona perdida'], c: 0 },
+  { p: 'Qual é o rei dos queijos?', o: ['O reiqueijão!', 'O queijo-coalho real', 'O provolone primeiro'], c: 0 },
+  { p: 'O que a vaca disse para o boi?', o: ['Te amuuuu!', 'Bom dia, vizinho!', 'Cadê o capim?'], c: 0 },
+  { p: 'Por que o computador foi ao médico?', o: ['Porque estava com vírus!', 'Porque travou a perna', 'Porque perdeu a memória do mouse'], c: 0 },
+  { p: 'O que o cavalo foi fazer no orelhão?', o: ['Passar um trote!', 'Ligar pra mãe', 'Pedir pizza'], c: 0 },
+  { p: 'O que o pão disse para a manteiga?', o: ['Você me derrete!', 'Sai pra lá!', 'Bom apetite!'], c: 0 },
+  { p: 'Qual é o animal mais antigo do mundo?', o: ['A zebra, porque é em preto e branco!', 'O dinossauro', 'A tartaruga'], c: 0 },
+  { p: 'O que um tijolo falou para o outro?', o: ['Há um ciumento entre nós!', 'Que parede linda!', 'Vamos ficar juntos?'], c: 0 },
+  { p: 'Qual é o queijo que mais sofre?', o: ['O queijo ralado!', 'O queijo suíço', 'O requeijão'], c: 0 },
+  { p: 'Por que o espantalho ganhou um prêmio?', o: ['Porque era excelente no seu campo!', 'Porque espantou todo mundo', 'Porque era o mais alto'], c: 0 },
+  { p: 'O que o oceano disse para a praia?', o: ['Nada, só deu uma onda!', 'Te vejo amanhã', 'Que areia bonita!'], c: 0 },
+  { p: 'Por que o Diego não joga baralho na selva?', o: ['Porque tem muito guepardo... digo, muita onça-pintada trapaceira!', 'Porque perde sempre', 'Porque a Fran não deixa'], c: 0 },
+  { p: 'Qual é o time que nunca perde a esperança, segundo o Diego?', o: ['Flamengo, ué! ❤️🖤', 'Palmeiras (o Henrique que disse) 💚', 'Time da vila'], c: 0 },
 ];
 // Rad: a família e o Theo
 const FAMILIA_QUIZ = [
@@ -647,18 +678,19 @@ const FAMILIA_QUIZ = [
   { p: 'Qual é a brincadeira preferida do Theo aqui no bosque?', o: ['Esconde-esconde', 'Dormir cedo', 'Ficar paradinho'], c: 0 },
 ];
 // Henrique: jogo da memória com coisas da vila (arquivo em img/ e nome lido pelo leitor de tela)
+const PARES_FLORES = [['🌹', 'rosa'], ['🌻', 'girassol'], ['🌷', 'tulipa'], ['🌼', 'margarida'], ['🌸', 'flor de cerejeira'], ['💐', 'buquê']];
 const PARES = [['presente', 'presente'], ['festa', 'festa'], ['flor', 'flor'], ['bolo-casamento', 'bolo'], ['sino', 'sino'], ['escudo', 'escudo']];
 // créditos no final: quem faz o quê nesta aventura
 const CREDITOS = [
   ['O tatuador e grafiteiro (marca ROS)', 'Randerson'],
   ['A mamãe do Theo', 'Rad'],
   ['Os jardineiros', 'Rangel e Ciane'],
-  ['O mensageiro', 'Henrique'],
+  ['O craque do Palmeiras', 'Henrique'],
   ['A guardiã do Vale do Tempo', 'Isabella'],
   ['A dupla da risada', 'Diego e Fran'],
   ['A cantora', 'Luzia'],
   ['O conselheiro', 'Lucas'],
-  ['O arauto do castelo', 'Cayo'],
+  ['O arauto e roqueiro do castelo', 'Cayo'],
   ['O pequeno furacão', 'Theo'],
   ['Mascotes', 'Snow e Paçoca'],
 ];
@@ -694,23 +726,24 @@ const TRILHA = [
 const FRASES = {
   'Randerson': ['Amigo, estou aqui! 🤠', 'Tatuagem nova? É só marcar horário! ✍️', 'Grafite assinado: ROS 🎨', 'Até o infinito... e amém! 🚀', 'Esse muro tá pedindo uma arte...'],
   'Radmila': ['Theo, volta aqui! 🏃‍♀️', 'Mãe de Theo não descansa nunca 😂', 'Família é tudo, irmã! 💕', 'Alguém viu o Theo? De novo? 🙈'],
-  'Rangel e Ciane': ['As flores estão lindas hoje! 🌷', 'Rangel: Ciane, cadê o regador? 🚿', 'Ciane: Tá na sua mão, Rangel 😂', 'Que dia lindo pra um aniversário! ☀️'],
-  'Henrique': ['Recado novo chegando! 📜', 'Ninguém entrega recado mais rápido que eu!', 'A Isabella é minha irmã!', 'Quem topa um jogo da memória?'],
+  'Rangel e Ciane': ['As flores estão lindas hoje! 🌷', 'Rangel: Ciane, cadê o regador? 🚿', 'Ciane: Tá na sua mão, Rangel 😂', 'Rangel: Palmeiras, minha vida é você! 💚', 'Ciane: Aqui em casa a mãe é Flamengo! ❤️🖤', 'Que dia lindo pra um aniversário! ☀️'],
+  'Henrique': ['Avanti, Palestra! 💚', 'Eu e meu pai somos Palmeiras; o resto da família é Flamengo 😅', 'Bora bater um pênalti? ⚽', 'A Isabella é minha irmã!'],
   'Isabella': ['Feliz aniversário, tia! 🎉', 'O tempo voa aqui no vale! ⏳', 'O Henrique é meu irmão!', 'Monta o quadro comigo? 🖼️'],
-  'Diego e Fran': ['Diego: Sabe o contrário de volátil? Vem cá, sobrinho! 😂', 'Fran: Diego, para com essas piadas! 🤦‍♀️', 'Diego: Minha filha cresceu rápido demais... 🥹', 'Fran: Filha, já comeu alguma coisa hoje?', 'Fran: Que orgulho da minha menina! 💕', 'Diego: Quem quer foto com o pai da aniversariante?'],
+  'Diego e Fran': ['Diego: Sabe o contrário de volátil? Vem cá, sobrinho! 😂', 'Fran: Diego, para com essas piadas! 🤦‍♀️', 'Diego: Uma vez Flamengo, sempre Flamengo! ❤️🖤', 'Diego: Minha filha cresceu rápido demais... 🥹', 'Fran: Filha, já comeu alguma coisa hoje?', 'Fran: Que orgulho da minha menina! 💕', 'Diego: Quem quer foto com o pai da aniversariante?'],
   'Luzia': ['Graça e Paz! 🙏', 'Deus é fiel em todo tempo!', 'Vamos cantar juntos? 🎶', 'O Senhor abençoe esse novo ano da sua vida, filha!'],
   'Lucas': ['Graça e Paz! 🙏', 'O amor é paciente, o amor é bondoso!', 'Precisa de um conselho? É só chegar.', 'Feliz aniversário, filha! Deus te abençoe.'],
-  'Cayo': ['Arauto oficial do castelo, às ordens! 😎', 'O bolo tá quase pronto... eu acho. 🎂', 'Quem vai abrir a pista comigo? 🕺', 'Atenção, reino: hoje é dia de festa!'],
+  'Cayo': ['Arauto oficial do castelo e roqueiro da família! 🎸', 'Bora fazer um show? 🤘', 'Quem vai abrir a pista comigo? 🕺', 'Atenção, reino: hoje é dia de festa!'],
+  'Isabela': ['Eu e a Manu amamos flores! 🌷', 'Joga memória comigo, tia?', 'Feliz aniversário! 💐'],
   'Theo': ['Títia! 🥰', 'Amo também! ❤️', 'Títia!', 'Hihihi! 😄'],
   'Snow': ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*traz a bolinha* 🎾'],
-  'Manu': ['Oi, tia! 👋', 'Eu gosto de ler histórias da Bíblia!', 'Feliz aniversário! 🎈'],
+  'Manu': ['Oi, tia! 👋', 'Perdi minhas flores pela vila! 🌼', 'Feliz aniversário! 🎈'],
   'Rebeca': ['Olha as minhas flores! 🌸', 'Tia, você é uma princesa!', 'Lalalá! 🎶'],
   'Anna Isabel': ['Escrevi um bilhete pra todo mundo! ✉️', 'Feliz aniversário, tia! 💜', 'Adoro bolo de cenoura!'],
   'Gabriela': ['Alguém falou em bolo? 🍰', 'Hoje é dia de festa!', 'Tia, você está linda!'],
   'Sthefany': ['Bora dançar? 💃', 'Já treinei os passos da pista!', 'Feliz aniversário! 🎉'],
   'Paçoca': ['Miau 💛', 'Purr...', '*se espreguiça*', '*ignora todo mundo com classe*'],
 };
-const DICAS = ['💡 Há 16 notas musicais escondidas pela vila: cada uma é uma canção da família.', '💡 Toque no Theo para brincar de esconde-esconde.', '💡 Toque no Snow para jogar a bolinha.', '💡 Na Colina da Música tem festa com pista de dança!', '💡 No Jardim Florido tem chuva de pétalas.', '💡 O botão ❤️ manda um coração pra quem estiver perto.', '💡 O minimapa mostra a próxima missão em dourado.'];
+const DICAS = ['💡 Há 16 notas musicais escondidas pela vila: cada uma é uma canção da família.', '💡 Toque no Theo para brincar de esconde-esconde.', '💡 Toque no Snow para jogar a bolinha.', '💡 Na Colina da Música tem festa com pista de dança!', '💡 A Rebeca, no Jardim, adora uma chuva de pétalas.', '💡 Na Vila, a pipoqueira e os outros cantinhos têm surpresas.', '💡 O botão ❤️ manda um coração pra quem estiver perto.', '💡 O minimapa mostra a próxima missão em dourado.'];
 // conquistas (aparecem no diário 📖)
 const CONQUISTAS = [
   { id: 'passos', ic: '👣', t: 'Primeiros passos', d: 'Entrou na vila' },
@@ -720,28 +753,24 @@ const CONQUISTAS = [
   { id: 'theo', ic: '🙈', t: 'Achei o Theo!', d: 'Venceu o esconde-esconde' },
   { id: 'snow', ic: '🎾', t: 'Melhor amiga do Snow', d: 'Jogou a bolinha 3 vezes' },
   { id: 'pista', ic: '💃', t: 'Rainha da pista', d: 'Mandou muito bem na pista de dança' },
-  { id: 'petalas', ic: '🌸', t: 'Chuva de pétalas', d: 'Fez a chuva de pétalas no jardim' },
-  { id: 'abracos', ic: '🤗', t: 'Abraço coletivo', d: 'Mandou 10 corações para a família' },
-  { id: 'ajudante', ic: '🎒', t: 'Ajudante da vila', d: 'Completou as 5 missões extras' },
+  { id: 'petalas', ic: '🌸', t: 'Chuva de pétalas', d: 'Fez a chuva de pétalas com a Rebeca' },
+  { id: 'flores', ic: '💐', t: 'Memória das flores', d: 'Jogou a memória das flores com a Isabela' },
+  { id: 'abracos', ic: '🤗', t: 'Abraço coletivo', d: 'Mandou corações e fez carinho na família e nos bichos' },
+  { id: 'ajudante', ic: '🎒', t: 'Ajudante da vila', d: 'Completou todas as missões extras' },
+  { id: 'curiosa', ic: '🔎', t: 'Curiosa da vila', d: 'Visitou todos os cantinhos da Vila' },
   { id: 'todos', ic: '👨‍👩‍👧‍👦', t: 'A família toda', d: 'Conversou com todos da vila' },
 ];
 // missões extras: quem pede, o que é e as falas (o desenho delas é genérico por enquanto)
 const MISSOES = [
-  { quem: 'Manu', tipo: 'entregar', item: '📖 Bíblia', para: 'Lucas',
-    pedido: 'Tia Vitória! O Lucas esqueceu a Bíblia dele aqui. Você leva pra ele, lá perto do castelo?',
-    entrega: 'A minha Bíblia! Obrigado, filha. Diga à Manu que Deus a abençoe! 🙏' },
   { quem: 'Anna Isabel', tipo: 'entregar', item: '✉️ Bilhete', para: 'Diego e Fran',
     pedido: 'Tia, a Fran pediu a receita do meu bolo de cenoura. Leva esse bilhete pra ela, lá na Vila?',
     entrega: 'A receita da Anna! Hoje mesmo eu faço. Obrigada, filha! 🥕🎂' },
-  { quem: 'Gabriela', tipo: 'buscar', item: '🍰 Fatia de bolo', de: 'Cayo',
-    pedido: 'Tia, o Cayo disse que tem bolo lá no castelo... Pega uma fatia pra mim? 🥺',
-    pega: 'Uma fatia pra Gabriela? Claro! Arauto também é confeiteiro. 🍰', fim: 'Ebaaa! Obrigada, tia! 🍰💕' },
-  { quem: 'Rebeca', tipo: 'flores',
-    pedido: 'Tia, perdi 3 flores mágicas pela vila! 🌼 Me ajuda a achar?', fim: 'As minhas flores! Fiz uma coroa pra você, tia! 👑🌼' },
+  { quem: 'Manu', tipo: 'flores',
+    pedido: 'Tia, perdi 3 flores mágicas aqui pela Vila! 🌼 Me ajuda a achar?', fim: 'As minhas flores! Eu e a Isabela vamos fazer uma coroa pra você, tia! 👑🌼' },
   { quem: 'Sthefany', tipo: 'danca',
     pedido: 'Tia, bora ver quem dança melhor? Vai lá na pista da festa, na tenda, e depois volta aqui!', fim: 'Você arrasou! Rainha da vila! 💃' },
 ];
-const FLORES = [[15, 20], [85, 80], [50, 15]];  // no Jardim Florido
+const FLORES = [[28, 60], [68, 52], [61, 71]];  // na Vila
 // dentro do castelo: 3 salas antes de encontrar o escudeiro
 const ENIGMAS = [
   { p: 'O que é, o que é: quanto mais se reparte, mais cresce?', o: ['O amor', 'O bolo', 'O tempo'], c: 0 },
@@ -782,7 +811,7 @@ const lvl = () => 1 + Math.floor(xp / 100);
 // ---- progresso salvo neste navegador ----
 const CHAVE = 'aventura-v3';  // v3: jornada em fases na ordem nova  // v2: 8 capítulos (o progresso da versão de 5 recomeça)
 // extra: notas achadas, conquistas, com quem já conversou e contadores dos joguinhos da vila
-const novoExtra = () => ({ notas: [], conq: [], falou: [], bolas: 0, abracos: 0, castelo: 0, miss: {}, flores: [] });
+const novoExtra = () => ({ cantinhos: [], carinhos: 0, notas: [], conq: [], falou: [], bolas: 0, abracos: 0, castelo: 0, miss: {}, flores: [] });
 let extra = novoExtra();
 const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify({ cap, xp, extra })); } catch {} };
 const carregar = () => { try { return JSON.parse(localStorage.getItem(CHAVE)); } catch { return null; } };
@@ -866,7 +895,7 @@ function missao() {
   if (cap < 0) return el.hidden = true;
   el.hidden = false;
   el.innerHTML = cap < CAPITULOS.length
-    ? `🗺️ <b>${fase + 1}/${FASES.length}</b> → ${NPCS[cap]?.aqui ? esc(NPCS[cap].nome) : cap > fase ? esc(FASES[fase + 1].nome) : '?'} · 🎵 ${extra.notas.length}/${TRILHA.length}`
+    ? `🗺️ <b>${fase + 1}/${FASES.length}</b> → ${NPCS[cap]?.aqui ? esc(NPCS[cap].nome) : cap > ultimoCap(fase) && FASES[fase + 1] ? esc(FASES[fase + 1].nome) : 'Castelo'} · 🎵 ${extra.notas.length}/${TRILHA.length}`
     : `🏰 → <b>Castelo</b> · 🎵 ${extra.notas.length}/${TRILHA.length}`;
 }
 // ---- canal da vila (mensagens no canto, estilo MMO) ----
@@ -898,16 +927,18 @@ const mini = document.getElementById('minimapa');
 // ================= O MUNDO: mapa maior que a tela, câmera, controles e colisão =================
 // moradores na ordem dos capítulos (NPCS[i] dá o capítulo i); a = artigo ("falar com o/a ...")
 const NPCS = [
-  { nome: 'Randerson', a: 'o', img: 'npc-randerson' },
-  { nome: 'Radmila', a: 'a', img: 'npc-radmila' },
-  { nome: 'Rangel e Ciane', a: '', img: 'npc-rangel-ciane' },
-  { nome: 'Henrique', a: 'o', img: 'npc-henrique' },
-  { nome: 'Isabella', a: 'a', img: 'amb-bel' },
-  { nome: 'Diego e Fran', a: '', img: 'npc-diego-fran' },
-  { nome: 'Luzia', a: 'a', img: 'npc-luzia' },
-  { nome: 'Lucas', a: 'o', img: 'npc-pastor' },
-  { nome: 'Cayo', a: 'o', img: 'npc-cayo' },
+  { nome: 'Randerson', a: 'o', img: 'npc-randerson', fase: 0, x: 40, y: 70 },
+  { nome: 'Radmila', a: 'a', img: 'npc-radmila', fase: 1, x: 14, y: 52 },
+  { nome: 'Rangel e Ciane', a: '', img: 'npc-rangel-ciane', fase: 2, x: 86, y: 50 },
+  { nome: 'Henrique', a: 'o', img: 'npc-henrique', fase: 3, x: 58, y: 28 },
+  { nome: 'Isabella', a: 'a', img: 'amb-bel', fase: 4, x: 88, y: 47 },
+  { nome: 'Diego e Fran', a: '', img: 'npc-diego-fran', fase: 5, x: 39, y: 80.5 },
+  { nome: 'Luzia', a: 'a', img: 'npc-luzia', fase: 6, x: 32, y: 46 },
+  { nome: 'Cayo', a: 'o', img: 'npc-cayo', fase: 6, x: 64, y: 55 },
+  { nome: 'Lucas', a: 'o', img: 'npc-pastor', fase: 7, x: 14, y: 50 },
 ];
+// o último capítulo de cada fase (o caminho abre depois dele)
+const ultimoCap = f => NPCS.reduce((m, n, i) => (n.fase === f ? i : m), -1);
 const com = n => (n.a ? `${n.a} ${n.nome}` : n.nome);
 // quem anda sozinho pela vila (h = altura em % da altura do mapa; casa = onde passeia)
 const BICHOS = [
@@ -918,6 +949,8 @@ const BICHOS = [
   { img: 'amb-anna', nome: 'Anna Isabel', fase: 0, h: 7, casa: { x: 58, y: 30 }, raio: 6, vel: .07, diz: ['Feliz aniversário, tia! 💜'] },
   { img: 'amb-gabriela', nome: 'Gabriela', fase: 6, h: 7.2, casa: { x: 60, y: 30 }, raio: 5, vel: .07, diz: ['Alguém falou em bolo? 🍰'] },
   { img: 'amb-sthefany', nome: 'Sthefany', fase: 6, h: 7.4, casa: { x: 40, y: 75 }, raio: 6, vel: .08, diz: ['Bora dançar? 💃'] },
+  { img: 'amb-isabela', nome: 'Isabela', fase: 5, h: 6.6, casa: { x: 46, y: 62 }, raio: 5, vel: .07, diz: ['Eu e a Manu amamos flores! 🌷'] },
+  { img: 'npc-cayo', nome: 'Cayo', fase: 8, h: 9.4, casa: { x: 40, y: 22 }, raio: 0, vel: 0, porta: true, diz: ['Atenção, reino: a aniversariante chegou! 📯', 'Pode entrar, o escudeiro tá te esperando! 🏰', 'Que show foi aquele, hein? 🎸'] },
   { img: 'amb-gato', nome: 'Paçoca', fase: 8, h: 4.2, casa: { x: 45, y: 40 }, raio: 9, vel: .06, diz: ['Miau 💛', 'Purr...', '*se espreguiça*'] },
 ];
 const INICIO = { x: 50, y: 89.5 };
@@ -930,7 +963,7 @@ const FASES = [
   { nome: 'O Velho Oeste', mapa: 'img/mapas/oeste.webp', w: 768, h: 1376, inicio: { x: 45, y: 4 }, npc: { x: 40, y: 70 }, saida: { x: 55, y: 97 }, notas: [[25, 40], [70, 60]] },
   { nome: 'O Bosque das Pinturas', mapa: 'img/mapas/bosque.webp', w: 1376, h: 768, inicio: { x: 96, y: 52 }, npc: { x: 14, y: 52 }, saida: { x: 3, y: 52 }, notas: [[55, 75], [30, 30]] },
   { nome: 'O Jardim Florido', mapa: 'img/mapas/jardim.webp', w: 1376, h: 768, inicio: { x: 4, y: 48 }, npc: { x: 86, y: 50 }, saida: { x: 97, y: 48 }, notas: [[40, 20], [60, 80]] },
-  { nome: 'A Estrada dos Recados', mapa: 'img/mapas/estrada.webp', w: 768, h: 1376, inicio: { x: 48, y: 96 }, npc: { x: 58, y: 28 }, saida: { x: 52, y: 3 }, notas: [[25, 60], [75, 40]] },
+  { nome: 'A Estrada do Craque', mapa: 'img/mapas/estrada.webp', w: 768, h: 1376, inicio: { x: 48, y: 96 }, npc: { x: 58, y: 28 }, saida: { x: 52, y: 3 }, notas: [[25, 60], [75, 40]] },
   { nome: 'O Vale do Tempo', mapa: 'img/mapas/vale.webp', w: 1376, h: 768, inicio: { x: 4, y: 52 }, npc: { x: 88, y: 47 }, saida: { x: 97, y: 52 }, notas: [[30, 75], [70, 25]] },
   { nome: 'A Vila', mapa: 'img/vila.webp', w: 768, h: 1376, inicio: INICIO, npc: { x: 39, y: 80.5 }, saida: { x: 50.5, y: 21 }, bloq: BLOQUEIOS_VILA, estrada: true, notas: [[12, 25], [86, 93]] },
   { nome: 'A Colina da Música', mapa: 'img/mapas/colina.webp', w: 768, h: 1376, inicio: { x: 50, y: 4 }, npc: { x: 32, y: 46 }, saida: { x: 50, y: 97 }, notas: [[80, 25], [20, 75]] },
@@ -942,7 +975,15 @@ const NOTAS_POS = FASES.flatMap((f, fi) => f.notas.map(([x, y]) => [x, y, fi]));
 // onde o Theo se esconde (no Bosque das Pinturas)
 const ESCONDERIJOS = [[8, 85], [92, 85], [50, 90], [90, 15], [30, 15], [60, 20]];
 // lugares com joguinho (a festa fica na Colina da Música)
-const LUGARES = [{ id: 'festa', nome: 'Festa · pista de dança', ic: '🎶', x: 72, y: 60, fase: 6 }, { id: 'petalas', nome: 'Chuva de pétalas', ic: '🌸', x: 50, y: 78, fase: 2 }];
+const LUGARES = [
+  { id: 'festa', nome: 'Festa · pista de dança', ic: '🎶', x: 74, y: 70, fase: 6 },
+  // cantinhos da Vila: cada um tem a sua surpresa
+  { id: 'pipoca', nome: 'Pipoqueira', ic: '🍿', x: 19, y: 51, fase: 5, txt: '🍿 Pipoca quentinha! A Fran grita lá de longe: “Pega mais, filha, hoje pode!”' },
+  { id: 'barraca', nome: 'Barraquinha', ic: '🛍️', x: 30, y: 46.5, fase: 5, txt: '🛍️ Você ganhou um chaveiro do Mengão! ❤️🖤 (o Henrique tentou trocar por um do Palmeiras 💚)' },
+  { id: 'cinema', nome: 'Cineminha', ic: '🎬', x: 22, y: 81, fase: 5, txt: '🎬 Sessão especial de hoje: “Vitória & Lucas, a aventura”. Classificação: livre, com muito amor.' },
+  { id: 'relogio', nome: 'Relógio da torre', ic: '🕰️', x: 80, y: 82, fase: 5, txt: '🕰️ O relógio da torre marca: hora de ser feliz!' },
+  { id: 'loja', nome: 'Lojinha', ic: '🏪', x: 72, y: 39.5, fase: 5, txt: '🏪 Lojinha da vila: hoje tudo tem desconto de aniversário!' },
+];
 let fase = 0, BLOQUEIOS = BLOQUEIOS_VILA, PORTAO = FASES[0].saida;
 const U = () => Math.min(W, H);  // medida base: a mesma em mapa em pé ou deitado
 const livre = (x, y) => !BLOQUEIOS.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
@@ -963,14 +1004,13 @@ function medir() {
 function desenharFase() {
   const f = FASES[fase];
   BLOQUEIOS = f.bloq || BORDAS; ESTRADA = f.estrada ? ESTRADA_VILA : []; PORTAO = f.saida;
-  NPCS.forEach((n, i) => { n.aqui = i === fase; if (n.aqui) Object.assign(n, f.npc); });
+  NPCS.forEach(n => { n.aqui = n.fase === fase; });
   if (esconde.ativo) { esconde.ativo = false; esconde.tick = null; esconde.b.sumiu = false; }
   mundoEl.innerHTML = '';
   mundoEl.style.backgroundImage = `url(${f.mapa})`; mini.style.backgroundImage = `url(${f.mapa})`;
-  const n = NPCS[fase];
   const aqui = BICHOS.filter(b => b.segue || b.fase === fase);
-  mundoEl.insertAdjacentHTML('beforeend', `<button class="npc" data-i="${fase}" style="left:${n.x}%;top:${n.y}%;z-index:${Math.round(n.y * 10)}">
-      <span class="balao" aria-hidden="true"></span><img src="img/${n.img}.webp" alt=""><small><b>${n.nome}</b></small></button>`
+  mundoEl.insertAdjacentHTML('beforeend', NPCS.map((n, i) => !n.aqui ? '' : `<button class="npc" data-i="${i}" style="left:${n.x}%;top:${n.y}%;z-index:${Math.round(n.y * 10)}">
+      <span class="balao" aria-hidden="true"></span><img src="img/${n.img}.webp" alt=""><small><b>${n.nome}</b></small></button>`).join('')
     + `<button class="portao${fase < FASES.length - 1 ? ' saida' : ''}" style="left:${PORTAO.x}%;top:${PORTAO.y}%"><span class="balao" aria-hidden="true"></span></button>`
     + `<div class="heroi" id="heroi"><span class="sombra"></span><img src="img/heroi-vitoria.webp" alt="${ELA}, a aventureira"></div>`
     + Array.from({ length: reduz ? 0 : 14 }, () => `<i class="brilho" style="left:${10 + Math.random() * 80}%;top:${10 + Math.random() * 80}%;animation-delay:${-Math.random() * 8}s;animation-duration:${6 + Math.random() * 6}s"></i>`).join('')
@@ -1168,29 +1208,49 @@ document.getElementById('bt-diario').onclick = () => { if (!pausado()) diario();
 // tocar num bicho: cada um tem a sua brincadeira
 function tocarBicho(b) {
   conversou(b.nome);
+  if (b.porta) return balaozinho(b);
   if (MISSOES.some(m => m.quem === b.nome)) return irAte(b, () => falarMissao(b));
-  if (b.nome === 'Snow') return jogarBolinha(b);
+  if (b.nome === 'Snow') return irAte(b, () => brincarBicho(b, 'Au au! 🐶 (O Snow abana o rabo, todo animado.)', ['🎾 Jogar a bolinha', '🤗 Fazer carinho', '🦴 Dar um petisco'], '🎾', ['*rola de barriga pra cima* 🥰', 'Au! 🦴 *senta bonitinho*']));
+  if (b.nome === 'Paçoca') return irAte(b, () => brincarBicho(b, 'Miau... 🐱 (A Paçoca te olha como quem diz: “e aí, vai me dar atenção?”)', ['🧶 Brincar com o novelo', '🤗 Fazer carinho', '🐟 Dar um peixinho'], '🧶', ['*ronrona alto* 💛', '*come tudo e lambe o bigode* 🐟']));
   if (b.nome === 'Theo' && !esconde.ativo) return irAte(b, async () => {
     const k = await falar(b, 'Títia! 🙈 (O Theo cobre os olhinhos e sai correndo. Parece que ele quer brincar de esconde-esconde!)', [['Bora!', 'primary'], ['Depois', 'ghost']]);
     if (k === 0) esconde.comecar(b);
   });
+  const JOGO = { Rebeca: ['Tia! Vamos fazer uma chuva de pétalas? Pega com a cesta as pétalas e os corações, e foge das abelhas! 🌸', 'jardim', f => JOGOS.petalas(f), 'Que lindo, tia! 🌸', 'petalas'],
+    Isabela: ['Tia! Eu e a Manu amamos flores. Joga a memória das flores comigo? 🌷', 'jardim', f => JOGOS.memoria(f, PARES_FLORES), 'Você é demais, tia! 💐', 'flores'],
+    Gabriela: ['Tia, bora fazer um bolo? Pega os ingredientes e deixa a cebola, a pimenta e o alho de fora! 🍰', 'cozinha', f => JOGOS.bolo(f), 'Que bolo lindo! 🍰💕', null] }[b.nome];
+  if (JOGO) return irAte(b, async () => {
+    const k = await falar(b, JOGO[0], [['Vamos!', 'primary'], ['Depois', 'ghost']]);
+    if (k !== 0) return;
+    cenaAtual = JOGO[1];
+    JOGO[2](() => { ganharXp(30); if (JOGO[4]) conquistar(JOGO[4]); fecharPainel(); balaozinho(b, JOGO[3]); });
+  });
   balaozinho(b);
 }
-function jogarBolinha(b) {
+// Snow e Paçoca: três jeitos de brincar
+async function brincarBicho(b, texto, opcoes, item, frases) {
+  const k = await falar(b, texto, opcoes.map((o, i) => [o, i ? 'ghost' : 'primary']));
+  if (k === 0) return jogarBolinha(b, item);
+  for (let n = 0; n < 6; n++) setTimeout(() => { const e = document.createElement('i'); e.className = 'emote'; e.textContent = k === 1 ? '💕' : '✨';
+    e.style.left = `${b.x + (Math.random() - .5) * 5}%`; e.style.top = `${b.y - 4 - Math.random() * 3}%`; mundoEl.append(e); setTimeout(() => e.remove(), 1500); }, n * 120);
+  balaozinho(b, frases[k - 1]); plim();
+  if (k === 1 && ++extra.carinhos >= 5) conquistar('abracos'); salvar();
+}
+function jogarBolinha(b, item = '🎾') {
   if (b.buscando) return balaozinho(b, '*já tá correndo* 🐾');
   let p;
   for (let k = 0; k < 20 && !p; k++) { const a = Math.random() * Math.PI * 2, r = 8 + Math.random() * 8, q = { x: heroi.x + Math.cos(a) * r, y: heroi.y + Math.sin(a) * r * .6 }; if (livre(q.x, q.y)) p = q; }
   if (!p) return balaozinho(b, 'Au? 🐾');
-  const bola = document.createElement('i'); bola.className = 'bolinha'; bola.textContent = '🎾';
+  const bola = document.createElement('i'); bola.className = 'bolinha'; bola.textContent = item;
   bola.style.left = `${heroi.x}%`; bola.style.top = `${heroi.y - 5}%`; mundoEl.append(bola);
   requestAnimationFrame(() => requestAnimationFrame(() => { bola.style.left = `${p.x}%`; bola.style.top = `${p.y}%`; }));
-  b.buscando = true; b.alvo = p; b.velAntes = b.vel; b.vel = .28; balaozinho(b, 'AU AU! 🎾');
+  b.buscando = true; b.alvo = p; b.velAntes = b.vel; b.vel = .28; balaozinho(b, item === '🎾' ? 'AU AU! 🎾' : 'Miau! 🧶');
   const busca = setInterval(() => {
     if (b.alvo) return;
     clearInterval(busca); bola.remove();
     b.alvo = { x: heroi.x + (heroi.x > 50 ? -4 : 4), y: heroi.y }; b.espera = 0;
-    const volta = setInterval(() => { if (b.alvo) return; clearInterval(volta); b.vel = b.velAntes; b.buscando = false; balaozinho(b, '*trouxe a bolinha* 🎾❤️');
-      if (++extra.bolas >= 3) conquistar('snow'); salvar(); }, 200);
+    const volta = setInterval(() => { if (b.alvo) return; clearInterval(volta); b.vel = b.velAntes; b.buscando = false; balaozinho(b, item === '🎾' ? '*trouxe a bolinha* 🎾❤️' : '*trouxe o novelo todo enrolado* 🧶😹');
+      if (item === '🎾' && ++extra.bolas >= 3) conquistar('snow'); salvar(); }, 200);
   }, 200);
 }
 // esconde-esconde com o Theo: ele some, e um "quente/frio" ajuda a achar
@@ -1251,7 +1311,7 @@ async function missaoNoMorador(i) {
 }
 function desenharFlores() {
   mundoEl.querySelectorAll('.flor-m').forEach(f => f.remove());
-  if (fase !== 2 || estado(MISSOES.find(m => m.tipo === 'flores')) !== 'ativa') return;
+  if (fase !== 5 || estado(MISSOES.find(m => m.tipo === 'flores')) !== 'ativa') return;
   FLORES.forEach(([x, y], i) => { if (!extra.flores.includes(i)) mundoEl.insertAdjacentHTML('beforeend', `<i class="nota flor-m" style="left:${x}%;top:${y}%;z-index:${Math.round(y * 10)};background:radial-gradient(circle at 40% 35%, #fff, #ffd1e8 60%, #e8638f)" aria-hidden="true">🌼</i>`); });
 }
 function mochila() {
@@ -1262,7 +1322,11 @@ function mochila() {
 // lugares com joguinho
 function abrirLugar(l) {
   if (pausado()) return;
-  if (l.id === 'petalas') { cenaAtual = 'jardim'; return JOGOS.petalas(() => { conquistar('petalas'); fecharPainel(); aviso('🌸 Que chuva de pétalas linda!'); }); }
+  if (l.txt) {
+    aviso(l.txt); plim();
+    if (!extra.cantinhos.includes(l.id)) { extra.cantinhos.push(l.id); ganharXp(5); if (LUGARES.filter(x => x.txt).every(x => extra.cantinhos.includes(x.id))) conquistar('curiosa'); salvar(); }
+    return;
+  }
   if (l.id === 'festa') {
     const n = NPCS.findIndex(x => x.nome === 'Cayo');
     falar(n, `A festa da vila não para aqui na tenda! Bora dançar? Toque nas faixas quando as notas passarem na linha dourada! 🕺`, [['Bora dançar!', 'primary'], ['Depois', 'ghost']])
@@ -1272,9 +1336,9 @@ function abrirLugar(l) {
 // mapa da jornada: as fases, com o desenho de cada mapa; dá para voltar às que já abriram
 function mapaJornada() {
   cenaAtual = null;
-  const max = Math.min(Math.max(cap, 0), FASES.length - 1);
+  const max = NPCS[Math.max(cap, 0)]?.fase ?? FASES.length - 1;
   view(`<p class="kicker">Mapa da jornada</p><h2>As fases</h2><div class="fases">${FASES.map((f, i) => `<button class="fase${i === fase ? ' aqui' : ''}" data-v="${i}" ${i > max ? 'disabled' : ''} style="background-image:url(${f.mapa})">
-      <b>${i + 1}. ${f.nome}</b><small>${esc(NPCS[i].nome)} ${i < cap ? '✅' : i <= max ? '⭐' : '🔒'}${i === fase ? ' · você está aqui' : ''}</small></button>`).join('')}</div>`, topoLivre('🗺️'));
+      <b>${i + 1}. ${f.nome}</b><small>${esc(NPCS.filter(n => n.fase === i).map(n => n.nome).join(' e ') || 'Cayo na porta')} ${i < max ? '✅' : i <= max ? '⭐' : '🔒'}${i === fase ? ' · você está aqui' : ''}</small></button>`).join('')}</div>`, topoLivre('🗺️'));
   on('.fase', v => { fecharPainel(); if (+v !== fase) irParaFase(+v); });
 }
 // diário: conquistas e as canções da família
@@ -1358,7 +1422,7 @@ function vizinho() {
   acaoEl.hidden = !perto;
   if (perto) acaoEl.innerHTML = perto.tipo === 'npc' ? `💬 Falar com ${com(NPCS[perto.i])}` : perto.tipo === 'lugar' ? `${LUGARES[perto.i].ic} ${LUGARES[perto.i].nome.split(' ·')[0]}`
     : fase === FASES.length - 1 ? (cap >= CAPITULOS.length ? '🏰 Entrar no castelo' : '🔒 Portão trancado')
-    : cap > fase ? `✨ Ir para ${FASES[fase + 1].nome}` : `🔒 Fale com ${com(NPCS[fase])} primeiro`;
+    : cap > ultimoCap(fase) ? `✨ Ir para ${FASES[fase + 1].nome}` : `🔒 Fale com ${com(NPCS[cap])} primeiro`;
 }
 function agir() { if (!perto || pausado()) return; perto.tipo === 'npc' ? falarCom(perto.i) : perto.tipo === 'lugar' ? abrirLugar(LUGARES[perto.i]) : irAoPortao(); }
 acaoEl.onclick = agir;
@@ -1397,7 +1461,7 @@ function desenharMundo() {
     b.classList.remove('feito', 'agora', 'depois'); b.classList.add(estado);
     b.setAttribute('aria-label', `${NPCS[i].nome}: ${estado === 'feito' ? 'pedaço da carta entregue' : estado === 'agora' ? 'tem um desafio para você' : 'ainda não é a vez'}`);
   });
-  const p = mundoEl.querySelector('.portao'), ultima = fase === FASES.length - 1, aberto = ultima ? cap >= CAPITULOS.length : cap > fase;
+  const p = mundoEl.querySelector('.portao'), ultima = fase === FASES.length - 1, aberto = ultima ? cap >= CAPITULOS.length : cap > ultimoCap(fase);
   p.classList.toggle('aberto', aberto);
   p.setAttribute('aria-label', ultima ? (aberto ? 'Portão do castelo: aberto, entrar' : 'Portão do castelo: trancado') : (aberto ? `Caminho para ${FASES[fase + 1].nome}` : 'Caminho trancado'));
   perto = null;
@@ -1457,7 +1521,7 @@ function start() {
   extra = { ...novoExtra(), ...(s?.extra || {}) };
   hud(); desenharMundo(); desenharNotas();
 
-  if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; fase = Math.min(extra.fase ?? Math.min(cap, FASES.length - 1), FASES.length - 1);
+  if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; fase = Math.min(extra.fase ?? (NPCS[cap]?.fase ?? FASES.length - 1), FASES.length - 1);
     Object.assign(heroi, FASES[fase].inicio); if (extra.fim) chamarEscudeiro(); desenharFase(); camera(true); boasVindas();
     return aviso(`Bem-vinda de volta! Fase ${fase + 1}: ${FASES[fase].nome}.`); }
   cenaAtual = 'quarto';
@@ -1496,7 +1560,7 @@ function capituloCompleto() {
     <p class="pedaco">“${CARTA[i]}”</p><div class="xp">+100 XP</div>${lvl() > antes ? `<div class="xp">⬆ Nível ${lvl()}!</div>` : ''}
     <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Guardar na mochila'}</button>`, iconeCap(i), true);
   canal(`📜 <b>${esc(NPCS[i].nome)}</b> entregou o pedaço ${i + 1} da carta para <b>${ELA}</b>!`, 'sis');
-  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `✨ O caminho para ${FASES[fase + 1].nome} se abriu!`);
+  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O caminho para o castelo se abriu! ✨' : NPCS[cap].fase === fase ? `Agora fale com ${com(NPCS[cap])}!` : `✨ O caminho para ${FASES[fase + 1].nome} se abriu!`);
     if (ultimo) { conquistar('carta'); canal('<b>[Vila] Cayo:</b> O PORTÃO ABRIU! Todo mundo pro castelo! 🏰'); } };
   on('.primary', voltar); aoFechar = voltar;
 }
@@ -1511,7 +1575,7 @@ function voar(i) {
 }
 function irAoPortao() {
   if (pausado()) return;
-  if (fase < FASES.length - 1) return cap > fase ? irParaFase(fase + 1) : aviso(`Fale com ${com(NPCS[fase])} primeiro: o caminho abre depois do desafio.`);
+  if (fase < FASES.length - 1) return cap > ultimoCap(fase) ? irParaFase(fase + 1) : aviso(`Fale com ${com(NPCS[cap])} primeiro: o caminho abre depois do desafio.`);
   if (cap < CAPITULOS.length) return aviso(`O portão está trancado. Faltam ${CAPITULOS.length - Math.max(cap, 0)} pedaços da carta.`);
   castelo();
 }
@@ -1573,6 +1637,37 @@ const JOGOS = {
     cv.addEventListener('pointermove', e => { if (pintando) pintar(e); });
     cv.addEventListener('pointerup', () => { pintando = false; });
   },
+  // Henrique: 5 pênaltis, precisa de 3 gols
+  penaltis(fim) {
+    let gols = 0, chutes = 0, travado = false;
+    view(`<p class="kicker">Gols: <span id="gols">0</span>/3 · Chutes: <span id="chutes">0</span>/5</p><h2>Bate o pênalti!</h2>
+      <div class="campo"><div class="gol"></div><i class="goleiro">🧤</i><i class="bola">⚽</i><div class="juizo" id="juizo" aria-live="polite"></div></div>
+      <div class="answers row" style="grid-template-columns:repeat(3,1fr)"><button data-v="0">⬅️ Esquerda</button><button data-v="1">⬆️ Meio</button><button data-v="2">➡️ Direita</button></div>
+      <p class="note" id="msg" role="status">Escolha o canto. O goleiro vai pular em algum lugar...</p>`, topoJogo());
+    const gol = app.querySelector('.goleiro'), bola = app.querySelector('.bola'), juizo = app.querySelector('#juizo'), msg = app.querySelector('#msg'), X = [25, 50, 75];
+    on('.answers button', v => {
+      if (travado) return; travado = true;
+      const pulo = Math.random() * 3 | 0;
+      gol.style.left = `${X[pulo]}%`; bola.style.left = `${X[+v]}%`; bola.style.bottom = '58%';
+      const entrou = pulo !== +v; chutes++; if (entrou) gols++;
+      depois(450, () => { juizo.textContent = entrou ? 'GOOOL! 💚⚽' : 'Defendeu! 🧤'; app.querySelector('#gols').textContent = gols; app.querySelector('#chutes').textContent = chutes;
+        const a = som(); if (a) tom(entrou ? 880 : 220, a.currentTime, .3, entrou ? 'triangle' : 'sawtooth', .07); });
+      depois(1400, () => {
+        juizo.textContent = ''; gol.style.left = '50%'; bola.style.left = '50%'; bola.style.bottom = '8%';
+        if (gols >= 3) { msg.textContent = 'Craque! O Henrique aprovou. 💚'; return depois(500, fim); }
+        if (chutes >= 5) { msg.textContent = 'Faltou pouco! Bora de novo?'; return depois(1200, () => JOGOS.penaltis(fim)); }
+        travado = false;
+      });
+    });
+  },
+  // Cayo: show estilo Guitar Hero (escolhe a música; ela toca no YouTube enquanto as notas descem)
+  guitarra(fim) {
+    pararMusica();
+    view(`<p class="kicker">O Show do Cayo</p><h2>Escolhe a música do show! 🎸</h2>
+      <div class="answers">${SHOW.map((m, i) => `<button data-v="${i}">🎵 ${esc(m.m)}</button>`).join('')}</div>
+      <p class="note">As notas descem no ritmo da música. Toque nas cores quando elas passarem na linha!</p>`, topoJogo());
+    on('.answers button', v => JOGOS.danca(fim, { ...SHOW[+v], faixas: 5, show: true }));
+  },
   // Rangel e Ciane: forca das flores
   forca(fim, k = 0) {
     const { dica, p } = FORCA[k], norm = c => c.normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -1594,7 +1689,14 @@ const JOGOS = {
     pintar();
   },
   // Diego e Fran: 4 piadinhas sorteadas
-  piadas(fim) { JOGOS.charadas(fim, 0, embaralhar(PIADAS).slice(0, 4), 'Piada'); },
+  piadas(fim) {
+    // não repete as piadas da última jogada: guarda as já vistas neste navegador
+    let vistas = []; try { vistas = JSON.parse(localStorage.getItem('aventura-piadas')) || []; } catch {}
+    let pool = PIADAS.filter(q => !vistas.includes(q.p)); if (pool.length < 4) { pool = PIADAS; vistas = []; }
+    const escolha = embaralhar(pool).slice(0, 4);
+    try { localStorage.setItem('aventura-piadas', JSON.stringify([...vistas, ...escolha.map(q => q.p)])); } catch {}
+    JOGOS.charadas(fim, 0, escolha, 'Piada');
+  },
   // Rad: a família e o Theo
   familia(fim) { JOGOS.charadas(fim, 0, FAMILIA_QUIZ, 'Pergunta'); },
   // Jardineira: quebra-cabeça 3x3 com o quadro do casal; toque em duas peças para trocar
@@ -1655,12 +1757,12 @@ const JOGOS = {
     }, 1000));
   },
   // 4. Memória: 6 pares com os ícones da aventura
-  memoria(fim) {
-    const ICONES = PARES.map(p => p[0]), NOME = Object.fromEntries(PARES);
+  memoria(fim, lista = PARES) {
+    const ICONES = lista.map(p => p[0]), NOME = Object.fromEntries(lista);
     const cartas = embaralhar([...ICONES, ...ICONES]);
     let abertas = [], pares = 0, jogadas = 0, travado = false;
     view(`<p class="kicker">Pares: <span id="pares">0</span>/${ICONES.length} · jogadas: <span id="jog">0</span></p><h2>Ache os pares!</h2>
-      <div class="memoria">${cartas.map((ic, i) => `<button class="carta-mem" data-v="${i}" aria-label="Carta virada"><img src="img/${ic}.webp" alt=""></button>`).join('')}</div>`, topoJogo());
+      <div class="memoria">${cartas.map((ic, i) => `<button class="carta-mem" data-v="${i}" aria-label="Carta virada">${/\p{Extended_Pictographic}/u.test(ic) ? `<img alt="" src="data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><text x='20' y='31' font-size='30' text-anchor='middle'>${ic}</text></svg>`)}">` : `<img src="img/${ic}.webp" alt="">`}</button>`).join('')}</div>`, topoJogo());
     on('.carta-mem', (v, b) => {
       if (travado || b.classList.contains('virada')) return;
       b.classList.add('virada'); b.setAttribute('aria-label', NOME[cartas[v]]); abertas.push(b);
@@ -1748,25 +1850,28 @@ const JOGOS = {
     });
   },
   // Pista de dança da festa: as notas descem; toque na faixa quando passarem na linha dourada (teclas D F J K ou setas)
-  danca(fim) {
-    const BPM = 112, BATIDA = 60 / BPM, QUEDA = 1.6, LEAD = 2.2;
-    const PADRAO = [0, 1, 2, 3, 3, 2, 1, 0, 0, 2, 1, 3, 1, 1, 2, 2, 0, 3, 0, 3, 1, 2, 1, 2, 3, 2, 1, 0, 0, 1, 2, 3];
+  danca(fim, o = {}) {
+    const NF = o.faixas || 4, BPM = o.bpm || 112, BATIDA = 60 / BPM, QUEDA = 1.6, LEAD = o.v ? 3 : 2.2;
+    const BASE = [0, 1, 2, 3, 3, 2, 1, 0, 0, 2, 1, 3, 1, 1, 2, 2, 0, 3, 0, 3, 1, 2, 1, 2, 3, 2, 1, 0, 0, 1, 2, 3];
+    const PADRAO = (o.show ? [...BASE, ...BASE] : BASE).map((v, b) => (v + (NF > 4 ? b >> 3 : 0)) % NF);
     const NOTAS = [69, 72, 74, 76, 79];  // pentatônica para a melodia de quem acerta
     const notas = PADRAO.map((f, b) => ({ f, t: LEAD + b * BATIDA }));
-    PADRAO.slice(16).forEach((f, b) => { if (b % 3 === 1) notas.push({ f: (f + 2) % 4, t: LEAD + (16 + b + .5) * BATIDA }); });
+    PADRAO.slice(16).forEach((f, b) => { if (b % 3 === 1) notas.push({ f: (f + 2) % NF, t: LEAD + (16 + b + .5) * BATIDA }); });
     notas.sort((a, b) => a.t - b.t);
-    const CORES = ['#ff5fa2', '#7fd3ff', '#8ff0b4', '#ffe08a'], TECLAS = [['d', 'arrowleft'], ['f', 'arrowdown'], ['j', 'arrowup'], ['k', 'arrowright']];
+    const CORES = NF > 4 ? ['#3fbf5f', '#e84a4a', '#f2d13d', '#4a8be8', '#f29a3d'] : ['#ff5fa2', '#7fd3ff', '#8ff0b4', '#ffe08a'];
+    const TECLAS = NF > 4 ? [['a'], ['s'], ['d'], ['f'], ['g']] : [['d', 'arrowleft'], ['f', 'arrowdown'], ['j', 'arrowup'], ['k', 'arrowright']], ROT = NF > 4 ? 'ASDFG' : 'DFJK';
     pararMusica();
-    const faixa = FESTA[Math.random() * FESTA.length | 0];
-    view(`<p class="kicker">🎶 Tocando na festa: ${esc(faixa)}</p><h2>Pista de dança!</h2>
-      <div class="pista"><i class="luz"></i>${[0, 1, 2, 3].map(f => `<div class="faixa-n" data-f="${f}"><button class="bt-d" data-f="${f}" style="background:${CORES[f]}66" aria-label="Faixa ${f + 1}">${['D', 'F', 'J', 'K'][f]}</button></div>`).join('')}<i class="linha"></i><div class="juizo" aria-live="polite"></div></div>
-      <p class="note" id="msg">A batida é da vila; a música, na nossa memória. 😉</p>`, topoLivre('💃'));
+    const faixa = o.m || FESTA[Math.random() * FESTA.length | 0];
+    view(`<p class="kicker">${o.show ? '🎸 No palco' : '🎶 Tocando na festa'}: ${esc(faixa)}</p><h2>${o.show ? 'O Show do Cayo!' : 'Pista de dança!'}</h2>
+      ${o.v ? `<iframe class="show-yt" src="https://www.youtube-nocookie.com/embed/${o.v}?autoplay=1&playsinline=1&rel=0&start=${o.ini || 0}" title="${esc(faixa)}" allow="autoplay; encrypted-media"></iframe>` : ''}
+      <div class="pista" style="grid-template-columns:repeat(${NF}, 1fr)"><i class="luz"></i>${[...Array(NF).keys()].map(f => `<div class="faixa-n" data-f="${f}"><button class="bt-d" data-f="${f}" style="background:${CORES[f]}66" aria-label="Faixa ${f + 1}">${ROT[f]}</button></div>`).join('')}<i class="linha"></i><div class="juizo" aria-live="polite"></div></div>
+      <p class="note" id="msg">${o.v ? 'Toque junto com a música! 🤘' : 'A batida é da vila; a música, na nossa memória. 😉'}</p>`, o.show ? topoJogo() : topoLivre('💃'));
     const pista = app.querySelector('.pista'), faixas = [...app.querySelectorAll('.faixa-n')], juizo = app.querySelector('.juizo');
     const ALT = pista.clientHeight, LINHA = ALT - 58;
     notas.forEach(n => { n.el = document.createElement('i'); n.el.className = 'nt'; n.el.style.background = CORES[n.f]; n.el.style.color = CORES[n.f]; n.el.style.top = '-30px'; faixas[n.f].append(n.el); });
     const a = som(), inicio = performance.now() / 1000, base = a ? a.currentTime - inicio : 0;
     // a batida inteira já fica agendada no relógio de áudio
-    if (a) for (let b = 0; b < PADRAO.length + 4; b++) { const tt = inicio + base + LEAD + b * BATIDA; bumbo(tt, .35); chimbal(tt + BATIDA / 2); if (b % 4 === 0) tom(ESCALA(-12 + [0, 5, 7, 4][b / 4 % 4 | 0]), tt, BATIDA * 3.6, 'triangle', .05); }
+    if (a && !o.v) for (let b = 0; b < PADRAO.length + 4; b++) { const tt = inicio + base + LEAD + b * BATIDA; bumbo(tt, .35); chimbal(tt + BATIDA / 2); if (b % 4 === 0) tom(ESCALA(-12 + [0, 5, 7, 4][b / 4 % 4 | 0]), tt, BATIDA * 3.6, 'triangle', .05); }
     let pontos = 0, acertos = 0, acabou = false;
     const julgar = (txt, cor) => { juizo.textContent = txt; juizo.style.color = cor; juizo.style.animation = 'none'; void juizo.offsetWidth; juizo.style.animation = 'pop .25s ease'; };
     const bater = f => {
@@ -1793,7 +1898,13 @@ const JOGOS = {
       });
       if (t < fimT) { quadro = requestAnimationFrame(quadroD); return; }
       acabou = true;
-      const pct = Math.round(pontos / (notas.length * 100) * 100), subiu = ganharXp(Math.max(10, Math.round(pct / 2)));
+      const pct = Math.round(pontos / (notas.length * 100) * 100);
+      if (o.show) {  // capítulo do Cayo: passa com 50%, senão tenta de novo
+        if (pct >= 50) return fim();
+        view(`<p class="kicker">Fim do show!</p><h2>Quase! ${pct}% 🎸</h2><p>O Cayo pediu bis: tenta de novo!</p><button class="primary" id="denovo">Tocar de novo</button>`, topoJogo());
+        app.querySelector('#denovo').onclick = () => JOGOS.guitarra(fim); return;
+      }
+      const subiu = ganharXp(Math.max(10, Math.round(pct / 2)));
       fim(pct);
       view(`<p class="kicker">Fim da música!</p><h2>${pct >= 70 ? 'Rainha da pista! 👑' : pct >= 50 ? 'Arrasou na pista! 💃' : 'A pista é sua, é só treinar! 🕺'}</h2>
         <div class="xp">${acertos}/${notas.length} passos · ${pct}%</div><div class="xp">+${Math.max(10, Math.round(pct / 2))} XP${subiu ? ` · ⬆ Nível ${lvl()}!` : ''}</div>

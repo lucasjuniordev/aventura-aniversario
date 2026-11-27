@@ -27,7 +27,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preload" as="image" href="img/vila.webp">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Alegreya:wght@700;800&family=Alegreya+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600;1,700&family=Alegreya+Sans:wght@500;600;700;800&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
 <style>
   :root { --night:#121833; --wood:#4a2c17; --wood2:#2a180b; --gold:#e3ae4a; --gold2:#ffe3a1; --gold3:#9a6a1f;
     --parch:#f6e9c8; --parch2:#e8cf98; --ink:#2b1c10; --ink2:#5a432c; --ruby:#a8323f; --ruby2:#7d1f2c; --emerald:#2f8f5b; }
@@ -54,21 +55,6 @@
   .bar i { display:block; height:100%; border-radius:999px; transition:width .6s cubic-bezier(.2,.9,.3,1.2);
     background:linear-gradient(180deg, #fff2bf 0%, #f0c45c 45%, #b9802a 100%); box-shadow:0 0 10px #f0c45c; }
 
-  /* mapa das missões */
-  .map { list-style:none; display:flex; justify-content:space-between; position:relative; margin:14px 4px 0; padding:0; }
-  .map::before { content:''; position:absolute; left:28px; right:28px; top:27px; border-top:3px dashed #e3ae4a99; }
-  .map li { position:relative; display:flex; flex-direction:column; align-items:center; gap:3px; width:64px; }
-  .map span { width:56px; height:56px; border-radius:50%; display:grid; place-items:center; position:relative;
-    background:radial-gradient(circle at 50% 35%, #2c366e, #121833); border:3px solid #6b5a3a; box-shadow:0 4px 10px #0008; transition:.3s; }
-  .map img { width:42px; height:42px; }
-  .map small { font-size:12px; font-weight:800; color:var(--parch); text-shadow:0 1px 3px #000; }
-  .map .locked img { filter:grayscale(1) brightness(.55); }
-  .map .locked small { opacity:.6; }
-  .map .on span { border-color:var(--gold); animation:glow 1.6s ease-in-out infinite alternate; }
-  .map .done span { border-color:#57c48a; }
-  .map .done span::after { content:'✓'; position:absolute; right:-4px; bottom:-4px; width:22px; height:22px; border-radius:50%; display:grid; place-items:center;
-    font:900 13px sans-serif; color:#fff; background:var(--emerald); border:2px solid #d8f5e4; }
-  @keyframes glow { from { box-shadow:0 0 0 3px #e3ae4a44, 0 0 8px #e3ae4a88; } to { box-shadow:0 0 0 5px #e3ae4a55, 0 0 22px #ffd36e; } }
 
   /* pergaminho com moldura */
   .card { position:relative; margin-top:70px; padding:64px 24px 26px; text-align:center; border-radius:12px; animation:in .35s ease;
@@ -86,7 +72,6 @@
   .crest.duo { width:190px; margin-left:-95px; background:none; border:0; box-shadow:none; display:flex; justify-content:center; }
   .crest.duo img { width:104px; height:104px; border-radius:50%; object-fit:cover; border:4px solid var(--gold); box-shadow:0 0 0 4px var(--wood), 0 10px 20px #000a; filter:none; }
   .crest.duo img + img { margin-left:-22px; }
-  .crest.think { animation:float 3s ease-in-out infinite, glow .7s ease-in-out infinite alternate; }
   @keyframes float { 50% { transform:translateY(-6px); } }
 
   .kicker { display:flex; align-items:center; justify-content:center; gap:10px; font:800 13px/1.3 'Alegreya Sans', sans-serif; letter-spacing:.16em;
@@ -176,13 +161,9 @@
   .foto { display:block; width:min(100%, 280px); aspect-ratio:4 / 3; object-fit:cover; margin:0 auto 12px; border-radius:10px;
     border:3px solid var(--gold); box-shadow:0 0 0 3px var(--wood), 0 8px 18px #0005; }
   .foto.poster { width:170px; aspect-ratio:2 / 3; }
-  .pista { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; margin:12px 0 2px; font-size:14px; color:var(--ink2); }
-  .pista img { width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); box-shadow:0 2px 5px #0004; }
-  .pista img + img { margin-left:-14px; }
 
   @media (max-width:420px) {
     body { font-size:17px; }
-    .map span { width:48px; height:48px; } .map img { width:36px; height:36px; } .map::before { top:23px; } .map li { width:56px; } .map small { font-size:11px; }
     .card { padding:60px 16px 22px; }
   }
   @media (prefers-reduced-motion:reduce) { *, *::before { animation:none !important; transition:none !important; } }
@@ -207,15 +188,6 @@
     font-size:26px; color:#ffd9dd; text-shadow:0 1px 0 #0006; background:radial-gradient(circle at 35% 30%, #d9586a, #7d1f2c 72%);
     box-shadow:0 4px 10px #0007, inset 0 -3px 6px #0005, 0 0 0 4px #9a2a3a55; }
 
-  /* desktop: retrato, nível e mapa numa coluna ao lado do pergaminho */
-  @media (min-width:980px) {
-    main { max-width:960px; display:grid; grid-template-columns:300px 1fr; gap:36px; align-items:start; }
-    #hud { position:sticky; top:24px; }
-    .map { flex-direction:column; gap:10px; margin:16px 0 0; padding:14px; background:#0b0f24b3; border:2px solid var(--gold3); border-radius:16px; }
-    .map::before { left:41px; right:auto; top:34px; bottom:34px; border-top:0; border-left:3px dashed #e3ae4a99; }
-    .map li { flex-direction:row; width:auto; gap:14px; }
-    .map small { font-size:17px; }
-  }
   /* ---- vila ---- */
   .mundo { margin-top:14px; }
   .vila { position:relative; container-type:size; aspect-ratio:768 / 1376; margin:0 auto; overflow:hidden; cursor:pointer; touch-action:manipulation; user-select:none; -webkit-user-select:none;
@@ -254,7 +226,6 @@
   .dialogo .card { max-width:540px; margin:0 auto; }
   .fechar { position:absolute; top:6px; right:6px; width:44px; height:44px; border:0; border-radius:50%; background:none; color:var(--ink2); font:900 20px sans-serif; cursor:pointer; }
   .crest img.npc-rosto { width:102px; height:102px; object-fit:cover; object-position:50% 4%; background:radial-gradient(circle at 50% 35%, #34418a, #121833); }
-  .fala { font:italic 500 19px/1.45 Alegreya, Georgia, serif; color:var(--ink); }
   .dica-jogo { font-size:15px; background:#fff8e6; border:1px dashed #c9a462; border-radius:10px; padding:8px 12px; }
 
   @media (min-width:980px) {
@@ -590,6 +561,127 @@
   .final-carta { position:relative; z-index:2; flex:1 1 auto; min-height:0; width:100%; max-width:540px; margin:0 auto; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; }
   .coracao { z-index:1; }
   .fala-texto { max-height:38dvh; overflow-y:auto; overscroll-behavior:contain; }
+
+  /* ===== revisão de layout ===== */
+  img.emo { display:inline-block; width:1.2em; height:1.2em; vertical-align:-.24em; object-fit:contain; -webkit-user-drag:none; }
+  .card h1:focus, .card h2:focus { outline:none; }
+  .kicker span { display:contents; }  /* contador no meio do texto sem o espaço do flex ("0 /3") */
+  /* fechar sempre visível, até em cima da pintura */
+  .fechar { z-index:3; top:8px; right:8px; display:grid; place-items:center; background:#2a180bcc; border:2px solid var(--gold3); color:var(--parch); font:900 18px/1 sans-serif; box-shadow:0 3px 8px #0006; }
+  .fechar:hover { background:var(--wood2); }
+  /* botão principal: em linha própria, centralizado, com o pergaminho por trás quando gruda no rodapé */
+  .card-corpo > .primary:last-child { display:block; margin:16px auto 0; min-width:min(240px, 100%); box-shadow:0 4px 0 #4e111b, inset 0 1px 0 #ffffff55, 0 -10px 18px 8px var(--parch); }
+  .ghost, .answers .ghost { text-decoration:none; color:var(--ink2); }
+  .ghost:hover { text-decoration:underline; color:var(--ink); }
+  /* respostas: certo e errado com cor e sinal */
+  .answers button.errado { background:linear-gradient(180deg, #fdeef0, #f4cfd4); border-color:#b8323f; color:#7d1f2c; opacity:.8; }
+  .answers button.errado::after, .answers button.certo::after { margin-left:auto; font-weight:900; }
+  .answers button.errado::after { content:'✕'; color:#b8323f; }
+  .answers button.certo::after { content:'✓'; color:#2f8f5b; }
+  .ref { margin:-8px 0 14px; font:italic 500 15px Alegreya, Georgia, serif; color:var(--ink2); }
+  /* galeria: 3 retratos que cabem até em 360 px */
+  .answers.trio { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+  .answers.trio button { flex-direction:column; justify-content:flex-start; gap:4px; padding:8px 4px; font-size:15px; line-height:1.15; text-align:center; overflow-wrap:anywhere; }
+  .answers.trio button::before { display:none; }
+  .answers.trio button::after { margin:0; }
+  .answers.trio img { width:100%; height:80px; object-fit:contain; }
+  /* forca: teclas de 44 px; acerto verde, erro vermelho */
+  .letras { gap:5px; }
+  .letras button { width:44px; height:44px; font-size:20px; }
+  .letras button.acertou { opacity:1; background:#d7f2df; border-color:var(--emerald); color:var(--emerald); }
+  .letras button.errou { opacity:.6; background:#f6d5d8; border-color:#b8323f; color:#b8323f; text-decoration:line-through; }
+  .slots span { border-bottom-color:var(--ink2); }
+  .flores-forca { letter-spacing:-1px; white-space:nowrap; }
+  /* grafite: as cores à mostra */
+  .cores { display:flex; justify-content:center; gap:10px; margin:10px 0 0; }
+  .cores button { width:40px; height:40px; border-radius:50%; background:var(--c); border:3px solid #fff; box-shadow:0 0 0 2px var(--gold3), 0 3px 6px #0005; }
+  .cores button.on { transform:scale(1.18); box-shadow:0 0 0 3px var(--ruby), 0 3px 8px #0006; }
+  /* pênaltis: Henrique no gol, mira e força */
+  .campo { height:230px; }
+  .petalas.chuva { width:auto; max-width:100%; height:max(240px, min(400px, calc(100dvh - 360px))); }
+  .campo .goleiro { position:absolute; top:12%; left:50%; height:42%; width:auto; translate:-50% 0; transition:left .35s ease, rotate .35s ease; filter:drop-shadow(0 3px 3px #0006); }
+  .campo .goleiro.pulou-e { rotate:-35deg; } .campo .goleiro.pulou-d { rotate:35deg; }
+  .campo .mira { position:absolute; top:20%; left:50%; width:34px; height:34px; translate:-50% 0; border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 2px #a8323f, inset 0 0 0 2px #a8323f; pointer-events:none; }
+  .campo .mira::after { content:''; position:absolute; inset:12px; border-radius:50%; background:#a8323f; }
+  .campo .bola { font-size:30px; transition:left .45s ease-out, bottom .45s ease-out, scale .45s ease-out; }
+  .forca-bar { position:absolute; right:8px; bottom:8%; width:16px; height:58%; border-radius:8px; border:2px solid #fff; background:linear-gradient(0deg, #8ff0b4 0 28%, #ffe08a 28% 86%, #ff8a96 86%); overflow:hidden; opacity:.35; }
+  .forca-bar.ativa { opacity:1; }
+  .forca-bar i { position:absolute; left:-2px; right:-2px; height:4px; bottom:0; background:#1d1006; box-shadow:0 0 0 2px #fff; }
+  /* quebra-cabeça: peça certa com ✓, selecionada em rubi */
+  .peca { position:relative; }
+  .peca.sel { box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--ruby); }
+  .peca.certa { box-shadow:none; }
+  .peca.certa::after { content:'✓'; position:absolute; right:3px; bottom:3px; width:18px; height:18px; border-radius:50%; display:grid; place-items:center; font:900 11px sans-serif; color:#fff; background:var(--emerald); border:2px solid #d8f5e4; }
+  .quebra.pronto .peca::after { display:none; }
+  /* gemas sem ficar marrom em repouso; bolo e pétalas */
+  .gema { filter:brightness(.85) saturate(.9); }
+  .bolo-barra { height:12px; background:#5a382026; }
+  .legenda { display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin:8px 0 0; }
+  .legenda span { padding:3px 10px; border-radius:999px; font:700 14px 'Alegreya Sans', sans-serif; color:var(--ink); background:#fff8e6; border:2px solid #d9bf8a; }
+  .carta-mem .emo-carta { font-size:clamp(28px, 9vw, 44px); line-height:1; opacity:0; transition:opacity .2s; }
+  .carta-mem.virada .emo-carta { opacity:1; }
+  /* show: miniatura do vídeo enquanto carrega; ✕ longe do título */
+  .show-yt { width:160px; height:90px; margin:0 auto 6px; border-radius:8px; overflow:hidden; background:#000 center / cover; }
+  .card.ritmo .kicker { padding:0 44px; }
+  .pista .bt-d { font-size:16px; }
+  .pista .combo { position:absolute; top:8px; right:10px; z-index:4; font:800 14px 'Alegreya Sans', sans-serif; color:#ffe08a; text-shadow:0 0 8px #ff5fa2; pointer-events:none; }
+  /* diário e mapa da jornada */
+  .diario { text-align:left; }
+  .conqs { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .conqs > div > span { font-size:20px; }
+  .trilha li small { font-size:13px; color:#7a5a20; }
+  .fase .aqui-tag { position:absolute; top:6px; left:6px; padding:2px 8px; border-radius:999px; font:800 11px 'Alegreya Sans', sans-serif; font-style:normal; color:#2a1a06; background:linear-gradient(#ffe79a, var(--gold)); border:1px solid #fff4da; }
+  .fases + .primary { display:block; margin:14px auto 0; }
+  /* final: vale com cara de ticket, epílogo liso */
+  .epilogo { border-style:solid; }
+  /* mapa: canal mais firme, faixa já opaca, nomes maiores, brilho do portão menor */
+  .canal p { background:#0b0f24e6; border:1px solid var(--gold3); }
+  @keyframes faixa { 0% { opacity:1; transform:scaleY(0); } 15%, 80% { opacity:1; transform:none; } 100% { opacity:0; transform:translateY(-20px); } }
+  .faixa small, .faixa b { animation:in .4s .15s both; }
+  .mundo .npc small { font-size:max(12px, 1.6cqh); }
+  .jogo .mundo.deitado .npc small { font-size:13px; }
+  .portao.aberto::before { inset:-15% -25%; }
+  .portao.saida::after { content:''; width:max(26px, 3.6cqh); height:max(26px, 3.6cqh); background:url(https://cdn.jsdelivr.net/npm/@lobehub/fluent-emoji-3d@1.1.0/assets/1f512.webp) center / contain no-repeat; filter:drop-shadow(0 2px 3px #0008); }
+  .portao.saida.aberto::after { background-image:url(https://cdn.jsdelivr.net/npm/@lobehub/fluent-emoji-3d@1.1.0/assets/2728.webp); }
+  /* player de música: no computador, embaixo dos botões do lado */
+  .yt { top:calc(max(10px, env(safe-area-inset-top)) + 316px); }
+  .yt p .yt-t { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+  .yt.mini .yt-msg { display:none; }
+  @media (hover:hover) and (pointer:fine) { .acao { left:50%; right:auto; translate:-50% 0; } }
+  /* celular */
+  @media (max-width:600px) {
+    /* player vira uma faixa no alto, sem tampar a caixa de fala nem os moradores; toque no nome mostra a mensagem */
+    .yt { left:10px; right:62px; width:auto; top:calc(max(10px, env(safe-area-inset-top)) + 140px); display:grid; grid-template-columns:96px minmax(0, 1fr); align-items:center; background:#2a180b; }
+    .yt[hidden] { display:none; }
+    .yt iframe { grid-row:1; grid-column:1; width:96px; height:54px; }
+    .yt p { grid-row:1; grid-column:2; min-width:0; align-self:stretch; }
+    .yt-msg { grid-column:1 / -1; display:none; }
+    .yt.aberto:not(.mini) .yt-msg { display:block; }
+    .conquista { top:auto; bottom:calc(max(14px, env(safe-area-inset-bottom)) + 250px); max-width:88vw; font-size:13px; }
+    .conquista span { font-size:24px; }
+  }
+  @media not ((hover:hover) and (pointer:fine)) { .aviso { bottom:calc(max(14px, env(safe-area-inset-bottom)) + 160px); } .mundo .npc.agora small { display:flex !important; } }
+  @media (max-width:480px) {
+    /* caixa de fala compacta: retrato pequeno ao lado do nome, texto na largura toda */
+    .fala-caixa { grid-template-columns:44px 1fr; gap:4px 10px; padding:10px 12px; }
+    .fala-rosto { width:44px; height:44px; border-width:2px; box-shadow:0 0 0 2px var(--wood); }
+    .fala-corpo { display:contents; }
+    .fala-nome { align-self:center; margin:0; }
+    .fala-texto, .fala-botoes { grid-column:1 / -1; }
+  }
+  @media (max-width:420px) {
+    .cena-img { margin:-60px -16px 14px; height:110px; }
+    .card { box-shadow:0 0 0 4px var(--wood), inset 0 0 50px #b8863b66, 0 26px 50px #000b; }
+  }
+  @media (max-width:400px) {
+    .kicker { letter-spacing:.08em; }
+    .kicker::before, .kicker::after { display:none; }
+    .acao { white-space:nowrap; font-size:15px; padding:12px 14px; }
+  }
+  @media (max-width:380px) { .pedacos { gap:2px; max-width:calc(100vw - 80px); } }
+  /* no computador o fundo já mostra a cena: desfocado, para não repetir a pintura três vezes */
+  .painel.com-cena { background:#0b0f2499; }
+  .painel.com-cena::before { content:''; position:fixed; inset:-20px; z-index:-1; background:var(--cena) center / cover; filter:blur(6px) brightness(.6); }
 </style>
 </head>
 <body>
@@ -789,7 +881,7 @@ const FRASES = {
   'Sthefany': ['Bora dançar? 💃', 'Já treinei os passos da pista!', 'Feliz aniversário! 🎉'],
   'Paçoca': ['Miau 💛', 'Purr...', '*se espreguiça*', '*ignora todo mundo com classe*'],
 };
-const DICAS = ['💡 Há 16 notas musicais escondidas pela vila: cada uma é uma canção da família.', '💡 Toque no Theo para brincar de esconde-esconde.', '💡 Toque no Snow para jogar a bolinha.', '💡 Na Colina da Música tem festa com pista de dança!', '💡 A Rebeca, no Jardim, adora uma chuva de pétalas.', '💡 Na Vila, a pipoqueira e os outros cantinhos têm surpresas.', '💡 O botão ❤️ manda um coração pra quem estiver perto.', '💡 O minimapa mostra a próxima missão em dourado.'];
+const DICAS = ['💡 Há 16 notas musicais escondidas pela vila: cada uma é uma canção da família.', '💡 Toque no Theo para brincar de esconde-esconde.', '💡 Toque no Snow para jogar a bolinha.', '💡 Na Colina da Música tem festa com pista de dança!', '💡 A Rebeca, no Jardim, adora uma chuva de pétalas.', '💡 Na Vila, a pipoqueira e os outros cantinhos têm surpresas.', '💡 O botão ❤️ manda um coração pra quem estiver perto.'];
 // conquistas (aparecem no diário 📖)
 const CONQUISTAS = [
   { id: 'passos', ic: '👣', t: 'Primeiros passos', d: 'Entrou na vila' },
@@ -868,10 +960,10 @@ const FANFARRA = new Audio('sons/fanfarra.mp3'); FANFARRA.preload = 'auto'; FANF
 function tocarMusica(nome) {
   const m = MUSICAS[nome], el = document.getElementById('yt');
   if (!m || mudo || el.dataset.id === m[1]) return;
-  el.dataset.id = m[1]; el.hidden = false;
+  el.dataset.id = m[1]; el.hidden = false; el.classList.toggle('mini', nome === 'final'); el.classList.remove('aberto');
   const t = TRILHA.find(x => x.m.toLowerCase() === m[0].toLowerCase()) || (MSG_EXTRA[m[0]] && { s: MSG_EXTRA[m[0]] });
-  el.innerHTML = `<p>🎵 ${esc(m[0])}<button aria-label="Parar a música">✕</button></p>${t ? `<div class="yt-msg">${t.trecho ? `<i>“${esc(t.trecho)}”</i><br>` : ''}${esc(t.s)}</div>` : ''}<iframe src="https://www.youtube-nocookie.com/embed/${m[1]}?autoplay=1&playsinline=1&rel=0" title="${esc(m[0])}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-  el.querySelector('button').onclick = pararMusica;
+  el.innerHTML = `<p><span class="yt-t">🎵 ${esc(m[0])}</span><button aria-label="Parar a música">✕</button></p>${t ? `<div class="yt-msg">${t.trecho ? `<i>“${esc(t.trecho)}”</i><br>` : ''}${esc(t.s)}</div>` : ''}<iframe src="https://www.youtube-nocookie.com/embed/${m[1]}?autoplay=1&playsinline=1&rel=0" title="${esc(m[0])}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  el.querySelector('button').onclick = pararMusica; el.querySelector('.yt-t').onclick = () => el.classList.toggle('aberto');
 }
 // carrega a API do player do YouTube uma vez só
 function ytApi() {
@@ -1011,11 +1103,11 @@ const BLOQUEIOS_VILA = [[20, 0, 80, 17.5], [0, 0, 18, 22], [82, 0, 100, 21], [53
 const BORDAS = [[0, 0, 100, 1.5], [0, 98.5, 100, 100], [0, 0, 1.5, 100], [98.5, 0, 100, 100]];
 // as fases: cada morador no seu mapa, com o seu tema e a sua direção (w/h = tamanho do desenho; notas = onde ficam as notas da fase)
 const FASES = [
-  { nome: 'O Velho Oeste', mapa: 'img/mapas/oeste.webp', w: 768, h: 1376, inicio: { x: 45, y: 9 }, npc: { x: 40, y: 70 }, saida: { x: 55, y: 97 }, notas: [[25, 40], [70, 60]] },
+  { nome: 'O Velho Oeste', mapa: 'img/mapas/oeste.webp', w: 768, h: 1376, inicio: { x: 45, y: 21 }, npc: { x: 40, y: 70 }, saida: { x: 55, y: 97 }, notas: [[25, 40], [70, 60]] },
   { nome: 'O Bosque das Pinturas', mapa: 'img/mapas/bosque.webp', w: 1376, h: 768, inicio: { x: 96, y: 52 }, npc: { x: 14, y: 52 }, saida: { x: 3, y: 52 }, notas: [[55, 75], [30, 30]] },
-  { nome: 'O Jardim Florido', mapa: 'img/mapas/jardim.webp', w: 1376, h: 768, inicio: { x: 4, y: 48 }, npc: { x: 86, y: 50 }, saida: { x: 97, y: 48 }, notas: [[40, 20], [60, 80]] },
+  { nome: 'O Jardim Florido', mapa: 'img/mapas/jardim.webp', w: 1376, h: 768, inicio: { x: 4, y: 48 }, npc: { x: 86, y: 50 }, saida: { x: 90, y: 48 }, notas: [[40, 20], [60, 80]] },
   { nome: 'A Estrada do Craque', mapa: 'img/mapas/estrada.webp', w: 768, h: 1376, inicio: { x: 48, y: 96 }, npc: { x: 58, y: 28 }, saida: { x: 52, y: 3 }, notas: [[25, 60], [75, 40]] },
-  { nome: 'O Vale do Tempo', mapa: 'img/mapas/vale.webp', w: 1376, h: 768, inicio: { x: 4, y: 52 }, npc: { x: 88, y: 47 }, saida: { x: 97, y: 52 }, notas: [[30, 75], [70, 25]] },
+  { nome: 'O Vale do Tempo', mapa: 'img/mapas/vale.webp', w: 1376, h: 768, inicio: { x: 4, y: 52 }, npc: { x: 88, y: 47 }, saida: { x: 90, y: 52 }, notas: [[30, 75], [70, 25]] },
   { nome: 'A Vila', mapa: 'img/vila.webp', w: 768, h: 1376, inicio: INICIO, npc: { x: 39, y: 80.5 }, saida: { x: 50.5, y: 21 }, bloq: BLOQUEIOS_VILA, estrada: true, notas: [[12, 25], [86, 93]] },
   { nome: 'A Colina da Música', mapa: 'img/mapas/colina.webp', w: 768, h: 1376, inicio: { x: 50, y: 9 }, npc: { x: 32, y: 46 }, saida: { x: 50, y: 97 }, notas: [[76, 11], [76, 87]] },
   { nome: 'O Lago da Paz', mapa: 'img/mapas/lago.webp', w: 1376, h: 768, inicio: { x: 96, y: 52 }, npc: { x: 14, y: 50 }, saida: { x: 3, y: 50 }, notas: [[60, 80], [35, 70]] },
@@ -1269,7 +1361,7 @@ function tocarBicho(b) {
     if (k === 0) esconde.comecar(b);
   });
   const JOGO = { Rebeca: ['Tia! Vamos fazer uma chuva de pétalas? Pega com a cesta as pétalas e os corações, e foge das abelhas! 🌸', 'jardim', f => JOGOS.petalas(f), 'Que lindo, tia! 🌸', 'petalas'],
-    Isabela: ['Tia! Eu e a Manu amamos flores. Joga a memória das flores comigo? 🌷', 'jardim', f => JOGOS.memoria(f, PARES_FLORES), 'Você é demais, tia! 💐', 'flores'],
+    Isabela: ['Tia! Eu e a Manu amamos flores. Joga a memória das flores comigo? 🌷', 'jardim', f => JOGOS.memoria(f, PARES_FLORES, topoLivre('💐')), 'Você é demais, tia! 💐', 'flores'],
     Gabriela: ['Tia, bora fazer um bolo? Pega os ingredientes e deixa a cebola, a pimenta e o alho de fora! 🍰', 'cozinha', f => JOGOS.bolo(f), 'Que bolo lindo! 🍰💕', null] }[b.nome];
   if (JOGO) return irAte(b, async () => {
     const k = await falar(b, JOGO[0], [['Vamos!', 'primary'], ['Depois', 'ghost']]);
@@ -1281,7 +1373,7 @@ function tocarBicho(b) {
 }
 // Snow e Paçoca: três jeitos de brincar
 async function brincarBicho(b, texto, opcoes, item, frases) {
-  const k = await falar(b, texto, opcoes.map((o, i) => [o, i ? 'ghost' : 'primary']));
+  const k = await falar(b, texto, opcoes.map(o => [o, '']));
   if (k === 0) return jogarBolinha(b, item);
   for (let n = 0; n < 6; n++) setTimeout(() => { const e = document.createElement('i'); e.className = 'emote'; e.textContent = k === 1 ? '💕' : '✨';
     e.style.left = `${b.x + (Math.random() - .5) * 5}%`; e.style.top = `${b.y - 4 - Math.random() * 3}%`; mundoEl.append(e); setTimeout(() => e.remove(), 1500); }, n * 120);
@@ -1390,20 +1482,20 @@ function mapaJornada() {
   cenaAtual = null;
   const max = NPCS[Math.max(cap, 0)]?.fase ?? FASES.length - 1;
   view(`<p class="kicker">Mapa da jornada</p><h2>As fases</h2><div class="fases">${FASES.map((f, i) => `<button class="fase${i === fase ? ' aqui' : ''}" data-v="${i}" ${i > max ? 'disabled' : ''} style="background-image:url(${f.mapa})">
-      <b>${i + 1}. ${f.nome}</b><small>${esc(NPCS.filter(n => n.fase === i).map(n => n.nome).join(' e ') || 'Cayo na porta')} ${i < max ? '✅' : i <= max ? '⭐' : '🔒'}${i === fase ? ' · você está aqui' : ''}</small></button>`).join('')}</div>`, topoLivre('🗺️'));
-  on('.fase', v => { fecharPainel(); if (+v !== fase) irParaFase(+v); });
+      <b>${i + 1}. ${f.nome}</b><small>${esc(NPCS.filter(n => n.fase === i).map(n => n.nome).join(' e ') || 'Cayo na porta')} ${i < max ? '✅' : i <= max ? '⭐' : '🔒'}</small>${i === fase ? '<em class="aqui-tag">📍 Você está aqui</em>' : ''}</button>`).join('')}</div><button class="primary" id="voltar">Voltar para a vila</button>`, topoLivre('🗺️'));
+  on('.fase', v => { fecharPainel(); if (+v !== fase) irParaFase(+v); }); on('#voltar', fecharPainel);
 }
 // diário: conquistas e as canções da família
 function diario() {
   view(`<p class="kicker">Diário da aventureira</p><h2>${ELA} · Nível ${lvl()}</h2><div class="diario">
-    <h3>🎒 Mochila</h3><p>${mochila().join(' · ') || 'Vazia por enquanto.'}</p>
+    <p><b>🎒 Mochila:</b> ${mochila().join(' · ') || 'vazia por enquanto'}</p>
     <h3>Missões extras (${MISSOES.filter(m => estado(m) === 'feita').length}/${MISSOES.length})</h3>
     <ol class="trilha">${MISSOES.map(m => `<li class="${estado(m) === 'feita' ? '' : 'nao'}">${estado(m) === 'feita' ? '✅' : estado(m) ? '⏳' : '❔'} <b>${m.quem}</b>${estado(m) ? `<small>${esc(m.pedido)}</small>` : '<small>Fale com ela pela vila</small>'}</li>`).join('')}</ol>
     <h3>Conquistas (${extra.conq.length}/${CONQUISTAS.length})</h3>
     <div class="conqs">${CONQUISTAS.map(q => `<div class="${extra.conq.includes(q.id) ? '' : 'nao'}"><span>${q.ic}</span><div><b>${q.t}</b><br>${q.d}</div></div>`).join('')}</div>
     <h3>As canções da família (${extra.notas.length}/${TRILHA.length})</h3>
     <ol class="trilha">${TRILHA.map((t, i) => extra.notas.includes(i) ? `<li><b>🎵 ${t.m}</b><br>${t.s}</li>` : `<li class="nao">🎵 ??? · ache a nota escondida pela vila</li>`).join('')}</ol>
-    </div><button class="primary" style="margin-top:16px">Voltar para a vila</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt=""></div>`);
+    </div><button class="primary">Voltar para a vila</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt=""></div>`);
   on('.primary', fecharPainel);
 }
 // menino, cachorro e gato passeiam sozinhos: escolhem um ponto livre perto de casa, andam, param um pouco
@@ -1516,7 +1608,7 @@ function desenharMundo() {
   const p = mundoEl.querySelector('.portao'), ultima = fase === FASES.length - 1, aberto = ultima ? cap >= CAPITULOS.length : cap > ultimoCap(fase);
   p.classList.toggle('aberto', aberto);
   p.setAttribute('aria-label', ultima ? (aberto ? 'Portão do castelo: aberto, entrar' : 'Portão do castelo: trancado') : (aberto ? `Caminho para ${FASES[fase + 1].nome}` : 'Caminho trancado'));
-  perto = null;
+  perto = null; acaoEl.hidden = true;
 }
 function aviso(txt) {
   avisoEl.textContent = txt; avisoEl.hidden = false;
@@ -1543,6 +1635,38 @@ function falar(i, texto, botoes) {
 }
 function fecharFala() { clearInterval(digitando); falaEl.hidden = true; }
 
+// ================= EMOJI 3D (Fluent, licença MIT) no lugar do emoji do sistema; sem internet, fica o emoji normal =================
+const EMO_RE = /(?:\p{Emoji_Presentation}|\p{Extended_Pictographic}\uFE0F)(?:[\u{1F3FB}-\u{1F3FF}]|\uFE0F|\u200D(?:\p{Emoji_Presentation}|\p{Extended_Pictographic})\uFE0F?)*/gu;
+const EMO_TEM = new RegExp(EMO_RE.source, 'u');
+const emoUrl = e => `https://cdn.jsdelivr.net/npm/@lobehub/fluent-emoji-3d@1.1.0/assets/${[...e].map(c => c.codePointAt(0).toString(16)).join('-')}.webp`;
+const emoNomes = e => [...new Set([e, e.replace(/\uFE0F/g, ''), [...e].length === 1 ? e + '\uFE0F' : ''])].filter(Boolean);  // o arquivo às vezes tem o FE0F, às vezes não
+const emoOk = new Map();  // emoji -> nome do arquivo que existe (ou false: fica o emoji do sistema)
+function emoImg(e) {
+  if (emoOk.get(e) === false) { const t = document.createElement('span'); t.className = 'sem-emo'; t.textContent = e; return t; }
+  const im = new Image(), nomes = emoOk.has(e) ? [emoOk.get(e)] : emoNomes(e); let k = 0;
+  im.className = 'emo'; im.alt = e; im.draggable = false; im.decoding = 'async';
+  im.onload = () => emoOk.set(e, nomes[k]);
+  im.onerror = () => { if (++k < nomes.length) im.src = emoUrl(nomes[k]); else { emoOk.set(e, false); im.replaceWith(emoImg(e)); } };
+  im.src = emoUrl(nomes[0]); return im;
+}
+function emojificar(raiz) {
+  if (!raiz || (raiz.nodeType === 1 && raiz.closest('script, style, textarea, title, .sem-emo'))) return;
+  const w = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement?.closest('script, style, textarea, title, .sem-emo') ? 2 : 1 }), nos = [];
+  while (w.nextNode()) if (EMO_TEM.test(w.currentNode.data)) nos.push(w.currentNode);
+  nos.forEach(n => { const f = document.createDocumentFragment(), d = n.data; let i = 0;
+    d.replace(EMO_RE, (m, at) => { f.append(d.slice(i, at), emoImg(m)); i = at + m.length; }); f.append(d.slice(i)); n.replaceWith(f); });
+}
+new MutationObserver(rs => rs.forEach(r => r.type === 'characterData' ? EMO_TEM.test(r.target.data) && emojificar(r.target.parentNode)
+  : r.addedNodes.forEach(n => n.nodeType === 1 ? emojificar(n) : n.nodeType === 3 && EMO_TEM.test(n.data) && emojificar(n.parentNode))))
+  .observe(document.body, { childList: true, subtree: true, characterData: true });
+// no canvas (pétalas, escadaria): desenha a imagem 3D; enquanto não carrega, o emoji do sistema
+const EMO_CANVAS = {};
+function emoCanvas(g, e, x, y, t) {
+  const im = EMO_CANVAS[e] ||= Object.assign(new Image(), { src: emoUrl(e) });
+  if (im.complete && im.naturalWidth) g.drawImage(im, x - t / 2, y - t / 2, t, t);
+  else { g.font = `${t * .85}px serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(e, x, y); }
+}
+
 // ================= PAINEL (desafios, prólogo, pedaços) =================
 let aoFechar = null;
 let cenaAtual = null;  // cena pintada do desafio aberto (img/cenas/)
@@ -1555,7 +1679,7 @@ function view(html, topo, brilho) {
   app.innerHTML = `<div class="card" role="dialog" aria-modal="true">${fundo ? `<div class="cena-img" style="background-image:${fundo}"></div>` : ''}${topo}<button class="fechar" aria-label="Voltar para a vila">✕</button><div class="card-corpo">${html}</div></div>`;
   app.querySelector('.fechar').onclick = () => (aoFechar || fecharPainel)();
   painel.hidden = false; hud(brilho); painel.scrollTop = 0;
-  app.querySelector('.card button:not(.fechar)')?.focus({ preventScroll: true });
+  const h = app.querySelector('.card h1, .card h2'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
 }
 const on = (sel, fn) => app.querySelectorAll(sel).forEach(b => b.onclick = () => fn(b.dataset.v, b));
 
@@ -1566,7 +1690,7 @@ function boasVindas() {
   canal(`🟢 <b>${ELA}</b> entrou na vila. A família toda está online!`, 'sis');
   setTimeout(() => canal('<b>Cayo:</b> Chegou a aniversariante! 🎉'), 1500);
   setTimeout(() => canal(DICAS[0], 'sis'), 4000);
-  conquistar('passos');
+  setTimeout(() => conquistar('passos'), 1500);
 }
 function start() {
   const s = carregar();
@@ -1609,8 +1733,8 @@ function capituloCompleto() {
   cap++; xp += 100; salvar(); fanfarra(); confete();
   const ultimo = cap >= CAPITULOS.length;
   view(`<p class="kicker">Pedaço ${i + 1} de ${CAPITULOS.length} encontrado!</p><div class="reward"><span class="reward-emo">${CAPITULOS[i].emo}</span></div>
-    <p class="pedaco">“${CARTA[i]}”</p><div class="xp">+100 XP</div>${lvl() > antes ? `<div class="xp">⬆ Nível ${lvl()}!</div>` : ''}
-    <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Guardar na mochila'}</button>`, iconeCap(i), true);
+    <p class="pedaco">“${CARTA[i]}”</p><div><span class="xp">+100 XP</span>${lvl() > antes ? `<span class="xp">⬆ Nível ${lvl()}!</span>` : ''}</div>
+    <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Guardar na mochila'}</button>`, `<div class="crest"><img class="face" src="img/aventureira.webp" alt=""></div>`, true);
   canal(`📜 <b>${esc(NPCS[i].nome)}</b> entregou o pedaço ${i + 1} da carta para <b>${ELA}</b>!`, 'sis');
   const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O caminho para o castelo se abriu! ✨' : NPCS[cap].fase === fase ? `Agora fale com ${com(NPCS[cap])}!` : `✨ O caminho para ${FASES[fase + 1].nome} se abriu!`);
     if (ultimo) { conquistar('carta'); canal('<b>Cayo:</b> O PORTÃO ABRIU! Todo mundo pro castelo! 🏰'); } };
@@ -1644,25 +1768,27 @@ function pararJogo() { timers.forEach(clearTimeout); timers.forEach(clearInterva
 const topoLivre = ic => `<div class="crest"><span style="font-size:46px;line-height:1">${ic}</span></div>`;
 const ganharXp = n => { const antes = lvl(); xp += n; salvar(); hud(true); return lvl() > antes; };
 const depois = (ms, fn) => timers.push(setTimeout(fn, ms));
+const erroSom = () => { const a = som(); if (a) tom(196, a.currentTime, .22, 'sawtooth', .05); };
 const topoJogo = () => cap < CAPITULOS.length ? iconeCap(cap) : topoLivre('🏰');
 
 const JOGOS = {
   // 1. Charadas: três perguntas de múltipla escolha; errar não tem castigo
   charadas(fim, k = 0, lista = CHARADAS, nome = 'Pergunta') {
-    const q = lista[k];
-    view(`<p class="kicker">${nome} ${k + 1} de ${lista.length}</p><h2>${q.p}</h2>
+    const q = lista[k], [, perg, ref] = q.p.match(/^(.*?)\s*(\([^()]*\d+:\d+\))?$/s);
+    view(`<p class="kicker">${nome} ${k + 1} de ${lista.length}</p><h2>${perg}</h2>${ref ? `<p class="ref">${ref}</p>` : ''}
       <div class="answers">${embaralhar(q.o.map((t, j) => [t, j])).map(([t, j]) => `<button data-v="${j}">${t}</button>`).join('')}</div>
       <p class="note" id="msg" role="status"></p>`, topoJogo());
     on('.answers button', (v, b) => {
-      if (+v === q.c) { b.classList.add('certo'); depois(500, () => k + 1 < lista.length ? JOGOS.charadas(fim, k + 1, lista, nome) : fim()); }
-      else { b.classList.add('errado'); b.disabled = true; app.querySelector('#msg').textContent = 'Quase! Tenta outra.'; }
+      if (+v === q.c) { b.classList.add('certo'); plim(); app.querySelectorAll('.answers button').forEach(x => { x.disabled = true; }); depois(650, () => k + 1 < lista.length ? JOGOS.charadas(fim, k + 1, lista, nome) : fim()); }
+      else { b.classList.add('errado'); b.disabled = true; erroSom(); app.querySelector('#msg').textContent = 'Quase! Tenta outra.'; }
     });
   },
   // Randerson: grafite da marca ROS (pinte por cima do molde)
   grafite(fim) {
+    const CORES = ['#ff5fa2', '#5fd3ff', '#ffe08a', '#8ff0b4', '#c77dff']; let cor = 0, pintando = false, feito = false;
     view(`<p class="kicker">Marca ROS · <span id="pct">0</span>%</p><h2>Grafite o muro!</h2>
       <canvas class="petalas" width="320" height="240" style="aspect-ratio:4/3;touch-action:none" aria-label="Passe o dedo por cima do molde para pintar"></canvas>
-      <div class="actions"><button class="ghost" id="cor">🎨 Trocar a cor</button></div>
+      <div class="cores" role="group" aria-label="Cor da lata">${CORES.map((c, i) => `<button data-v="${i}" class="${i ? '' : 'on'}" style="--c:${c}" aria-label="Cor ${i + 1}" aria-pressed="${!i}"></button>`).join('')}</div>
       <p class="note" id="msg" role="status">Passe o dedo por cima do molde para pintar.</p>`, topoJogo());
     const cv = app.querySelector('canvas'), g = cv.getContext('2d'), msg = app.querySelector('#msg');
     g.fillStyle = '#9c4a33'; g.fillRect(0, 0, 320, 240); g.strokeStyle = '#7a3624'; g.lineWidth = 2;  // muro de tijolos
@@ -1673,8 +1799,7 @@ const JOGOS = {
     for (let y = 4; y < 240; y += 8) for (let x = 4; x < 320; x += 8) if (px[(y * 320 + x) * 4 + 3] > 128) alvos.push({ x, y, ok: false });
     g.font = mg.font; g.textAlign = 'center'; g.textBaseline = 'middle'; g.strokeStyle = '#ffffffcc'; g.lineWidth = 2.5; g.setLineDash([7, 5]); g.strokeText('ROS', 160, 122); g.setLineDash([]);  // contorno do molde
     g.fillStyle = '#fff6'; alvos.forEach(a => { g.beginPath(); g.arc(a.x, a.y, 1.4, 0, 7); g.fill(); });
-    const CORES = ['#ff5fa2', '#5fd3ff', '#ffe08a', '#8ff0b4', '#c77dff']; let cor = 0, pintando = false, feito = false;
-    app.querySelector('#cor').onclick = () => { cor = (cor + 1) % CORES.length; };
+    on('.cores button', (v, b) => { cor = +v; app.querySelectorAll('.cores button').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); }); });
     const pintar = e => {
       if (feito) return;
       const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * 320, y = (e.clientY - r.top) / r.height * 240;
@@ -1689,28 +1814,46 @@ const JOGOS = {
     cv.addEventListener('pointermove', e => { if (pintando) pintar(e); });
     cv.addEventListener('pointerup', () => { pintando = false; });
   },
-  // Henrique: 5 pênaltis, precisa de 3 gols
+  // Henrique: 5 pênaltis, precisa de 3 gols. Toque 1 trava a mira (que passeia pelo gol), toque 2 trava a força
   penaltis(fim) {
-    let gols = 0, chutes = 0, travado = false;
+    let gols = 0, chutes = 0, etapa = 0, mx = 50, pw = 0, t0 = performance.now();
     view(`<p class="kicker">Gols: <span id="gols">0</span>/3 · Chutes: <span id="chutes">0</span>/5</p><h2>Bate o pênalti!</h2>
-      <div class="campo"><div class="gol"></div><i class="goleiro">🧤</i><i class="bola">⚽</i><div class="juizo" id="juizo" aria-live="polite"></div></div>
-      <div class="answers row" style="grid-template-columns:repeat(3,1fr)"><button data-v="0">⬅️ Esquerda</button><button data-v="1">⬆️ Meio</button><button data-v="2">➡️ Direita</button></div>
-      <p class="note" id="msg" role="status">Escolha o canto. O goleiro vai pular em algum lugar...</p>`, topoJogo());
-    const gol = app.querySelector('.goleiro'), bola = app.querySelector('.bola'), juizo = app.querySelector('#juizo'), msg = app.querySelector('#msg'), X = [25, 50, 75];
-    on('.answers button', v => {
-      if (travado) return; travado = true;
-      const pulo = Math.random() * 3 | 0;
-      gol.style.left = `${X[pulo]}%`; bola.style.left = `${X[+v]}%`; bola.style.bottom = '58%';
-      const entrou = pulo !== +v; chutes++; if (entrou) gols++;
-      depois(450, () => { juizo.textContent = entrou ? 'GOOOL! 💚⚽' : 'Defendeu! 🧤'; app.querySelector('#gols').textContent = gols; app.querySelector('#chutes').textContent = chutes;
-        const a = som(); if (a) tom(entrou ? 880 : 220, a.currentTime, .3, entrou ? 'triangle' : 'sawtooth', .07); });
-      depois(1400, () => {
-        juizo.textContent = ''; gol.style.left = '50%'; bola.style.left = '50%'; bola.style.bottom = '8%';
+      <div class="campo"><div class="gol"></div><img class="goleiro" src="img/npc-henrique.webp" alt="Henrique no gol"><i class="mira" aria-hidden="true"></i><i class="bola">⚽</i>
+        <div class="forca-bar" aria-hidden="true"><i></i></div><div class="juizo" id="juizo" aria-live="polite"></div></div>
+      <button class="primary" id="chutar">🎯 Travar a mira</button>
+      <p class="note" id="msg" role="status">1º toque: trava a mira. 2º toque: a força. Mira no cantinho, força na faixa amarela!</p>`, topoJogo());
+    const gol = app.querySelector('.goleiro'), bola = app.querySelector('.bola'), mira = app.querySelector('.mira'), barra = app.querySelector('.forca-bar'),
+      ponteiro = barra.querySelector('i'), juizo = app.querySelector('#juizo'), msg = app.querySelector('#msg'), bt = app.querySelector('#chutar');
+    const loop = t => {
+      const s = (t - t0) / 1000;
+      if (etapa === 0) { mx = 50 + 43 * Math.sin(s * 2.4); mira.style.left = `${mx}%`; }
+      if (etapa === 1) { pw = (1 - Math.cos(s * 3.4)) / 2; ponteiro.style.bottom = `calc(${pw * 100}% - 2px)`; }
+      quadro = requestAnimationFrame(loop);
+    };
+    quadro = requestAnimationFrame(loop);
+    const chutar = () => {
+      if (etapa === 0) { etapa = 1; t0 = performance.now(); barra.classList.add('ativa'); bt.textContent = '⚽ Chutar!'; return; }
+      if (etapa !== 1) return;
+      etapa = 2; bt.disabled = true;
+      const pulo = [22, 50, 78][Math.random() * 3 | 0], alcance = mx < 24 || mx > 76 ? 11 : 16;  // no cantinho é mais difícil pegar
+      const trave = mx < 12 || mx > 88, alto = pw > .86, fraco = pw < .28;
+      const entrou = !trave && !alto && !fraco && Math.abs(mx - pulo) > alcance;
+      gol.style.left = `${fraco ? mx : pulo}%`; gol.classList.toggle('pulou-e', (fraco ? mx : pulo) < 40); gol.classList.toggle('pulou-d', (fraco ? mx : pulo) > 60);
+      bola.style.left = `${mx}%`; bola.style.bottom = alto ? '96%' : `${50 + pw * 20}%`; bola.style.scale = '.7';
+      chutes++; if (entrou) gols++;
+      depois(500, () => { juizo.textContent = entrou ? 'GOOOL! 💚⚽' : trave ? 'Na trave! 😱' : alto ? 'Por cima! 🙈' : fraco ? 'Fraquinho... defendeu!' : 'Defendeu! 🧤';
+        app.querySelector('#gols').textContent = gols; app.querySelector('#chutes').textContent = chutes;
+        const a = som(); if (a) tom(entrou ? 880 : 220, a.currentTime, .3, entrou ? 'triangle' : 'sawtooth', .07); if (entrou) confete(); });
+      depois(1700, () => {
+        juizo.textContent = ''; gol.style.left = '50%'; gol.classList.remove('pulou-e', 'pulou-d'); bola.style.left = '50%'; bola.style.bottom = '8%'; bola.style.scale = '1';
         if (gols >= 3) { msg.textContent = 'Craque! O Henrique aprovou. 💚'; return depois(500, fim); }
-        if (chutes >= 5) { msg.textContent = 'Faltou pouco! Bora de novo?'; return depois(1200, () => JOGOS.penaltis(fim)); }
-        travado = false;
+        if (chutes >= 5 || gols + 5 - chutes < 3) { msg.textContent = 'Faltou pouco! Bora de novo?'; return depois(1200, () => JOGOS.penaltis(fim)); }
+        etapa = 0; t0 = performance.now(); barra.classList.remove('ativa'); bt.disabled = false; bt.textContent = '🎯 Travar a mira';
       });
-    });
+    };
+    bt.onclick = chutar;
+    const tecla = e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!e.repeat) chutar(); } };
+    addEventListener('keydown', tecla); limpar.push(() => removeEventListener('keydown', tecla));
   },
   // Cayo: show estilo Guitar Hero (escolhe a música; ela toca no YouTube enquanto as notas descem)
   guitarra(fim) {
@@ -1724,9 +1867,9 @@ const JOGOS = {
   forca(fim, k = 0) {
     const { dica, p } = FORCA[k], norm = c => c.normalize('NFD').replace(/[̀-ͯ]/g, '');
     let erros = 0; const chutes = new Set();
-    view(`<p class="kicker" style="white-space:nowrap">Palavra ${k + 1} de ${FORCA.length} · <span id="flores" style="font-size:13px;letter-spacing:-1px"></span></p><h2>${dica}</h2>
+    view(`<p class="kicker" style="white-space:nowrap">Palavra ${k + 1} de ${FORCA.length} · <span id="flores" class="flores-forca"></span></p><h2>${dica}</h2>
       <div class="slots" aria-live="polite">${[...p].map(() => '<span></span>').join('')}</div>
-      <div class="letras">${[...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(l => `<button data-v="${l}" style="width:38px;height:42px;font-size:19px">${l}</button>`).join('')}</div>
+      <div class="letras">${[...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(l => `<button data-v="${l}">${l}</button>`).join('')}</div>
       <p class="note" id="msg" role="status">Cada letra errada faz uma flor murchar.</p>`, topoJogo());
     const slots = [...app.querySelectorAll('.slots span')], msg = app.querySelector('#msg');
     const tk = e => { const l = e.key.toUpperCase(); if (/^[A-Z]$/.test(l)) app.querySelector(`.letras button[data-v="${l}"]`)?.click(); };
@@ -1735,7 +1878,8 @@ const JOGOS = {
       app.querySelector('#flores').textContent = '🌸'.repeat(6 - erros) + '🥀'.repeat(erros); };
     on('.letras button', (l, b) => {
       if (b.disabled) return; b.disabled = true; chutes.add(l);
-      if (![...p].some(c => norm(c) === l)) erros++;
+      const tem = [...p].some(c => norm(c) === l); b.classList.add(tem ? 'acertou' : 'errou');
+      if (!tem) { erros++; erroSom(); } else { const a = som(); if (a) tom(660, a.currentTime, .12, 'sine', .06); }
       pintar();
       if ([...p].every(c => chutes.has(norm(c)))) { app.querySelector('.slots').classList.add('certo'); msg.textContent = 'Isso! 🌷'; depois(900, () => k + 1 < FORCA.length ? JOGOS.forca(fim, k + 1) : fim()); }
       else if (erros >= 6) { msg.textContent = `As flores murcharam! Era ${p}. Bora de novo?`; app.querySelectorAll('.letras button').forEach(x => { x.disabled = true; }); depois(1800, () => JOGOS.forca(fim, k)); }
@@ -1786,7 +1930,7 @@ const JOGOS = {
     view(`<p class="kicker">Ingredientes: <span id="pts">0</span>/${META} · <span id="tmp">${tempo}</span>s</p><h2>Pegue os ingredientes do bolo!</h2>
       <div class="bar bolo-barra"><i id="prog" style="width:0%"></i></div>
       <div class="buracos">${Array.from({ length: 9 }, (_, i) => `<button class="buraco" data-v="${i}" aria-label="Espaço vazio"></button>`).join('')}</div>
-      <p class="note" id="msg" role="status"></p>`, topoJogo());
+      <p class="note" id="msg" role="status"></p>`, topoLivre('🍰'));
     const casas = [...app.querySelectorAll('.buraco')], msg = app.querySelector('#msg');
     const atualizar = () => { app.querySelector('#pts').textContent = pontos; app.querySelector('#prog').style.width = `${pontos / META * 100}%`; };
     casas.forEach(b => b.onclick = () => {
@@ -1807,16 +1951,16 @@ const JOGOS = {
     timers.push(setInterval(surgir, reduz ? 900 : 620));
     timers.push(setInterval(() => {
       tempo--; app.querySelector('#tmp').textContent = tempo;
-      if (tempo <= 0) { pararJogo(); msg.innerHTML = 'O tempo acabou! <button class="ghost" id="denovo">Tentar de novo</button>'; app.querySelector('#denovo').onclick = () => JOGOS.bolo(fim); }
+      if (tempo <= 0) { pararJogo(); msg.innerHTML = 'O tempo acabou!<br><button class="primary" id="denovo">Tentar de novo</button>'; app.querySelector('#denovo').onclick = () => JOGOS.bolo(fim); }
     }, 1000));
   },
   // 4. Memória: 6 pares com os ícones da aventura
-  memoria(fim, lista = PARES) {
+  memoria(fim, lista = PARES, topo = topoJogo()) {
     const ICONES = lista.map(p => p[0]), NOME = Object.fromEntries(lista);
     const cartas = embaralhar([...ICONES, ...ICONES]);
     let abertas = [], pares = 0, jogadas = 0, travado = false;
     view(`<p class="kicker">Pares: <span id="pares">0</span>/${ICONES.length} · jogadas: <span id="jog">0</span></p><h2>Ache os pares!</h2>
-      <div class="memoria">${cartas.map((ic, i) => `<button class="carta-mem" data-v="${i}" aria-label="Carta virada">${/\p{Extended_Pictographic}/u.test(ic) ? `<img alt="" src="data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><text x='20' y='31' font-size='30' text-anchor='middle'>${ic}</text></svg>`)}">` : `<img src="img/${ic}.webp" alt="">`}</button>`).join('')}</div>`, topoJogo());
+      <div class="memoria">${cartas.map((ic, i) => `<button class="carta-mem" data-v="${i}" aria-label="Carta virada">${/\p{Extended_Pictographic}/u.test(ic) ? `<span class="emo-carta" aria-hidden="true">${ic}</span>` : `<img src="img/${ic}.webp" alt="">`}</button>`).join('')}</div>`, topo);
     on('.carta-mem', (v, b) => {
       if (travado || b.classList.contains('virada')) return;
       b.classList.add('virada'); b.setAttribute('aria-label', NOME[cartas[v]]); abertas.push(b);
@@ -1885,7 +2029,7 @@ const JOGOS = {
       }
       g.clearRect(0, 0, 320, 240);
       if (fundo.complete && fundo.naturalWidth) { const w = 240 * fundo.naturalWidth / fundo.naturalHeight; g.drawImage(fundo, -fundoX, 0, w, 240); g.drawImage(fundo, w - fundoX, 0, w, 240); }
-      g.font = '28px serif'; g.textAlign = 'center'; g.textBaseline = 'bottom'; obst.forEach(o => g.fillText(o.ic, o.x, CHAO + 8));
+      obst.forEach(o => emoCanvas(g, o.ic, o.x, CHAO - 7, 32));
       if (ela.complete && ela.naturalWidth) { const h = 72, w = h * ela.naturalWidth / ela.naturalHeight; g.drawImage(ela, X - w / 2, CHAO - h - y + 8, w, h); }
       quadro = requestAnimationFrame(loop);
     };
@@ -1896,11 +2040,11 @@ const JOGOS = {
     const [frase, nome] = rodadas[k], certo = NPCS.find(n => n.nome === nome);
     const opcoes = embaralhar([certo, ...embaralhar(NPCS.filter(n => n !== certo)).slice(0, 2)]);
     view(`<p class="kicker">Quadro ${k + 1} de ${rodadas.length}</p><h2>Quem disse: “${esc(frase)}”</h2>
-      <div class="answers row" style="grid-template-columns:repeat(3,1fr)">${opcoes.map(n => `<button data-v="${esc(n.nome)}" style="flex-direction:column"><img src="img/${n.img}.webp" alt="" style="height:90px">${esc(n.nome)}</button>`).join('')}</div>
+      <div class="answers trio">${opcoes.map(n => `<button data-v="${esc(n.nome)}"><img src="img/${n.img}.webp" alt="">${esc(n.nome)}</button>`).join('')}</div>
       <p class="note" id="msg" role="status"></p>`, topoLivre('🖼️'));
     on('.answers button', (v, b) => {
       if (v === certo.nome) { b.classList.add('certo'); depois(600, () => k + 1 < rodadas.length ? JOGOS.quemDisse(fim, k + 1, rodadas) : fim()); }
-      else { b.classList.add('errado'); b.disabled = true; app.querySelector('#msg').textContent = 'Quase! Olha de novo.'; }
+      else { b.classList.add('errado'); b.disabled = true; erroSom(); app.querySelector('#msg').textContent = 'Quase! Olha de novo.'; }
     });
   },
   // Pista de dança da festa: as notas descem; toque na faixa quando passarem na linha dourada (teclas D F J K ou setas)
@@ -1917,8 +2061,8 @@ const JOGOS = {
     pararMusica();
     const faixa = o.m || FESTA[Math.random() * FESTA.length | 0];
     view(`<p class="kicker">${o.show ? '🎸 No palco' : '🎶 Tocando na festa'}: ${esc(faixa)}</p><h2>${o.show ? 'O Show do Cayo!' : 'Pista de dança!'}</h2>
-      ${o.v ? `<div class="show-yt"><div id="ytshow"></div></div><button class="primary" id="tocar" hidden>▶ Toque para começar o show</button>` : ''}
-      <div class="pista" style="grid-template-columns:repeat(${NF}, 1fr)"><i class="luz"></i>${[...Array(NF).keys()].map(f => `<div class="faixa-n" data-f="${f}"><button class="bt-d" data-f="${f}" style="background:${CORES[f]}66" aria-label="Faixa ${f + 1}">${ROT[f]}</button></div>`).join('')}<i class="linha"></i><div class="juizo" aria-live="polite"></div></div>
+      ${o.v ? `<div class="show-yt" style="background-image:url(https://i.ytimg.com/vi/${o.v}/hqdefault.jpg)"><div id="ytshow"></div></div><button class="primary" id="tocar" hidden>▶ Toque para começar o show</button>` : ''}
+      <div class="pista" style="grid-template-columns:repeat(${NF}, 1fr)"><i class="luz"></i>${[...Array(NF).keys()].map(f => `<div class="faixa-n" data-f="${f}"><button class="bt-d" data-f="${f}" style="background:${CORES[f]}66" aria-label="Faixa ${f + 1}">${ROT[f]}</button></div>`).join('')}<i class="linha"></i><div class="juizo" aria-live="polite"></div><b class="combo" aria-hidden="true"></b></div>
       <p class="note" id="msg">${o.v ? 'Toque junto com a música! ✌️' : 'A batida é da vila; a música, na nossa memória. 😉'}</p>`, o.show ? topoJogo() : topoLivre('💃'));
     app.querySelector('.card').classList.add('ritmo');
     const pista = app.querySelector('.pista'), faixas = [...app.querySelectorAll('.faixa-n')], juizo = app.querySelector('.juizo');
@@ -1932,7 +2076,8 @@ const JOGOS = {
       if (a && !o.v) for (let b = 0; b < PADRAO.length + 4; b++) { const tt = inicio + base + LEAD + b * BATIDA; bumbo(tt, .35); chimbal(tt + BATIDA / 2); if (b % 4 === 0) tom(ESCALA(-12 + [0, 5, 7, 4][b / 4 % 4 | 0]), tt, BATIDA * 3.6, 'triangle', .05); }
       quadro = requestAnimationFrame(quadroD);
     };
-    let pontos = 0, acertos = 0, acabou = false;
+    let pontos = 0, acertos = 0, acabou = false, combo = 0, maior = 0;
+    const comboEl = app.querySelector('.combo'), mostrarCombo = () => { comboEl.textContent = combo >= 3 ? `Combo x${combo}` : ''; };
     const julgar = (txt, cor) => { juizo.textContent = txt; juizo.style.color = cor; juizo.style.animation = 'none'; void juizo.offsetWidth; juizo.style.animation = 'pop .25s ease'; };
     const bater = f => {
       if (acabou) return;
@@ -1940,7 +2085,7 @@ const JOGOS = {
       const t = performance.now() / 1000 - inicio;
       const n = notas.find(x => x.f === f && !x.feito && Math.abs(x.t - t) < .16);
       if (!n) return;
-      n.feito = true; n.el.classList.add('ok'); acertos++;
+      n.feito = true; n.el.classList.add('ok'); acertos++; maior = Math.max(maior, ++combo); mostrarCombo();
       const d = Math.abs(n.t - t); pontos += d < .07 ? 100 : 70; julgar(d < .07 ? 'Perfeito! ✨' : 'Boa! 👍', d < .07 ? '#ffe08a' : '#8ff0b4');
       if (a) tom(ESCALA(NOTAS[(acertos + f) % NOTAS.length] - 67), a.currentTime, .3, 'square', .05);
     };
@@ -1954,20 +2099,20 @@ const JOGOS = {
         if (n.feito) return;
         const y = LINHA - (n.t - t) / QUEDA * LINHA;
         n.el.style.top = `${y}px`;
-        if (t - n.t > .16) { n.feito = true; n.el.style.opacity = .25; julgar('Ops!', '#ff9aa2'); }
+        if (t - n.t > .16) { n.feito = true; n.el.style.opacity = .25; julgar('Ops!', '#ff9aa2'); combo = 0; mostrarCombo(); }
       });
       if (t < fimT) { quadro = requestAnimationFrame(quadroD); return; }
       acabou = true;
       const pct = Math.round(pontos / (notas.length * 100) * 100);
       if (o.show) {  // capítulo do Cayo: passa com 50%, senão tenta de novo
         if (pct >= 50) return fim();
-        view(`<p class="kicker">Fim do show!</p><h2>Quase! ${pct}% 🎸</h2><p>O Cayo pediu bis: tenta de novo!</p><button class="primary" id="denovo">Tocar de novo</button>`, topoJogo());
+        view(`<p class="kicker">Fim do show!</p><h2>Quase! ${pct}% 🎸</h2><p>Maior combo: ${maior}. O Cayo pediu bis: tenta de novo!</p><button class="primary" id="denovo">Tocar de novo</button>`, topoJogo());
         app.querySelector('#denovo').onclick = () => JOGOS.guitarra(fim); return;
       }
       const subiu = ganharXp(Math.max(10, Math.round(pct / 2)));
       fim(pct);
       view(`<p class="kicker">Fim da música!</p><h2>${pct >= 70 ? 'Rainha da pista! 👑' : pct >= 50 ? 'Arrasou na pista! 💃' : 'A pista é sua, é só treinar! 🕺'}</h2>
-        <div class="xp">${acertos}/${notas.length} passos · ${pct}%</div><div class="xp">+${Math.max(10, Math.round(pct / 2))} XP${subiu ? ` · ⬆ Nível ${lvl()}!` : ''}</div>
+        <div class="xp">${acertos}/${notas.length} passos · ${pct}%</div><div class="xp">Maior combo: ${maior}</div><div class="xp">+${Math.max(10, Math.round(pct / 2))} XP${subiu ? ` · ⬆ Nível ${lvl()}!` : ''}</div>
         <div class="actions"><button class="primary" id="denovo">Dançar de novo</button><button class="ghost" id="sair">Voltar à vila</button></div>`, topoLivre(pct >= 70 ? '👑' : '💃'), true);
       if (pct >= 50) { fanfarra(); confete(); }
       app.querySelector('#denovo').onclick = () => JOGOS.danca(fim);
@@ -1988,10 +2133,11 @@ const JOGOS = {
   // Chuva de pétalas (com a Bel): mova a cesta, pegue pétalas e corações, fuja das abelhas
   petalas(fim) {
     const META = 25;
-    let pontos = 0, tempo = 40, cx = 150, itens = [], ult = 0, prox = 0, acabou = false;
+    let pontos = 0, tempo = 40, cx = 150, itens = [], ult = 0, prox = 0, acabou = false, pops = [];
     view(`<p class="kicker">Pétalas: <span id="pts">0</span>/${META} · <span id="tmp">${tempo}</span>s</p><h2>Chuva de pétalas!</h2>
-      <canvas class="petalas" width="300" height="400" aria-label="Arraste para mover a cesta"></canvas>
-      <p class="note" id="msg" role="status">Arraste (ou use as setas) para mover a cesta. 🌸 +1 · 💗 +2 · 🐝 −2</p>`, topoLivre('🌸'));
+      <canvas class="petalas chuva" width="300" height="400" aria-label="Arraste para mover a cesta"></canvas>
+      <div class="legenda" aria-hidden="true"><span>🌸 +1</span><span>💗 +2</span><span>🐝 −2</span></div>
+      <p class="note" id="msg" role="status">Arraste (ou use as setas) para mover a cesta.</p>`, topoLivre('🌸'));
     const cv = app.querySelector('canvas'), g = cv.getContext('2d'), msg = app.querySelector('#msg');
     const mover = e => { const r = cv.getBoundingClientRect(); cx = Math.max(25, Math.min(275, (e.clientX - r.left) / r.width * 300)); };
     cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); mover(e); });
@@ -1999,7 +2145,7 @@ const JOGOS = {
     const setas = new Set(), tecla = e => { const k = e.key.toLowerCase(); if (k === 'arrowleft' || k === 'arrowright' || k === 'a' || k === 'd') { e.preventDefault(); e.type === 'keydown' ? setas.add(k) : setas.delete(k); } };
     addEventListener('keydown', tecla); addEventListener('keyup', tecla); limpar.push(() => { removeEventListener('keydown', tecla); removeEventListener('keyup', tecla); });
     timers.push(setInterval(() => { if (acabou) return; tempo--; app.querySelector('#tmp').textContent = tempo;
-      if (tempo <= 0) { acabou = true; msg.innerHTML = 'O tempo acabou! <button class="ghost" id="denovo">Tentar de novo</button>'; app.querySelector('#denovo').onclick = () => JOGOS.petalas(fim); } }, 1000));
+      if (tempo <= 0) { acabou = true; msg.innerHTML = 'O tempo acabou!<br><button class="primary" id="denovo">Tentar de novo</button>'; app.querySelector('#denovo').onclick = () => JOGOS.petalas(fim); } }, 1000));
     const loop = t => {
       const dt = Math.min(.05, (t - (ult || t)) / 1000); ult = t;
       if (!acabou) {
@@ -2008,13 +2154,16 @@ const JOGOS = {
         if ((prox -= dt) <= 0) { prox = .38; const r = Math.random(); itens.push({ x: 20 + Math.random() * 260, y: -20, v: 110 + Math.random() * 110, s: (Math.random() - .5) * 40, ic: r < .68 ? '🌸' : r < .84 ? '💗' : '🐝' }); }
         itens.forEach(it => { it.y += it.v * dt; it.x += Math.sin(it.y / 30) * it.s * dt;
           if (!it.fora && it.y > 352 && it.y < 384 && Math.abs(it.x - cx) < 32) { it.fora = true; const v = it.ic === '🌸' ? 1 : it.ic === '💗' ? 2 : -2;
-            pontos = Math.max(0, pontos + v); app.querySelector('#pts').textContent = pontos; const a = som(); if (a) tom(v > 0 ? 880 + pontos * 12 : 180, a.currentTime, .18, v > 0 ? 'sine' : 'sawtooth', .06);
+            pontos = Math.max(0, pontos + v); pops.push({ x: it.x, y: 340, v, t: 0 }); app.querySelector('#pts').textContent = pontos; const a = som(); if (a) tom(v > 0 ? 880 + pontos * 12 : 180, a.currentTime, .18, v > 0 ? 'sine' : 'sawtooth', .06);
             if (pontos >= META) { acabou = true; msg.textContent = 'Que chuva de pétalas linda! 🌸'; depois(900, fim); } } });
         itens = itens.filter(it => !it.fora && it.y < 420);
       }
-      g.clearRect(0, 0, 300, 400); g.textAlign = 'center'; g.textBaseline = 'middle';
-      g.font = '26px serif'; itens.forEach(it => g.fillText(it.ic, it.x, it.y));
-      g.font = '46px serif'; g.fillText('🧺', cx, 372);
+      g.clearRect(0, 0, 300, 400);
+      g.fillStyle = '#0002'; g.beginPath(); g.ellipse(cx, 394, 30, 5, 0, 0, 7); g.fill();  // sombra da cesta
+      itens.forEach(it => emoCanvas(g, it.ic, it.x, it.y, 30));
+      emoCanvas(g, '🧺', cx, 366, 58);
+      pops = pops.filter(q => (q.t += dt) < .7); g.font = '800 20px "Alegreya Sans", sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      pops.forEach(q => { g.globalAlpha = 1 - q.t / .7; g.fillStyle = q.v > 0 ? '#c2185b' : '#b8323f'; g.fillText(q.v > 0 ? `+${q.v}` : `${q.v}`, q.x, q.y - q.t * 60); }); g.globalAlpha = 1;
       quadro = requestAnimationFrame(loop);
     };
     quadro = requestAnimationFrame(loop);
@@ -2033,7 +2182,7 @@ function final() {
       <div class="card final-carta">
         <div class="carta"><h2 class="title">A carta do escudeiro</h2>${CARTA.map(t => `<p class="abre">${t}</p>`).join('')}<div class="selo" aria-hidden="true">♥</div></div>
         <p class="premio">${FINAL.premio}</p>
-        <ul class="vales">${FINAL.vales.map(v => `<li><span aria-hidden="true">🎟️</span> ${v}</li>`).join('')}</ul>
+        <ul class="vales">${FINAL.vales.map(v => `<li>${v}</li>`).join('')}</ul>
         <p class="despedida">${FINAL.despedida}</p>
         <div class="epilogo"><h3>Epílogo</h3><p>${FINAL.epilogo}</p></div>
         <div class="creditos"><h3>Os moradores desta aventura</h3><dl>${CREDITOS.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl><p class="creditos-fim">nada acontece por acaso</p></div>
@@ -2054,6 +2203,7 @@ const bg = document.getElementById('bg');
 if (reduz || navigator.connection?.saveData) { bg.removeAttribute('autoplay'); bg.preload = 'none'; bg.pause(); }
 montarMundo();
 start();
+emojificar(document.body);
 </script>
 </body>
 </html>

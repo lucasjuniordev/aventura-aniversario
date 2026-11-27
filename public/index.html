@@ -392,6 +392,8 @@
   /* painel dos desafios */
   .painel { position:fixed; inset:0; z-index:300; overflow-y:auto; overscroll-behavior:contain; background:#0b0f24c4; padding:80px 16px 28px; }
   .painel[hidden] { display:none; }
+  .painel.com-cena { background:linear-gradient(#0b0f2466, #0b0f24b0), var(--cena) center / cover fixed; }
+  .cena-img { margin:-64px -24px 14px; height:150px; border-radius:10px 10px 0 0; background:center / cover; box-shadow:inset 0 -30px 30px -20px #fdf3dc; }
   .painel .card { max-width:540px; margin:0 auto; }
 
   /* faixa de capítulo, voo do pedaço, clarão e corações */
@@ -580,23 +582,23 @@ const CARTA = [
 ];
 // um capítulo por morador, na ordem do caminho (de baixo do mapa até o castelo); cada um tem o seu ofício na vila
 const CAPITULOS = [
-  { icone: 'escudo', jogo: 'charadas', titulo: 'O Guia da Vila',
+  { icone: 'escudo', cena: 'portao', jogo: 'charadas', titulo: 'O Guia da Vila',
     fala: `Minha filha! Aqui na vila eu sou o guia: mostro o caminho para quem chega. O ${ELE} me pediu para te levar até o primeiro pedaço da carta. Mas antes, umas perguntinhas do seu pai sobre a nossa família!` },
-  { icone: 'dia', jogo: 'relogio', titulo: 'A Hora Certa',
+  { icone: 'dia', cena: 'torre', jogo: 'relogio', titulo: 'A Hora Certa',
     fala: `Filha! Quem cuida do relógio da torre sou eu, e hoje tudo tem que acontecer na hora certa, porque nada acontece por acaso. Pare o ponteiro na faixa dourada três vezes e o pedaço da carta é seu.` },
-  { icone: 'poeta', jogo: 'palavras', titulo: 'As Palavras do Cowboy',
+  { icone: 'poeta', cena: 'fogueira', jogo: 'palavras', titulo: 'As Palavras do Cowboy',
     fala: `E aí, irmã! O cowboy contador de histórias da vila está aqui, e amigo é pra isso. O ${ELE} embaralhou as palavras preferidas de vocês dois. Desembaralhe as três e o pedaço é seu.` },
-  { icone: 'flor', jogo: 'quebracabeca', titulo: 'O Quadro da Pintora',
+  { icone: 'flor', cena: 'atelie', jogo: 'quebracabeca', titulo: 'O Quadro da Pintora',
     fala: `Irmã! Pintei um quadro de vocês dois no jardim, mas o Theo brincou com ele e as peças se misturaram! Monte de novo e eu te entrego o pedaço da carta.` },
-  { icone: 'convite', jogo: 'memoria', titulo: 'Os Pares do Mensageiro',
+  { icone: 'convite', cena: 'correio', jogo: 'memoria', titulo: 'Os Pares do Mensageiro',
     fala: `Oi, tia! Eu sou o mensageiro da vila: levo os recados de todo mundo. Hoje os recados vieram em pares. Ache todos os pares e o pedaço da carta é seu.` },
-  { icone: 'presente', jogo: 'petalas', titulo: 'A Chuva de Pétalas',
+  { icone: 'presente', cena: 'jardim', jogo: 'petalas', titulo: 'A Chuva de Pétalas',
     fala: `Oi, ${ELA}! Aqui são o Rangel e a Ciane, os jardineiros da vila. As flores do jardim estão soltando pétalas para o seu aniversário! Pegue as pétalas e os corações com a cesta, fuja das abelhas, e o pedaço é seu.` },
-  { icone: 'festa', jogo: 'sequencia', titulo: 'A Canção da Luzia',
+  { icone: 'festa', cena: 'palco', jogo: 'sequencia', titulo: 'A Canção da Luzia',
     fala: `Graça e Paz, filha! Aqui na vila eu sou a cantora, e Deus é fiel em todo tempo. Agora é a sua vez de fazer música: observe a melodia das gemas e toque na mesma ordem.` },
-  { icone: 'biblia', jogo: 'versiculos', titulo: 'O Amor de 1 Coríntios 13',
+  { icone: 'biblia', cena: 'biblioteca', jogo: 'versiculos', titulo: 'O Amor de 1 Coríntios 13',
     fala: `Graça e Paz, ${ELA}! Eu sou o conselheiro da vila e ando sempre com a Bíblia. Meu filho deixou o penúltimo pedaço comigo: complete os versículos sobre o amor.` },
-  { icone: 'comida', jogo: 'bolo', titulo: 'O Banquete do Arauto',
+  { icone: 'comida', cena: 'cozinha', jogo: 'bolo', titulo: 'O Banquete do Arauto',
     fala: `Chegou a aniversariante! Aqui é o Cayo, o arauto oficial do castelo. Antes de eu anunciar a sua chegada, o bolo da festa precisa ficar pronto: pegue 10 ingredientes e deixe a cebola, a pimenta e o alho de fora.` },
 ];
 // Randerson: as palavras preferidas do casal, embaralhadas (dica e resposta)
@@ -690,6 +692,17 @@ const CONQUISTAS = [
   { id: 'abracos', ic: '🤗', t: 'Abraço coletivo', d: 'Mandou 10 corações para a família' },
   { id: 'todos', ic: '👨‍👩‍👧‍👦', t: 'A família toda', d: 'Conversou com todos da vila' },
 ];
+// dentro do castelo: 3 salas antes de encontrar o escudeiro
+const ENIGMAS = [
+  { p: 'O que é, o que é: quanto mais se reparte, mais cresce?', o: ['O amor', 'O bolo', 'O tempo'], c: 0 },
+  { p: 'O que é, o que é: tem teclas, mas não abre porta; tem notas, mas não é dinheiro?', o: ['O piano', 'O cofre', 'O caderno'], c: 0 },
+  { p: 'A porta só abre com a frase de vocês dois: “Até o infinito e...”', o: ['amém', 'além', 'depois'], c: 0 },
+];
+const SALAS = [
+  { cena: 'salao', t: 'O Salão de Entrada', d: 'Uma porta enorme com um cadeado de coração. Para abrir, só respondendo aos enigmas.', jogo: fim => JOGOS.charadas(fim, 0, ENIGMAS, 'Enigma') },
+  { cena: 'escada', t: 'A Grande Escadaria', d: 'O escudeiro está lá em cima! Suba pulando as velas, os vasos e... a Paçoca, que resolveu deitar na escada.', jogo: fim => JOGOS.escada(fim) },
+  { cena: 'galeria', t: 'A Galeria da Família', d: 'Os quadros da galeria estão sem nome. Descubra quem disse cada frase e a última porta se abre.', jogo: fim => JOGOS.quemDisse(fim) },
+];
 // a festa da vila: na pista, a batida é da vila; os nomes são músicas que a família ama
 const FESTA = ["I'm a Believer", "Don't Stop Believin'", "Summer Of '69", 'Vejo Enfim a Luz Brilhar', 'Sentimentos São', 'Heaven'];
 // a música de cada personagem: toca no player do YouTube quando ela fala com ele
@@ -719,7 +732,7 @@ const lvl = () => 1 + Math.floor(xp / 100);
 // ---- progresso salvo neste navegador ----
 const CHAVE = 'aventura-v2';  // v2: 8 capítulos (o progresso da versão de 5 recomeça)
 // extra: notas achadas, conquistas, com quem já conversou e contadores dos joguinhos da vila
-const novoExtra = () => ({ notas: [], conq: [], falou: [], bolas: 0, abracos: 0 });
+const novoExtra = () => ({ notas: [], conq: [], falou: [], bolas: 0, abracos: 0, castelo: 0 });
 let extra = novoExtra();
 const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify({ cap, xp, extra })); } catch {} };
 const carregar = () => { try { return JSON.parse(localStorage.getItem(CHAVE)); } catch { return null; } };
@@ -1056,7 +1069,7 @@ function tocarBicho(b) {
   });
   if (b.nome === 'Bel') return irAte(b, async () => {
     const k = await falar(b, 'Tia! Vamos fazer uma chuva de pétalas? Pegue as pétalas e os corações, e fuja das abelhas! 🌸', [['Vamos!', 'primary'], ['Depois', 'ghost']]);
-    if (k === 0) JOGOS.petalas(() => { conquistar('petalas'); fecharPainel(); balaozinho(b, 'Que lindo, tia! 🌸'); });
+    if (k === 0) cenaAtual = 'jardim', JOGOS.petalas(() => { conquistar('petalas'); fecharPainel(); balaozinho(b, 'Que lindo, tia! 🌸'); });
   });
   balaozinho(b);
 }
@@ -1109,7 +1122,7 @@ function abrirLugar(l) {
   if (l.id === 'festa') {
     const n = NPCS.findIndex(x => x.nome === 'Cayo');
     falar(n, `A festa da vila não para aqui na tenda! Bora dançar? Toque nas faixas quando as notas passarem na linha dourada! 🕺`, [['Bora dançar!', 'primary'], ['Depois', 'ghost']])
-      .then(k => { if (k === 0) JOGOS.danca(nota => { if (nota >= 70) conquistar('pista'); }); });
+      .then(k => { if (k === 0) cenaAtual = 'festa', JOGOS.danca(nota => { if (nota >= 70) conquistar('pista'); }); });
   }
 }
 // diário: conquistas e as canções da família
@@ -1247,11 +1260,14 @@ function fecharFala() { clearInterval(digitando); falaEl.hidden = true; }
 
 // ================= PAINEL (desafios, prólogo, pedaços) =================
 let aoFechar = null;
-function fecharPainel() { painel.hidden = true; pararJogo(); hud(); desenharMundo(); }
+let cenaAtual = null;  // cena pintada do desafio aberto (img/cenas/)
+function fecharPainel() { painel.hidden = true; cenaAtual = null; pararJogo(); hud(); desenharMundo(); }
 const iconeCap = i => `<div class="crest"><img src="img/${CAPITULOS[i].icone}.webp" alt=""></div>`;
 function view(html, topo, brilho) {
   pararJogo(); aoFechar = fecharPainel;
-  app.innerHTML = `<div class="card" role="dialog" aria-modal="true">${topo}<button class="fechar" aria-label="Voltar para a vila">✕</button>${html}</div>`;
+  const fundo = cenaAtual ? `url(img/cenas/${cenaAtual}.webp)` : '';
+  painel.style.setProperty('--cena', fundo || 'none'); painel.classList.toggle('com-cena', !!fundo);
+  app.innerHTML = `<div class="card" role="dialog" aria-modal="true">${fundo ? `<div class="cena-img" style="background-image:${fundo}"></div>` : ''}${topo}<button class="fechar" aria-label="Voltar para a vila">✕</button>${html}</div>`;
   app.querySelector('.fechar').onclick = () => (aoFechar || fecharPainel)();
   painel.hidden = false; hud(brilho); painel.scrollTop = 0;
   app.querySelector('.card button:not(.fechar)')?.focus({ preventScroll: true });
@@ -1289,7 +1305,7 @@ async function falarCom(i) {
   const k = await falar(i, c.fala, [['Aceitar o desafio', 'primary'], ['Agora não', 'ghost']]);
   if (k !== 0) return;
   await faixaCapitulo(cap);
-  JOGOS[c.jogo](capituloCompleto);
+  cenaAtual = c.cena; JOGOS[c.jogo](capituloCompleto);
 }
 function faixaCapitulo(i) {
   return new Promise(res => {
@@ -1323,7 +1339,14 @@ function voar(i) {
 function irAoPortao() {
   if (pausado()) return;
   if (cap < CAPITULOS.length) return aviso(`O portão está trancado. Faltam ${CAPITULOS.length - Math.max(cap, 0)} pedaços da carta.`);
-  final();
+  castelo();
+}
+function castelo() {
+  const k = extra.castelo || 0;
+  if (k >= SALAS.length) return final();
+  const s = SALAS[k]; cenaAtual = s.cena;
+  view(`<p class="kicker">Dentro do castelo · sala ${k + 1} de ${SALAS.length}</p><h2>${s.t}</h2><p>${s.d}</p><button class="primary">Entrar</button>`, topoLivre('🏰'));
+  on('.primary', () => { cenaAtual = s.cena; s.jogo(() => { extra.castelo = k + 1; ganharXp(50); canal(`🏰 <b>${ELA}</b> passou por ${s.t}!`, 'sis'); castelo(); }); });
 }
 // ================= MINIJOGOS =================
 let timers = [], quadro = null, limpar = [];
@@ -1331,7 +1354,7 @@ function pararJogo() { timers.forEach(clearTimeout); timers.forEach(clearInterva
 const topoLivre = ic => `<div class="crest"><span style="font-size:46px;line-height:1">${ic}</span></div>`;
 const ganharXp = n => { const antes = lvl(); xp += n; salvar(); hud(true); return lvl() > antes; };
 const depois = (ms, fn) => timers.push(setTimeout(fn, ms));
-const topoJogo = () => iconeCap(cap);
+const topoJogo = () => cap < CAPITULOS.length ? iconeCap(cap) : topoLivre('🏰');
 
 const JOGOS = {
   // 1. Charadas: três perguntas de múltipla escolha; errar não tem castigo
@@ -1495,6 +1518,53 @@ const JOGOS = {
       }
     });
     nova();
+  },
+  // Escadaria: ela sobe correndo; toque (ou espaço/seta para cima) para pular velas, vasos e a Paçoca
+  escada(fim) {
+    const META = 10;
+    let passou = 0, y = 0, vy = 0, obst = [], prox = 1, ult = 0, fundoX = 0, acabou = false;
+    view(`<p class="kicker">Degraus: <span id="pts">0</span>/${META}</p><h2>Suba a escadaria!</h2>
+      <canvas class="petalas" width="320" height="240" style="aspect-ratio:4/3" aria-label="Toque para pular"></canvas>
+      <p class="note" id="msg" role="status">Toque na tela (ou espaço) para pular.</p>`, topoLivre('🪜'));
+    const cv = app.querySelector('canvas'), g = cv.getContext('2d'), msg = app.querySelector('#msg');
+    const fundo = new Image(); fundo.src = 'img/cenas/escada.webp';
+    const ela = new Image(); ela.src = 'img/heroi-vitoria.webp';
+    const pular = () => { if (!acabou && y === 0) { vy = 430; const a = som(); if (a) tom(660, a.currentTime, .15, 'sine', .06); } };
+    cv.addEventListener('pointerdown', e => { e.preventDefault(); pular(); });
+    const tecla = e => { if ([' ', 'arrowup', 'w'].includes(e.key.toLowerCase())) { e.preventDefault(); pular(); } };
+    addEventListener('keydown', tecla); limpar.push(() => removeEventListener('keydown', tecla));
+    const CHAO = 200, X = 60;
+    const loop = t => {
+      const dt = Math.min(.05, (t - (ult || t)) / 1000); ult = t;
+      if (!acabou) {
+        vy -= 1100 * dt; y = Math.max(0, y + vy * dt); if (y === 0) vy = 0;
+        fundoX = (fundoX + 60 * dt) % 427;
+        if ((prox -= dt) <= 0) { prox = 1.1 + Math.random() * .8; obst.push({ x: 340, ic: ['🕯️', '🏺', '🐈'][Math.random() * 3 | 0] }); }
+        obst.forEach(o => { o.x -= 170 * dt;
+          if (!o.bateu && o.x < X + 18 && o.x > X - 18 && y < 26) { o.bateu = true; msg.textContent = 'Ops! Pula na hora certa.'; }
+          if (!o.contou && o.x < X - 20) { o.contou = true; if (!o.bateu) { passou++; app.querySelector('#pts').textContent = passou; msg.textContent = ''; } } });
+        obst = obst.filter(o => o.x > -30);
+        if (passou >= META) { acabou = true; msg.textContent = 'Lá em cima! 🏰'; depois(700, fim); }
+      }
+      g.clearRect(0, 0, 320, 240);
+      if (fundo.complete && fundo.naturalWidth) { const w = 240 * fundo.naturalWidth / fundo.naturalHeight; g.drawImage(fundo, -fundoX, 0, w, 240); g.drawImage(fundo, w - fundoX, 0, w, 240); }
+      g.font = '28px serif'; g.textAlign = 'center'; g.textBaseline = 'bottom'; obst.forEach(o => g.fillText(o.ic, o.x, CHAO + 8));
+      if (ela.complete && ela.naturalWidth) { const h = 72, w = h * ela.naturalWidth / ela.naturalHeight; g.drawImage(ela, X - w / 2, CHAO - h - y + 8, w, h); }
+      quadro = requestAnimationFrame(loop);
+    };
+    quadro = requestAnimationFrame(loop);
+  },
+  // Galeria: quem disse esta frase? (as frases soltas da vila, com os retratos)
+  quemDisse(fim, k = 0) {
+    const RODADAS = 3, certo = NPCS[Math.random() * NPCS.length | 0], f = FRASES[certo.nome];
+    const opcoes = embaralhar([certo, ...embaralhar(NPCS.filter(n => n !== certo)).slice(0, 2)]);
+    view(`<p class="kicker">Quadro ${k + 1} de ${RODADAS}</p><h2>Quem disse: “${esc(f[Math.random() * f.length | 0])}”</h2>
+      <div class="answers row" style="grid-template-columns:repeat(3,1fr)">${opcoes.map(n => `<button data-v="${esc(n.nome)}" style="flex-direction:column"><img src="img/${n.img}.webp" alt="" style="height:90px">${esc(n.nome)}</button>`).join('')}</div>
+      <p class="note" id="msg" role="status"></p>`, topoLivre('🖼️'));
+    on('.answers button', (v, b) => {
+      if (v === certo.nome) { b.classList.add('certo'); depois(600, () => k + 1 < RODADAS ? JOGOS.quemDisse(fim, k + 1) : fim()); }
+      else { b.classList.add('errado'); b.disabled = true; app.querySelector('#msg').textContent = 'Quase! Olha de novo.'; }
+    });
   },
   // Pista de dança da festa: as notas descem; toque na faixa quando passarem na linha dourada (teclas D F J K ou setas)
   danca(fim) {

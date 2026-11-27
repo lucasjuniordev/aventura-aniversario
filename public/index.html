@@ -514,6 +514,16 @@
   .epilogo { margin:18px 0 6px; padding:14px; border-radius:12px; background:#fff8e6; border:2px dashed #d9bf8a; }
   .epilogo h3 { margin:0 0 6px; font:700 18px Alegreya, Georgia, serif; color:var(--wood); }
   .epilogo p { margin:0; font:italic 500 16px/1.45 Alegreya, Georgia, serif; }
+  .portao.saida { width:max(54px, 7cqh); height:max(54px, 7cqh); border-radius:50%; display:grid; place-items:center; background:radial-gradient(#ffffff55, transparent 70%); }
+  .portao.saida::after { content:'🔒'; font-size:max(22px, 3.4cqh); filter:drop-shadow(0 2px 3px #0008); }
+  .portao.saida.aberto::after { content:'✨'; }
+  .troca { position:fixed; inset:0; z-index:5000; background:#0b0f24; pointer-events:none; animation:troca 1s ease forwards; }
+  @keyframes troca { 0% { opacity:0; } 40%, 60% { opacity:1; } 100% { opacity:0; } }
+  .fases { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .fase { position:relative; height:96px; border-radius:12px; border:3px solid var(--gold3); background:center / cover; color:#fff; text-align:left; padding:8px; display:flex; flex-direction:column; justify-content:flex-end; cursor:pointer;
+    box-shadow:inset 0 -50px 30px -10px #000c; font:700 13px/1.2 'Alegreya Sans', sans-serif; }
+  .fase small { font-weight:600; opacity:.9; } .fase.aqui { border-color:var(--gold); box-shadow:inset 0 -50px 30px -10px #000c, 0 0 0 3px var(--gold2); }
+  .fase:disabled { filter:grayscale(1) brightness(.6); cursor:default; }
   .yt { position:fixed; z-index:6100; right:10px; top:calc(max(10px, env(safe-area-inset-top)) + 252px); width:200px; border-radius:12px; overflow:hidden; background:#000; border:2px solid var(--gold3); box-shadow:0 6px 14px #0008; }
   .yt[hidden] { display:none; }
   .yt p { margin:0; display:flex; align-items:center; justify-content:space-between; gap:6px; padding:4px 4px 4px 10px; font:700 12px 'Alegreya Sans', sans-serif; color:var(--gold2); background:#2a180b; }
@@ -718,7 +728,7 @@ const MISSOES = [
   { quem: 'Sthefany', tipo: 'danca',
     pedido: 'Tia, bora ver quem dança melhor? Vai lá na pista da festa, na tenda, e depois volta aqui!', fim: 'Você arrasou! Rainha da vila! 💃' },
 ];
-const FLORES = [[14, 30], [89, 42], [60, 84]];
+const FLORES = [[15, 20], [85, 80], [50, 15]];  // no Jardim Florido
 // dentro do castelo: 3 salas antes de encontrar o escudeiro
 const ENIGMAS = [
   { p: 'O que é, o que é: quanto mais se reparte, mais cresce?', o: ['O amor', 'O bolo', 'O tempo'], c: 0 },
@@ -836,13 +846,13 @@ function hud(brilho) {
   missao();
 }
 // ---- missão atual (canto da tela) ----
-function alvoMissao() { return cap < 0 ? null : cap < CAPITULOS.length ? NPCS[cap] : { x: PORTAO.x, y: PORTAO.y + 2, nome: 'Portão do castelo' }; }
+function alvoMissao() { return cap < 0 ? null : NPCS[cap]?.aqui ? NPCS[cap] : { x: PORTAO.x, y: PORTAO.y + 2 }; }
 function missao() {
   const el = document.getElementById('missao');
   if (cap < 0) return el.hidden = true;
   el.hidden = false;
   el.innerHTML = cap < CAPITULOS.length
-    ? `📜 <b>${cap + 1}/${CAPITULOS.length}</b> → ${esc(NPCS[cap].nome)} · 🎵 ${extra.notas.length}/${TRILHA.length}`
+    ? `🗺️ <b>${fase + 1}/${FASES.length}</b> → ${NPCS[cap]?.aqui ? esc(NPCS[cap].nome) : cap > fase ? esc(FASES[fase + 1].nome) : '?'} · 🎵 ${extra.notas.length}/${TRILHA.length}`
     : `🏰 → <b>Castelo</b> · 🎵 ${extra.notas.length}/${TRILHA.length}`;
 }
 // ---- canal da vila (mensagens no canto, estilo MMO) ----
@@ -870,6 +880,7 @@ function conversou(nome) {
   if ([...NPCS.map(n => n.nome), ...BICHOS.map(b => b.nome)].every(n => extra.falou.includes(n))) conquistar('todos');
 }
 
+const mini = document.getElementById('minimapa');
 // ================= O MUNDO: mapa maior que a tela, câmera, controles e colisão =================
 // moradores na ordem dos capítulos (NPCS[i] dá o capítulo i); a = artigo ("falar com o/a ...")
 const NPCS = [
@@ -886,54 +897,100 @@ const NPCS = [
 const com = n => (n.a ? `${n.a} ${n.nome}` : n.nome);
 // quem anda sozinho pela vila (h = altura em % da altura do mapa; casa = onde passeia)
 const BICHOS = [
-  { img: 'amb-theo', nome: 'Theo', h: 5.6, casa: { x: 32, y: 53 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Hihihi! 😄', 'Vamos brincar?'] },
-  { img: 'amb-snow', nome: 'Snow', h: 5.4, casa: { x: 50, y: 88 }, raio: 14, vel: .13, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*pede carinho*'] },
-  { img: 'amb-bel', nome: 'Bel', h: 7.4, casa: { x: 58, y: 48 }, raio: 6, vel: .08, diz: ['Feliz aniversário, Vitória! 🎉', 'Vamos jogar pétalas? 🌸', 'O Henrique é meu irmão!'] },
-  { img: 'amb-manu', nome: 'Manu', h: 6.2, casa: { x: 54, y: 68 }, raio: 6, vel: .07, diz: ['Oi, tia! 👋'] },
-  { img: 'amb-rebeca', nome: 'Rebeca', h: 5.8, casa: { x: 36, y: 90 }, raio: 6, vel: .07, diz: ['Olha as minhas flores! 🌸'] },
-  { img: 'amb-anna', nome: 'Anna Isabel', h: 7, casa: { x: 78, y: 88 }, raio: 6, vel: .07, diz: ['Feliz aniversário, tia! 💜'] },
-  { img: 'amb-gabriela', nome: 'Gabriela', h: 7.2, casa: { x: 48, y: 40 }, raio: 5, vel: .07, diz: ['Alguém falou em bolo? 🍰'] },
-  { img: 'amb-sthefany', nome: 'Sthefany', h: 7.4, casa: { x: 18, y: 86 }, raio: 6, vel: .08, diz: ['Bora dançar? 💃'] },
-  { img: 'amb-gato', nome: 'Paçoca', h: 4.2, casa: { x: 47, y: 31 }, raio: 9, vel: .06, diz: ['Miau 💛', 'Purr...', '*se espreguiça*'] },
+  { img: 'amb-theo', nome: 'Theo', fase: 3, h: 5.6, casa: { x: 50, y: 65 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Hihihi! 😄', 'Vamos brincar?'] },
+  { img: 'amb-snow', nome: 'Snow', fase: 0, h: 5.4, casa: { x: 50, y: 88 }, raio: 14, vel: .13, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*pede carinho*'] },
+  { img: 'amb-bel', nome: 'Bel', fase: 4, h: 7.4, casa: { x: 40, y: 70 }, raio: 6, vel: .08, diz: ['Feliz aniversário, Vitória! 🎉', 'Vamos jogar pétalas? 🌸', 'O Henrique é meu irmão!'] },
+  { img: 'amb-manu', nome: 'Manu', fase: 0, h: 6.2, casa: { x: 54, y: 68 }, raio: 6, vel: .07, diz: ['Oi, tia! 👋'] },
+  { img: 'amb-rebeca', nome: 'Rebeca', fase: 5, h: 5.8, casa: { x: 25, y: 55 }, raio: 6, vel: .07, diz: ['Olha as minhas flores! 🌸'] },
+  { img: 'amb-anna', nome: 'Anna Isabel', fase: 0, h: 7, casa: { x: 78, y: 88 }, raio: 6, vel: .07, diz: ['Feliz aniversário, tia! 💜'] },
+  { img: 'amb-gabriela', nome: 'Gabriela', fase: 6, h: 7.2, casa: { x: 60, y: 30 }, raio: 5, vel: .07, diz: ['Alguém falou em bolo? 🍰'] },
+  { img: 'amb-sthefany', nome: 'Sthefany', fase: 6, h: 7.4, casa: { x: 40, y: 75 }, raio: 6, vel: .08, diz: ['Bora dançar? 💃'] },
+  { img: 'amb-gato', nome: 'Paçoca', fase: 8, h: 4.2, casa: { x: 45, y: 40 }, raio: 9, vel: .06, diz: ['Miau 💛', 'Purr...', '*se espreguiça*'] },
 ];
-const PORTAO = { x: 50.5, y: 17 }, INICIO = { x: 50, y: 89.5 };
-// onde ficam as 16 notas da Trilha do Casamento (pontos livres e alcançáveis, espalhados pelo mapa)
-const NOTAS_POS = [[89, 22], [12, 25], [13, 93], [86, 93], [47, 22], [68, 52], [28, 60], [68, 92], [32, 92], [29, 29], [65, 20.5], [49, 54], [12, 55], [84, 48], [61, 71], [40, 69]];
-// onde o Theo se esconde
-const ESCONDERIJOS = [[86, 93], [80, 19.5], [55, 93], [13, 93], [12, 25], [51, 21], [33, 91], [12, 60]];
-// lugares com joguinho, abertos a qualquer hora
-const LUGARES = [{ id: 'festa', nome: 'Festa · pista de dança', ic: '🎶', x: 26, y: 81.5 }];
-// áreas bloqueadas do mapa, em % (x0, y0, x1, y1): castelo, morros, loja, barraca, tenda, torre e bordas
-const BLOQUEIOS = [[20, 0, 80, 17.5], [0, 0, 18, 22], [82, 0, 100, 21], [53, 23, 91, 38], [69, 38, 87, 46], [17, 33, 43, 45], [13.5, 40.5, 25, 50],
+const INICIO = { x: 50, y: 89.5 };
+// áreas bloqueadas da vila, em % (x0, y0, x1, y1): castelo, morros, loja, barraca, tenda, torre e bordas
+const BLOQUEIOS_VILA = [[20, 0, 80, 17.5], [0, 0, 18, 22], [82, 0, 100, 21], [53, 23, 91, 38], [69, 38, 87, 46], [17, 33, 43, 45], [13.5, 40.5, 25, 50],
   [8, 61, 37, 79], [70, 49.5, 90, 80], [0, 0, 8.5, 100], [91.5, 0, 100, 100], [0, 96.5, 100, 100]];
+const BORDAS = [[0, 0, 100, 1.5], [0, 98.5, 100, 100], [0, 0, 1.5, 100], [98.5, 0, 100, 100]];
+// as fases: cada morador no seu mapa, com o seu tema e a sua direção (w/h = tamanho do desenho; notas = onde ficam as notas da fase)
+const FASES = [
+  { nome: 'A Vila', mapa: 'img/vila.webp', w: 768, h: 1376, inicio: INICIO, npc: { x: 39, y: 80.5 }, saida: { x: 50.5, y: 21 }, bloq: BLOQUEIOS_VILA, notas: [[12, 25], [86, 93]] },
+  { nome: 'O Vale do Tempo', mapa: 'img/mapas/vale.webp', w: 1376, h: 768, inicio: { x: 4, y: 52 }, npc: { x: 88, y: 47 }, saida: { x: 97, y: 52 }, notas: [[30, 75], [70, 25]] },
+  { nome: 'O Velho Oeste', mapa: 'img/mapas/oeste.webp', w: 768, h: 1376, inicio: { x: 45, y: 4 }, npc: { x: 40, y: 70 }, saida: { x: 55, y: 97 }, notas: [[25, 40], [70, 60]] },
+  { nome: 'O Bosque das Pinturas', mapa: 'img/mapas/bosque.webp', w: 1376, h: 768, inicio: { x: 96, y: 52 }, npc: { x: 14, y: 52 }, saida: { x: 3, y: 52 }, notas: [[55, 75], [30, 30]] },
+  { nome: 'A Estrada dos Recados', mapa: 'img/mapas/estrada.webp', w: 768, h: 1376, inicio: { x: 48, y: 96 }, npc: { x: 58, y: 28 }, saida: { x: 52, y: 3 }, notas: [[25, 60], [75, 40]] },
+  { nome: 'O Jardim Florido', mapa: 'img/mapas/jardim.webp', w: 1376, h: 768, inicio: { x: 4, y: 48 }, npc: { x: 86, y: 50 }, saida: { x: 97, y: 48 }, notas: [[40, 20], [60, 80]] },
+  { nome: 'A Colina da Música', mapa: 'img/mapas/colina.webp', w: 768, h: 1376, inicio: { x: 50, y: 4 }, npc: { x: 32, y: 46 }, saida: { x: 50, y: 97 }, notas: [[80, 25], [20, 75]] },
+  { nome: 'O Lago da Paz', mapa: 'img/mapas/lago.webp', w: 1376, h: 768, inicio: { x: 96, y: 52 }, npc: { x: 14, y: 50 }, saida: { x: 3, y: 50 }, notas: [[60, 80], [35, 70]] },
+  { nome: 'O Caminho do Castelo', mapa: 'img/mapas/castelo.webp', w: 768, h: 1376, inicio: { x: 55, y: 95 }, npc: { x: 38, y: 24 }, saida: { x: 52, y: 12 }, notas: [] },
+];
+// as 16 notas: [x, y, fase]
+const NOTAS_POS = FASES.flatMap((f, fi) => f.notas.map(([x, y]) => [x, y, fi]));
+// onde o Theo se esconde (no Bosque das Pinturas)
+const ESCONDERIJOS = [[8, 85], [92, 85], [50, 90], [90, 15], [30, 15], [60, 20]];
+// lugares com joguinho (a festa fica na Colina da Música)
+const LUGARES = [{ id: 'festa', nome: 'Festa · pista de dança', ic: '🎶', x: 72, y: 60, fase: 6 }];
+let fase = 0, BLOQUEIOS = BLOQUEIOS_VILA, PORTAO = FASES[0].saida;
+const U = () => Math.min(W, H);  // medida base: a mesma em mapa em pé ou deitado
 const livre = (x, y) => !BLOQUEIOS.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
 const heroi = { x: INICIO.x, y: INICIO.y, esq: false };
 let W = 0, H = 0, camX = 0, camY = 0, alvo = null, aoChegar = null, perto = null;
 const joy = { x: 0, y: 0 }, teclas = new Set();
-const pausado = () => !painel.hidden || !falaEl.hidden || !document.getElementById('final').hidden;
+let cena = false;  // durante a troca de fase ninguém mexe
+const pausado = () => cena || !painel.hidden || !falaEl.hidden || !document.getElementById('final').hidden;
 
 function medir() {
   const vw = jogoEl.clientWidth, vh = jogoEl.clientHeight;
-  W = Math.round(Math.min(vw * 1.55, vh * 1.02)); H = Math.round(W * 1376 / 768);
+  const f = FASES[fase];
+  if (f.h > f.w) { W = Math.round(Math.min(vw * 1.55, vh * 1.02)); H = Math.round(W * f.h / f.w); }
+  else { H = Math.round(vh); W = Math.round(H * f.w / f.h); }  // deitado: ocupa a altura e anda para os lados
   mundoEl.style.width = `${W}px`; mundoEl.style.height = `${H}px`;
   camera(true);
 }
-function montarMundo() {
-  mundoEl.insertAdjacentHTML('beforeend', NPCS.map((n, i) => `<button class="npc" data-i="${i}" style="left:${n.x}%;top:${n.y}%;z-index:${Math.round(n.y * 10)};animation-delay:${-i * .7}s">
-      <span class="balao" aria-hidden="true"></span><img src="img/${n.img}.webp" alt=""><small><b>${n.nome}</b></small></button>`).join('')
-    + `<button class="portao" style="left:${PORTAO.x}%;top:${PORTAO.y}%"><span class="balao" aria-hidden="true"></span></button>`
+function desenharFase() {
+  const f = FASES[fase];
+  BLOQUEIOS = f.bloq || BORDAS; ESTRADA = fase === 0 ? ESTRADA_VILA : []; PORTAO = f.saida;
+  NPCS.forEach((n, i) => { n.aqui = i === fase; if (n.aqui) Object.assign(n, f.npc); });
+  if (esconde.ativo) { esconde.ativo = false; esconde.tick = null; esconde.b.sumiu = false; }
+  mundoEl.innerHTML = '';
+  mundoEl.style.backgroundImage = `url(${f.mapa})`; mini.style.backgroundImage = `url(${f.mapa})`;
+  const n = NPCS[fase];
+  const aqui = BICHOS.filter(b => b.segue || b.fase === fase);
+  mundoEl.insertAdjacentHTML('beforeend', `<button class="npc" data-i="${fase}" style="left:${n.x}%;top:${n.y}%;z-index:${Math.round(n.y * 10)}">
+      <span class="balao" aria-hidden="true"></span><img src="img/${n.img}.webp" alt=""><small><b>${n.nome}</b></small></button>`
+    + `<button class="portao${fase < FASES.length - 1 ? ' saida' : ''}" style="left:${PORTAO.x}%;top:${PORTAO.y}%"><span class="balao" aria-hidden="true"></span></button>`
     + `<div class="heroi" id="heroi"><span class="sombra"></span><img src="img/heroi-vitoria.webp" alt="${ELA}, a aventureira"></div>`
-    + Array.from({ length: reduz ? 0 : 18 }, () => `<i class="brilho" style="left:${10 + Math.random() * 80}%;top:${14 + Math.random() * 80}%;animation-delay:${-Math.random() * 8}s;animation-duration:${6 + Math.random() * 6}s"></i>`).join('')
-    + BICHOS.map((b, i) => `<button class="bicho" data-b="${i}" aria-label="${b.nome}"><span class="sombra"></span><img src="img/${b.img}.webp" alt="" style="height:${b.h}cqh"></button>`).join('')
-    + (reduz ? '' : '<i class="nuvem n1"></i><i class="nuvem n2"></i>' + [[27, 55], [33, 60], [58, 63], [72, 88], [20, 30]].map(([x, y], i) => `<i class="borboleta" style="left:${x}%;top:${y}%;animation-delay:${-i * 2.3}s">🦋</i>`).join(''))
-    + LUGARES.map((l, i) => `<button class="lugar" data-l="${i}" style="left:${l.x}%;top:${l.y}%;z-index:${Math.round(l.y * 10)}" aria-label="${l.nome}"><span aria-hidden="true">${l.ic}</span><small>${l.nome}</small></button>`).join(''));
-  BICHOS.forEach((b, i) => { Object.assign(b, { x: b.casa.x, y: b.casa.y, alvo: null, espera: Math.random() * 2, esq: false, el: mundoEl.querySelector(`.bicho[data-b="${i}"]`) });
+    + Array.from({ length: reduz ? 0 : 14 }, () => `<i class="brilho" style="left:${10 + Math.random() * 80}%;top:${10 + Math.random() * 80}%;animation-delay:${-Math.random() * 8}s;animation-duration:${6 + Math.random() * 6}s"></i>`).join('')
+    + aqui.map(b => `<button class="bicho" data-b="${BICHOS.indexOf(b)}" aria-label="${b.nome}"><span class="sombra"></span><img src="img/${b.img}.webp" alt="" style="height:${b.h}cqh"></button>`).join('')
+    + (reduz ? '' : '<i class="nuvem n1"></i><i class="nuvem n2"></i>' + [[27, 55], [63, 30], [72, 80]].map(([x, y], i) => `<i class="borboleta" style="left:${x}%;top:${y}%;animation-delay:${-i * 2.3}s">🦋</i>`).join(''))
+    + LUGARES.map((l, i) => l.fase !== fase ? '' : `<button class="lugar" data-l="${i}" style="left:${l.x}%;top:${l.y}%;z-index:${Math.round(l.y * 10)}" aria-label="${l.nome}"><span aria-hidden="true">${l.ic}</span><small>${l.nome}</small></button>`).join(''));
+  BICHOS.forEach(b => { b.el = null; });
+  aqui.forEach(b => { const casa = b.segue ? heroi : b.casa;
+    Object.assign(b, { x: casa.x, y: casa.y, alvo: null, espera: Math.random() * 2, esq: false, el: mundoEl.querySelector(`.bicho[data-b="${BICHOS.indexOf(b)}"]`) });
     Object.assign(b.el.style, { left: `${b.x}%`, top: `${b.y}%`, zIndex: Math.round(b.y * 10) });
-    b.el.onclick = e => { e.stopPropagation(); if (!pausado()) tocarBicho(b); }; });
+    b.el.onclick = e => { e.stopPropagation(); if (!pausado()) b.segue ? balaozinho(b) : tocarBicho(b); }; });
   mundoEl.querySelectorAll('.lugar').forEach(b => b.onclick = e => { e.stopPropagation(); const l = LUGARES[+b.dataset.l]; irAte(l, () => abrirLugar(l)); });
-  desenharNotas(); desenharFlores();
   mundoEl.querySelectorAll('.npc').forEach(b => b.onclick = e => { e.stopPropagation(); irAte(NPCS[+b.dataset.i], () => falarCom(+b.dataset.i)); });
-  mundoEl.querySelector('.portao').onclick = e => { e.stopPropagation(); irAte({ x: PORTAO.x + 8, y: PORTAO.y + 3 }, irAoPortao); };
+  mundoEl.querySelector('.portao').onclick = e => { e.stopPropagation(); irAte(fase === FASES.length - 1 ? { x: PORTAO.x + 8, y: PORTAO.y + 3 } : PORTAO, irAoPortao); };
+  desenharNotas(); desenharFlores();
+  medir(); desenharMundo(); hud();
+}
+// troca de fase com uma cortina e a faixa com o nome do lugar
+function irParaFase(f) {
+  if (cena) return; cena = true;
+  const c = document.createElement('div'); c.className = 'troca'; document.body.append(c);
+  setTimeout(() => {
+    fase = f; extra.fase = f; salvar();
+    Object.assign(heroi, FASES[f].inicio); alvo = null; aoChegar = null;
+    desenharFase(); camera(true);
+    const fx = document.createElement('div'); fx.className = 'faixa';
+    fx.innerHTML = `<small>Fase ${f + 1} de ${FASES.length}</small><b>${FASES[f].nome}</b>`;
+    document.body.append(fx); setTimeout(() => fx.remove(), 1800);
+    canal(`🗺️ <b>${ELA}</b> chegou à fase ${f + 1}: <b>${FASES[f].nome}</b>!`, 'sis');
+  }, reduz ? 0 : 450);
+  setTimeout(() => { c.remove(); cena = false; }, reduz ? 50 : 1000);
+}
+function montarMundo() {
   // toque no chão: anda até lá (o joystick tem prioridade)
   mundoEl.addEventListener('pointerdown', e => {
     if (pausado() || e.target.closest('button')) return;
@@ -941,7 +998,8 @@ function montarMundo() {
     alvo = { x: (e.clientX - r.left) / r.width * 100, y: (e.clientY - r.top) / r.height * 100 }; aoChegar = null;
     marcarAlvo(alvo);
   });
-  medir(); addEventListener('resize', medir);
+  addEventListener('resize', medir);
+  desenharFase();
   requestAnimationFrame(passo);
 }
 // chega perto de algo antes de interagir
@@ -954,7 +1012,8 @@ function irAte(p, depois) {
   marcarAlvo(dest);
 }
 // se uma construção está no meio, passa antes por um ponto da estrada de pedras
-const ESTRADA = [{ x: 50, y: 88 }, { x: 47, y: 75 }, { x: 50, y: 62 }, { x: 46, y: 50 }, { x: 48, y: 38 }, { x: 50, y: 27 }, { x: 51, y: 20.5 }];
+const ESTRADA_VILA = [{ x: 50, y: 88 }, { x: 47, y: 75 }, { x: 50, y: 62 }, { x: 46, y: 50 }, { x: 48, y: 38 }, { x: 50, y: 27 }, { x: 51, y: 20.5 }];
+let ESTRADA = ESTRADA_VILA;
 const limpo = (a, b) => Array.from({ length: 41 }, (_, k) => k / 40).every(f => livre(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f));
 const dist2 = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 function rota(de, para) {
@@ -982,7 +1041,7 @@ function passo(t) {
   const el = document.getElementById('heroi');
   if (mov > .15 && !pausado()) {
     if (mov > 1) { vx /= mov; vy /= mov; }
-    const vel = W * .3 * dt;  // ~30% da largura do mapa por segundo
+    const vel = U() * .3 * dt;  // ~30% da largura do mapa por segundo
     const nx = heroi.x + vx * vel / W * 100, ny = heroi.y + vy * vel / H * 100;
     const antes = [heroi.x, heroi.y];
     if (livre(nx, ny)) { heroi.x = nx; heroi.y = ny; }
@@ -1005,8 +1064,8 @@ function passo(t) {
 // ================= A VILA VIVA: notas, bússola, minimapa, conversas soltas, joguinhos com os bichos =================
 function desenharNotas() {
   mundoEl.querySelectorAll('.nota').forEach(n => n.remove());
-  NOTAS_POS.forEach(([x, y], i) => {
-    if (extra.notas.includes(i)) return;
+  NOTAS_POS.forEach(([x, y, f], i) => {
+    if (extra.notas.includes(i) || f !== fase) return;
     mundoEl.insertAdjacentHTML('beforeend', `<button class="nota" data-n="${i}" style="left:${x}%;top:${y}%;z-index:${Math.round(y * 10)};animation-delay:${-i * .3}s" aria-label="Nota musical escondida">♪</button>`);
   });
   mundoEl.querySelectorAll('.nota').forEach(b => b.onclick = e => { e.stopPropagation(); const [x, y] = NOTAS_POS[+b.dataset.n]; irAte({ x, y }, () => {}); });
@@ -1028,13 +1087,13 @@ function vidaDaVila(t) {
   const dt = t - (ultimoT || t); ultimoT = t;
   if (pausado()) return;
   // notas: passou por cima, pegou
-  NOTAS_POS.forEach(([x, y], i) => { if (!extra.notas.includes(i) && Math.hypot((x - heroi.x) * W / 100, (y - heroi.y) * H / 100) < W * .05) pegarNota(i); });
-  if (mundoEl.querySelector('.flor-m')) FLORES.forEach(([x, y], i) => { if (!extra.flores.includes(i) && Math.hypot((x - heroi.x) * W / 100, (y - heroi.y) * H / 100) < W * .05) {
+  NOTAS_POS.forEach(([x, y, f], i) => { if (f === fase && !extra.notas.includes(i) && Math.hypot((x - heroi.x) * W / 100, (y - heroi.y) * H / 100) < U() * .05) pegarNota(i); });
+  if (mundoEl.querySelector('.flor-m')) FLORES.forEach(([x, y], i) => { if (!extra.flores.includes(i) && Math.hypot((x - heroi.x) * W / 100, (y - heroi.y) * H / 100) < U() * .05) {
     extra.flores.push(i); salvar(); plim(); desenharFlores(); aviso(extra.flores.length >= FLORES.length ? '🌼 Achou as 3 flores! Leve para a Rebeca.' : `🌼 Flor mágica ${extra.flores.length}/${FLORES.length}`); } });
   // moradores e bichos soltam frases sozinhos (balão + canal da vila)
   if ((proxFala -= dt) <= 0) {
     proxFala = 5500 + Math.random() * 5000;
-    const todos = [...NPCS.map((n, i) => ({ nome: n.nome, el: mundoEl.querySelector(`.npc[data-i="${i}"]`) })), ...BICHOS.filter(b => !b.sumiu).map(b => ({ nome: b.nome, el: b.el, b }))];
+    const todos = [...NPCS.filter(n => n.aqui).map(n => ({ nome: n.nome, el: mundoEl.querySelector(`.npc[data-i="${NPCS.indexOf(n)}"]`) })), ...BICHOS.filter(b => b.el && !b.sumiu).map(b => ({ nome: b.nome, el: b.el, b }))];
     const q = todos[Math.random() * todos.length | 0], f = FRASES[q.nome]; if (f) {
       const frase = f[Math.random() * f.length | 0];
       q.b ? balaozinho(q.b, frase) : balaoNpc(q.el, frase);
@@ -1043,7 +1102,7 @@ function vidaDaVila(t) {
   }
   if ((proxDica -= dt) <= 0) { proxDica = 45000; canal(DICAS[Math.random() * DICAS.length | 0], 'sis'); }
   // moradores olham para a aventureira
-  if (t - olhaT > 300) { olhaT = t; mundoEl.querySelectorAll('.npc').forEach((b, i) => b.classList.toggle('olha', heroi.x < NPCS[i].x - 2)); }
+  if (t - olhaT > 300) { olhaT = t; mundoEl.querySelectorAll('.npc').forEach(b => b.classList.toggle('olha', heroi.x < NPCS[+b.dataset.i].x - 2)); }
   bussolaEMapa();
   esconde.tick?.(dt);
 }
@@ -1054,9 +1113,9 @@ function balaoNpc(el, frase) {
   const z = el.style.zIndex; el.style.zIndex = 1600; setTimeout(() => { f.remove(); el.style.zIndex = z; }, 3000);
 }
 // bússola na borda da tela apontando a missão + minimapa
-const mini = document.getElementById('minimapa'), bussolaEl = document.getElementById('bussola');
+const bussolaEl = document.getElementById('bussola');
 mini.onclick = () => { mini.hidden = true; };
-document.getElementById('bt-mapa').onclick = () => { mini.hidden = !mini.hidden; };
+document.getElementById('bt-mapa').onclick = () => { if (!pausado()) mapaJornada(); };
 document.getElementById('bt-canal').onclick = () => { const b = document.getElementById('nao-lidas'); b.hidden = true; b.textContent = ''; if (matchMedia('(hover:hover) and (pointer:fine)').matches) return; document.body.classList.toggle('canal-aberto'); };
 function bussolaEMapa() {
   const a = alvoMissao();
@@ -1082,9 +1141,9 @@ function emote() {
   const e = document.createElement('i'); e.className = 'emote'; e.textContent = ['❤️', '💛', '🥰', '💕'][Math.random() * 4 | 0];
   e.style.left = `${heroi.x}%`; e.style.top = `${heroi.y - 9}%`; mundoEl.append(e); setTimeout(() => e.remove(), 1500);
   const d = p => Math.hypot((p.x - heroi.x) * W / 100, (p.y - heroi.y) * H / 100);
-  const npc = NPCS.map((n, i) => ({ n, i, d: d(n) })).sort((a, b) => a.d - b.d)[0];
-  const bicho = BICHOS.filter(b => !b.sumiu).map(b => ({ b, d: d(b) })).sort((a, b) => a.d - b.d)[0];
-  const perto = [npc, bicho].filter(q => q && q.d < W * .16).sort((a, b) => a.d - b.d)[0];
+  const npc = NPCS.map((n, i) => ({ n, i, d: d(n) })).filter(q => q.n.aqui)[0];
+  const bicho = BICHOS.filter(b => b.el && !b.sumiu).map(b => ({ b, d: d(b) })).sort((a, b) => a.d - b.d)[0];
+  const perto = [npc, bicho].filter(q => q && q.d < U() * .16).sort((a, b) => a.d - b.d)[0];
   if (!perto) return;
   const RESP = ['❤️ Também te amo!', '🤗 Abraço!', '🥰 Que fofa!', '💛 Feliz aniversário!'];
   const frase = RESP[Math.random() * RESP.length | 0];
@@ -1183,7 +1242,7 @@ async function missaoNoMorador(i) {
 }
 function desenharFlores() {
   mundoEl.querySelectorAll('.flor-m').forEach(f => f.remove());
-  if (estado(MISSOES.find(m => m.tipo === 'flores')) !== 'ativa') return;
+  if (fase !== 5 || estado(MISSOES.find(m => m.tipo === 'flores')) !== 'ativa') return;
   FLORES.forEach(([x, y], i) => { if (!extra.flores.includes(i)) mundoEl.insertAdjacentHTML('beforeend', `<i class="nota flor-m" style="left:${x}%;top:${y}%;z-index:${Math.round(y * 10)};background:radial-gradient(circle at 40% 35%, #fff, #ffd1e8 60%, #e8638f)" aria-hidden="true">🌼</i>`); });
 }
 function mochila() {
@@ -1199,6 +1258,14 @@ function abrirLugar(l) {
     falar(n, `A festa da vila não para aqui na tenda! Bora dançar? Toque nas faixas quando as notas passarem na linha dourada! 🕺`, [['Bora dançar!', 'primary'], ['Depois', 'ghost']])
       .then(k => { if (k === 0) cenaAtual = 'festa', JOGOS.danca(nota => { if (nota >= 70) conquistar('pista'); const m = MISSOES.find(x => x.tipo === 'danca'); if (estado(m) === 'ativa') { extra.miss[m.quem] = 'pegou'; salvar(); canal('💃 Volte e conte para a Sthefany!', 'sis'); } }); });
   }
+}
+// mapa da jornada: as fases, com o desenho de cada mapa; dá para voltar às que já abriram
+function mapaJornada() {
+  cenaAtual = null;
+  const max = Math.min(Math.max(cap, 0), FASES.length - 1);
+  view(`<p class="kicker">Mapa da jornada</p><h2>As fases</h2><div class="fases">${FASES.map((f, i) => `<button class="fase${i === fase ? ' aqui' : ''}" data-v="${i}" ${i > max ? 'disabled' : ''} style="background-image:url(${f.mapa})">
+      <b>${i + 1}. ${f.nome}</b><small>${esc(NPCS[i].nome)} ${i < cap ? '✅' : i <= max ? '⭐' : '🔒'}${i === fase ? ' · você está aqui' : ''}</small></button>`).join('')}</div>`, topoLivre('🗺️'));
+  on('.fase', v => { fecharPainel(); if (+v !== fase) irParaFase(+v); });
 }
 // diário: conquistas e as canções da família
 function diario() {
@@ -1218,12 +1285,11 @@ function chamarEscudeiro() {
   if (BICHOS.some(b => b.segue)) return;
   const b = { img: 'heroi-lucas', nome: 'Lucas Junior', h: 9, vel: .32, segue: true, casa: { ...heroi }, raio: 0, x: heroi.x - 4, y: heroi.y, alvo: null, espera: 0, esq: false,
     diz: ['Te amo mil milhões! ❤️', 'Feliz aniversário, minha aventureira!', 'Até o infinito e amém! 🚀', 'Você me achou! 🥰'] };
-  mundoEl.insertAdjacentHTML('beforeend', `<button class="bicho" data-b="${BICHOS.length}" aria-label="${b.nome}"><span class="sombra"></span><img src="img/${b.img}.webp" alt="" style="height:${b.h}cqh"></button>`);
-  b.el = mundoEl.querySelector(`.bicho[data-b="${BICHOS.length}"]`); b.el.onclick = e => { e.stopPropagation(); balaozinho(b); };
-  FRASES[b.nome] = b.diz; BICHOS.push(b);
+  FRASES[b.nome] = b.diz; BICHOS.push(b); desenharFase();
 }
 function passear(dt) {
   BICHOS.forEach(b => {
+    if (!b.el) return;
     if (b.segue) {  // o escudeiro anda ao lado dela
       const ax = heroi.x + (heroi.esq ? 4 : -4), ay = heroi.y + .3;
       b.alvo = Math.hypot(ax - b.x, (ay - b.y) * .56) > 1.5 ? { x: ax, y: ay } : null;
@@ -1233,11 +1299,11 @@ function passear(dt) {
       if ((b.espera -= dt) > 0 || reduz) return;
       for (let k = 0; k < 12 && !b.alvo; k++) {
         const a = Math.random() * Math.PI * 2, r = Math.random() * b.raio, p = { x: b.casa.x + Math.cos(a) * r, y: b.casa.y + Math.sin(a) * r * .6 };
-        if (livre(p.x, p.y) && !NPCS.some(n => Math.hypot(n.x - p.x, n.y - p.y) < 5)) b.alvo = p;
+        if (livre(p.x, p.y) && !NPCS.some(n => n.aqui && Math.hypot(n.x - p.x, n.y - p.y) < 5)) b.alvo = p;
       }
       if (!b.alvo) { b.espera = 1; return; }
     }
-    const dx = (b.alvo.x - b.x) * W / 100, dy = (b.alvo.y - b.y) * H / 100, d = Math.hypot(dx, dy), v = W * b.vel * dt;
+    const dx = (b.alvo.x - b.x) * W / 100, dy = (b.alvo.y - b.y) * H / 100, d = Math.hypot(dx, dy), v = U() * b.vel * dt;
     if (d <= v) { b.x = b.alvo.x; b.y = b.alvo.y; b.alvo = null; b.espera = 1.5 + Math.random() * 3.5; }
     else { b.x += dx / d * v / W * 100; b.y += dy / d * v / H * 100; if (Math.abs(dx) > 2) b.esq = dx < 0; }
     b.el.classList.toggle('andando', !!b.alvo); b.el.classList.toggle('esquerda', b.esq);
@@ -1270,17 +1336,18 @@ function vizinho() {
   if (pausado()) { acaoEl.hidden = true; return; }
   const dist = p => Math.hypot((p.x - heroi.x) * W / 100, (p.y - heroi.y) * H / 100);
   let achou = null;
-  NPCS.forEach((n, i) => { if (dist(n) < W * .13 && (!achou || dist(n) < achou.d)) achou = { tipo: 'npc', i, d: dist(n) }; });
-  if (!achou && dist({ x: PORTAO.x, y: PORTAO.y + 3 }) < W * .16) achou = { tipo: 'portao' };
-  LUGARES.forEach((l, i) => { if (!achou && dist(l) < W * .13) achou = { tipo: 'lugar', i }; });
+  NPCS.forEach((n, i) => { if (n.aqui && dist(n) < U() * .13 && (!achou || dist(n) < achou.d)) achou = { tipo: 'npc', i, d: dist(n) }; });
+  if (!achou && dist({ x: PORTAO.x, y: PORTAO.y + 3 }) < U() * .16) achou = { tipo: 'portao' };
+  LUGARES.forEach((l, i) => { if (!achou && l.fase === fase && dist(l) < U() * .13) achou = { tipo: 'lugar', i }; });
   const chave = achou ? achou.tipo + (achou.i ?? '') : '';
   if (chave === (perto?.chave ?? '')) return;
   perto = achou ? { ...achou, chave } : null;
-  mundoEl.querySelectorAll('.npc').forEach((b, i) => b.classList.toggle('perto', perto?.tipo === 'npc' && perto.i === i));
-  mundoEl.querySelectorAll('.lugar').forEach((b, i) => b.classList.toggle('perto', perto?.tipo === 'lugar' && perto.i === i));
+  mundoEl.querySelectorAll('.npc').forEach(b => b.classList.toggle('perto', perto?.tipo === 'npc' && perto.i === +b.dataset.i));
+  mundoEl.querySelectorAll('.lugar').forEach(b => b.classList.toggle('perto', perto?.tipo === 'lugar' && perto.i === +b.dataset.l));
   acaoEl.hidden = !perto;
   if (perto) acaoEl.innerHTML = perto.tipo === 'npc' ? `💬 Falar com ${com(NPCS[perto.i])}` : perto.tipo === 'lugar' ? `${LUGARES[perto.i].ic} Entrar na ${LUGARES[perto.i].nome.split(' ·')[0]}`
-    : (cap >= CAPITULOS.length ? '🏰 Entrar no castelo' : '🔒 Portão trancado');
+    : fase === FASES.length - 1 ? (cap >= CAPITULOS.length ? '🏰 Entrar no castelo' : '🔒 Portão trancado')
+    : cap > fase ? `✨ Ir para ${FASES[fase + 1].nome}` : `🔒 Fale com ${com(NPCS[fase])} primeiro`;
 }
 function agir() { if (!perto || pausado()) return; perto.tipo === 'npc' ? falarCom(perto.i) : perto.tipo === 'lugar' ? abrirLugar(LUGARES[perto.i]) : irAoPortao(); }
 acaoEl.onclick = agir;
@@ -1314,14 +1381,14 @@ addEventListener('keyup', e => { const k = MAPA_TECLAS[e.key.toLowerCase()]; if 
 addEventListener('blur', () => teclas.clear());
 
 function desenharMundo() {
-  mundoEl.querySelectorAll('.npc').forEach((b, i) => {
-    const estado = i < cap ? 'feito' : i === cap ? 'agora' : 'depois';
+  mundoEl.querySelectorAll('.npc').forEach(b => {
+    const i = +b.dataset.i, estado = i < cap ? 'feito' : i === cap ? 'agora' : 'depois';
     b.classList.remove('feito', 'agora', 'depois'); b.classList.add(estado);
     b.setAttribute('aria-label', `${NPCS[i].nome}: ${estado === 'feito' ? 'pedaço da carta entregue' : estado === 'agora' ? 'tem um desafio para você' : 'ainda não é a vez'}`);
   });
-  const p = mundoEl.querySelector('.portao'), aberto = cap >= CAPITULOS.length;
+  const p = mundoEl.querySelector('.portao'), ultima = fase === FASES.length - 1, aberto = ultima ? cap >= CAPITULOS.length : cap > fase;
   p.classList.toggle('aberto', aberto);
-  p.setAttribute('aria-label', aberto ? 'Portão do castelo: aberto, entrar' : 'Portão do castelo: trancado');
+  p.setAttribute('aria-label', ultima ? (aberto ? 'Portão do castelo: aberto, entrar' : 'Portão do castelo: trancado') : (aberto ? `Caminho para ${FASES[fase + 1].nome}` : 'Caminho trancado'));
   perto = null;
 }
 function aviso(txt) {
@@ -1378,9 +1445,10 @@ function start() {
   const s = carregar();
   extra = { ...novoExtra(), ...(s?.extra || {}) };
   hud(); desenharMundo(); desenharNotas();
-  if (extra.fim) chamarEscudeiro();
-  if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; hud(); desenharMundo(); boasVindas();
-    return aviso(cap >= CAPITULOS.length ? 'A carta está completa! Suba até o castelo.' : `Bem-vinda de volta! Fale com ${com(NPCS[cap])}.`); }
+
+  if (s && s.cap >= 0) { cap = s.cap; xp = s.xp || 0; fase = Math.min(extra.fase ?? Math.min(cap, FASES.length - 1), FASES.length - 1);
+    Object.assign(heroi, FASES[fase].inicio); if (extra.fim) chamarEscudeiro(); desenharFase(); camera(true); boasVindas();
+    return aviso(`Bem-vinda de volta! Fase ${fase + 1}: ${FASES[fase].nome}.`); }
   cenaAtual = 'quarto';
   view(`<p class="kicker">${PROLOGO.kicker}</p><h1>${PROLOGO.titulo}</h1>${PROLOGO.texto}
     <div class="dica-jogo"><b>Como jogar:</b> use o controle no canto da tela (ou as setas do teclado) para andar, ou toque no mapa. Chegou perto de alguém, toque em <b>Falar</b>. Quem tem um desafio pra você mostra um <b>!</b> dourado.</div>
@@ -1417,7 +1485,7 @@ function capituloCompleto() {
     <p class="pedaco">“${CARTA[i]}”</p><div class="xp">+100 XP</div>${lvl() > antes ? `<div class="xp">⬆ Nível ${lvl()}!</div>` : ''}
     <button class="primary">${ultimo ? 'A carta está completa! Ir ao castelo' : 'Guardar na mochila'}</button>`, iconeCap(i), true);
   canal(`📜 <b>${esc(NPCS[i].nome)}</b> entregou o pedaço ${i + 1} da carta para <b>${ELA}</b>!`, 'sis');
-  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `Próxima parada: ${com(NPCS[cap])}.`);
+  const voltar = () => { fecharPainel(); voar(i); aviso(ultimo ? 'O portão do castelo se abriu! Suba até lá.' : `✨ O caminho para ${FASES[fase + 1].nome} se abriu!`);
     if (ultimo) { conquistar('carta'); canal('<b>[Vila] Cayo:</b> O PORTÃO ABRIU! Todo mundo pro castelo! 🏰'); } };
   on('.primary', voltar); aoFechar = voltar;
 }
@@ -1432,6 +1500,7 @@ function voar(i) {
 }
 function irAoPortao() {
   if (pausado()) return;
+  if (fase < FASES.length - 1) return cap > fase ? irParaFase(fase + 1) : aviso(`Fale com ${com(NPCS[fase])} primeiro: o caminho abre depois do desafio.`);
   if (cap < CAPITULOS.length) return aviso(`O portão está trancado. Faltam ${CAPITULOS.length - Math.max(cap, 0)} pedaços da carta.`);
   castelo();
 }
@@ -1776,7 +1845,7 @@ function final() {
     fanfarra(); confete(); setTimeout(confete, 2200); pararMusica(); setTimeout(() => tocarMusica('final'), 4000);
     extra.fim = true; salvar();
     f.querySelector('#vila-de-novo').onclick = () => { f.hidden = true; chamarEscudeiro(); canal(`💞 <b>${ELE}</b> agora passeia pela vila com <b>${ELA}</b>!`, 'conq'); };
-    f.querySelector('#recomecar').onclick = () => { try { localStorage.removeItem(CHAVE); } catch {} f.hidden = true; cap = -1; xp = 0; extra = novoExtra(); Object.assign(heroi, INICIO); start(); };
+    f.querySelector('#recomecar').onclick = () => { try { localStorage.removeItem(CHAVE); } catch {} f.hidden = true; cap = -1; xp = 0; extra = novoExtra(); fase = 0; Object.assign(heroi, INICIO); desenharFase(); start(); };
     f.querySelector('#vila-de-novo').focus({ preventScroll: true });
   }, reduz ? 0 : 450);
   setTimeout(() => clarao.remove(), 1400);

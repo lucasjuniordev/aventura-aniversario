@@ -546,10 +546,9 @@
   .card.ritmo { padding-top:22px; margin-top:8px; }
   .card.ritmo .cena-img, .card.ritmo .crest { display:none; }
   .card.ritmo h2 { margin:4px 0; }
-  .card.ritmo .pista { height:min(330px, calc(100dvh - 340px)); min-height:200px; }
+  .card.ritmo .pista { height:min(330px, calc(100dvh - 360px)); min-height:200px; }
   .card.ritmo #tocar { margin:4px 0 8px; padding:10px 14px; }
   .card.ritmo .show-yt iframe { width:160px; height:90px; }
-  .painel .card > .primary:last-child { position:sticky; bottom:8px; }
   .yt-msg { max-height:96px; overflow-y:auto; padding:6px 10px; font:500 11.5px/1.35 'Alegreya Sans', sans-serif; color:#fff4da; background:#2a180bee; }
   .yt iframe { display:block; width:200px; height:200px; border:0; }
   /* diário */
@@ -577,6 +576,20 @@
   /* Chuva de pétalas */
   .petalas { display:block; width:100%; max-width:340px; aspect-ratio:3 / 4; margin:8px auto 0; border-radius:12px; touch-action:none; background:linear-gradient(#cfe9ff, #fdf0f5 70%, #cfe8c4); box-shadow:inset 0 0 20px #0002; }
   @media (prefers-reduced-motion:reduce) { .mundo::after, .nota, .lugar span, .canal p, .pista .luz { animation:none !important; } .canal p { opacity:1; } }
+
+  /* ===== rolagem: a página nunca rola; o que abre por cima rola por dentro, como uma carta ===== */
+  html, body { height:100%; overflow:hidden; overscroll-behavior:none; }
+  .painel { overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:calc(max(10px, env(safe-area-inset-top)) + 70px) 12px calc(max(12px, env(safe-area-inset-bottom)) + 10px); }
+  .painel #app { width:100%; max-width:540px; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+  .painel .card { display:flex; flex-direction:column; width:100%; max-height:100%; min-height:0; }
+  .card-corpo { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; margin:0 -14px; padding:0 14px 4px; scrollbar-width:thin; scrollbar-color:var(--gold3) transparent; }
+  .card-corpo > .primary:last-child { position:sticky; bottom:0; }
+  .final { overflow:hidden; display:flex; flex-direction:column; align-items:center; gap:14px; padding:calc(max(10px, env(safe-area-inset-top)) + 8px) 12px calc(max(12px, env(safe-area-inset-bottom)) + 10px); }
+  .final-cena { flex:0 0 auto; width:100%; max-width:540px; }
+  .final-cena img { width:100%; height:auto; max-height:36dvh; object-fit:cover; }
+  .final-carta { position:relative; z-index:2; flex:1 1 auto; min-height:0; width:100%; max-width:540px; margin:0 auto; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; }
+  .coracao { z-index:1; }
+  .fala-texto { max-height:38dvh; overflow-y:auto; overscroll-behavior:contain; }
 </style>
 </head>
 <body>
@@ -1539,7 +1552,7 @@ function view(html, topo, brilho) {
   pararJogo(); aoFechar = fecharPainel;
   const fundo = cenaAtual ? `url(img/cenas/${cenaAtual}.webp)` : '';
   painel.style.setProperty('--cena', fundo || 'none'); painel.classList.toggle('com-cena', !!fundo);
-  app.innerHTML = `<div class="card" role="dialog" aria-modal="true">${fundo ? `<div class="cena-img" style="background-image:${fundo}"></div>` : ''}${topo}<button class="fechar" aria-label="Voltar para a vila">✕</button>${html}</div>`;
+  app.innerHTML = `<div class="card" role="dialog" aria-modal="true">${fundo ? `<div class="cena-img" style="background-image:${fundo}"></div>` : ''}${topo}<button class="fechar" aria-label="Voltar para a vila">✕</button><div class="card-corpo">${html}</div></div>`;
   app.querySelector('.fechar').onclick = () => (aoFechar || fecharPainel)();
   painel.hidden = false; hud(brilho); painel.scrollTop = 0;
   app.querySelector('.card button:not(.fechar)')?.focus({ preventScroll: true });

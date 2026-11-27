@@ -778,7 +778,7 @@ const FRASES = {
   'Diego e Fran': ['Diego: Sabe o contrário de volátil? Vem cá, sobrinho! 😂', 'Fran: Diego, para com essas piadas! 🤦‍♀️', 'Diego: Minha filha cresceu rápido demais... 🥹', 'Fran: Filha, já comeu alguma coisa hoje?', 'Fran: Que orgulho da minha menina! 💕', 'Diego: Quem quer foto com o pai da aniversariante?'],
   'Luzia': ['Lucas, olha a nossa filha chegando! 💕', 'Deus é fiel em todo tempo! 🙏', 'Vamos cantar juntos? 🎶', 'O Senhor abençoe esse novo ano da sua vida, filha!'],
   'Lucas': ['Luzia, canta aquela pra ela! 🎶', 'Graça e Paz! 🙏', 'O amor é paciente, o amor é bondoso!', 'Precisa de um conselho? É só chegar.', 'Feliz aniversário, filha! Deus te abençoe.'],
-  'Cayo': ['Arauto oficial do castelo, às ordens! 😎', 'Bora fazer um show? 🤘', 'Quem vai abrir a pista comigo? 🕺', 'Atenção, reino: hoje é dia de festa!'],
+  'Cayo': ['Arauto oficial do castelo, às ordens! 😎', 'Bora fazer um show? ✌️', 'Quem vai abrir a pista comigo? 🕺', 'Atenção, reino: hoje é dia de festa!'],
   'Isabela': ['Eu e a Manu amamos flores! 🌷', 'Joga memória comigo, tia?', 'Feliz aniversário! 💐'],
   'Theo': ['Títia! 🥰', 'Amo também! ❤️', 'Títia!', 'Hihihi! 😄'],
   'Snow': ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*traz a bolinha* 🎾'],
@@ -1919,7 +1919,7 @@ const JOGOS = {
     view(`<p class="kicker">${o.show ? '🎸 No palco' : '🎶 Tocando na festa'}: ${esc(faixa)}</p><h2>${o.show ? 'O Show do Cayo!' : 'Pista de dança!'}</h2>
       ${o.v ? `<div class="show-yt"><div id="ytshow"></div></div><button class="primary" id="tocar" hidden>▶ Toque para começar o show</button>` : ''}
       <div class="pista" style="grid-template-columns:repeat(${NF}, 1fr)"><i class="luz"></i>${[...Array(NF).keys()].map(f => `<div class="faixa-n" data-f="${f}"><button class="bt-d" data-f="${f}" style="background:${CORES[f]}66" aria-label="Faixa ${f + 1}">${ROT[f]}</button></div>`).join('')}<i class="linha"></i><div class="juizo" aria-live="polite"></div></div>
-      <p class="note" id="msg">${o.v ? 'Toque junto com a música! 🤘' : 'A batida é da vila; a música, na nossa memória. 😉'}</p>`, o.show ? topoJogo() : topoLivre('💃'));
+      <p class="note" id="msg">${o.v ? 'Toque junto com a música! ✌️' : 'A batida é da vila; a música, na nossa memória. 😉'}</p>`, o.show ? topoJogo() : topoLivre('💃'));
     app.querySelector('.card').classList.add('ritmo');
     const pista = app.querySelector('.pista'), faixas = [...app.querySelectorAll('.faixa-n')], juizo = app.querySelector('.juizo');
     const ALT = pista.clientHeight, LINHA = ALT - 58;

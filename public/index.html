@@ -1493,7 +1493,7 @@ function fecharFala() { clearInterval(digitando); falaEl.hidden = true; }
 // ================= PAINEL (desafios, prólogo, pedaços) =================
 let aoFechar = null;
 let cenaAtual = null;  // cena pintada do desafio aberto (img/cenas/)
-function fecharPainel() { painel.hidden = true; cenaAtual = null; pararJogo(); hud(); desenharMundo(); }
+function fecharPainel() { painel.hidden = true; cenaAtual = null; pararJogo(); app.querySelectorAll('iframe').forEach(f => f.remove()); hud(); desenharMundo(); }  // o vídeo do show não pode continuar tocando escondido
 const iconeCap = i => `<div class="crest"><img src="img/${CAPITULOS[i].icone}.webp" alt=""></div>`;
 function view(html, topo, brilho) {
   pararJogo(); aoFechar = fecharPainel;

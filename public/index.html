@@ -643,7 +643,7 @@ const PIADAS = [
 const FAMILIA_QUIZ = [
   { p: 'Quantos anos tem o Theo?', o: ['2 aninhos', '5 anos', '10 anos'], c: 0 },
   { p: 'Quem é a mamãe do Theo?', o: ['A Rad', 'A Ciane', 'A Isabella'], c: 0 },
-  { p: 'Quando o Theo te vê na vila, ele grita...', o: ['“Tia Vitória!”', '“Cadê o bolo?”', '“Boa noite!”'], c: 0 },
+  { p: 'Quando o Theo te vê na vila, ele grita...', o: ['“Títia!”', '“Cadê o bolo?”', '“Boa noite!”'], c: 0 },
   { p: 'Qual é a brincadeira preferida do Theo aqui no bosque?', o: ['Esconde-esconde', 'Dormir cedo', 'Ficar paradinho'], c: 0 },
 ];
 // Henrique: jogo da memória com coisas da vila (arquivo em img/ e nome lido pelo leitor de tela)
@@ -701,7 +701,7 @@ const FRASES = {
   'Luzia': ['Graça e Paz! 🙏', 'Deus é fiel em todo tempo!', 'Vamos cantar juntos? 🎶', 'O Senhor abençoe esse novo ano da sua vida, filha!'],
   'Lucas': ['Graça e Paz! 🙏', 'O amor é paciente, o amor é bondoso!', 'Precisa de um conselho? É só chegar.', 'Feliz aniversário, filha! Deus te abençoe.'],
   'Cayo': ['Arauto oficial do castelo, às ordens! 😎', 'O bolo tá quase pronto... eu acho. 🎂', 'Quem vai abrir a pista comigo? 🕺', 'Atenção, reino: hoje é dia de festa!'],
-  'Theo': ['Tia Vitória! 🎈', 'Hihihi! 😄', 'Vamos brincar de esconder?', 'Cadê o Snow? 🐶', 'Eu sou o mais rápido do bosque!'],
+  'Theo': ['Títia! 🥰', 'Amo também! ❤️', 'Títia!', 'Hihihi! 😄'],
   'Snow': ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*traz a bolinha* 🎾'],
   'Manu': ['Oi, tia! 👋', 'Eu gosto de ler histórias da Bíblia!', 'Feliz aniversário! 🎈'],
   'Rebeca': ['Olha as minhas flores! 🌸', 'Tia, você é uma princesa!', 'Lalalá! 🎶'],
@@ -911,7 +911,7 @@ const NPCS = [
 const com = n => (n.a ? `${n.a} ${n.nome}` : n.nome);
 // quem anda sozinho pela vila (h = altura em % da altura do mapa; casa = onde passeia)
 const BICHOS = [
-  { img: 'amb-theo', nome: 'Theo', fase: 1, h: 5.6, casa: { x: 50, y: 65 }, raio: 9, vel: .09, diz: ['Tia Vitória! 🎈', 'Hihihi! 😄', 'Vamos brincar?'] },
+  { img: 'amb-theo', nome: 'Theo', fase: 1, h: 5.6, casa: { x: 50, y: 65 }, raio: 9, vel: .09, diz: ['Títia! 🥰', 'Amo também! ❤️'] },
   { img: 'amb-snow', nome: 'Snow', fase: 5, h: 5.4, casa: { x: 50, y: 88 }, raio: 14, vel: .13, diz: ['Au au! ❤️', 'Au! 🐾', '*abana o rabo*', '*pede carinho*'] },
   { img: 'amb-manu', nome: 'Manu', fase: 5, h: 6.2, casa: { x: 54, y: 68 }, raio: 6, vel: .07, diz: ['Oi, tia! 👋'] },
   { img: 'amb-rebeca', nome: 'Rebeca', fase: 2, h: 5.8, casa: { x: 25, y: 55 }, raio: 6, vel: .07, diz: ['Olha as minhas flores! 🌸'] },
@@ -1171,7 +1171,7 @@ function tocarBicho(b) {
   if (MISSOES.some(m => m.quem === b.nome)) return irAte(b, () => falarMissao(b));
   if (b.nome === 'Snow') return jogarBolinha(b);
   if (b.nome === 'Theo' && !esconde.ativo) return irAte(b, async () => {
-    const k = await falar(b, 'Tia Vitória! Vamos brincar de esconde-esconde? Eu me escondo e você me acha! 🙈', [['Bora!', 'primary'], ['Depois', 'ghost']]);
+    const k = await falar(b, 'Títia! 🙈 (O Theo cobre os olhinhos e sai correndo. Parece que ele quer brincar de esconde-esconde!)', [['Bora!', 'primary'], ['Depois', 'ghost']]);
     if (k === 0) esconde.comecar(b);
   });
   balaozinho(b);
@@ -1215,7 +1215,7 @@ const esconde = {
     const b = this.b; this.ativo = false; this.tick = null;
     Object.assign(b, { x: this.x, y: this.y, sumiu: false, alvo: null, espera: 2 }); b.el.classList.remove('sumiu');
     b.el.style.left = `${b.x}%`; b.el.style.top = `${b.y}%`;
-    balaozinho(b, achou ? 'Achou! Hihihi 😄' : 'Tô aqui! Você não me achou! 😜');
+    balaozinho(b, achou ? 'Títia! 🥰' : 'Títia! 😄');
     if (achou) { conquistar('theo'); confete(); } else aviso('O tempo acabou! Toque no Theo para brincar de novo.');
   },
 };
@@ -1352,6 +1352,7 @@ function vizinho() {
   const chave = achou ? achou.tipo + (achou.i ?? '') : '';
   if (chave === (perto?.chave ?? '')) return;
   perto = achou ? { ...achou, chave } : null;
+  if (perto?.tipo === 'npc') tocarMusica(NPCS[perto.i].nome); else pararMusica();  // a música abre perto do morador e fecha ao se afastar
   mundoEl.querySelectorAll('.npc').forEach(b => b.classList.toggle('perto', perto?.tipo === 'npc' && perto.i === +b.dataset.i));
   mundoEl.querySelectorAll('.lugar').forEach(b => b.classList.toggle('perto', perto?.tipo === 'lugar' && perto.i === +b.dataset.l));
   acaoEl.hidden = !perto;
@@ -1469,7 +1470,7 @@ function start() {
 async function falarCom(i) {
   if (pausado() || cap < 0) return;
   const n = NPCS[i];
-  conversou(n.nome); tocarMusica(n.nome);
+  conversou(n.nome);
   await missaoNoMorador(i);
   if (i < cap) return falar(i, `${n.a === 'a' ? 'Obrigada' : 'Obrigado'}, ${ELA}! O pedaço ${i + 1} já está com você. Corre, que o ${ELE} está esperando!`, [['Até mais!', 'primary']]);
   if (i > cap) return falar(i, `Ainda não é a minha vez! Primeiro fale com ${com(NPCS[cap])}.`, [['Entendi', 'primary']]);
